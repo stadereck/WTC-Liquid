@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WTC Liquid IOS 26.14</title>
+    <title>WTC Liquid IOS 26.15</title>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;600&display=swap');
@@ -121,7 +121,8 @@
         .app-item { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; }
         
         .app-icon { width: 62px; height: 62px; border-radius: 14px; display: flex; justify-content: center; align-items: center; background: var(--glass-bg); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 4px 10px rgba(0,0,0,0.2); color: white; font-size: 28px; position: relative; overflow: hidden; }
-        .icon-mail { background: linear-gradient(#007aff, #00c6ff); }
+        
+        /* Iconos Específicos */
         .icon-cal { background: #fff; color: #ff3b30; flex-direction: column; font-size: 10px; font-weight: 800; gap: 2px; }
         .icon-cal span { font-size: 28px; color: #000; }
         .icon-maps { background: #4cd964; }
@@ -130,7 +131,6 @@
         .icon-phone { background: #34c759; }
         .icon-messages { background: #34c759; }
         .icon-wallet { background: #000; border: 1px solid #333; }
-        .icon-settings { background: #8e8e93; }
         .app-name { font-size: 11px; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
 
         .dock-bar { margin-top: auto; width: 100%; height: 95px; border-radius: 35px; background: rgba(255,255,255,0.2); backdrop-filter: blur(30px); display: flex; justify-content: space-evenly; align-items: center; border: 1px solid rgba(255,255,255,0.2); }
@@ -174,23 +174,17 @@
         .home-indicator { 
             position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); 
             width: 130px; height: 5px; background: white; border-radius: 10px; z-index: 2000; cursor: pointer; 
-            transition: background-color 0.6s cubic-bezier(0.25, 1, 0.5, 1); /* Animación hermosa */
+            transition: background-color 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
-        
-        .home-indicator.dark {
-            background-color: #000; /* Color oscuro para apps claras */
-        }
+        .home-indicator.dark { background-color: #000; }
 
         .status-bar { 
             position: absolute; top: 15px; width: 100%; padding: 0 25px; 
             display: flex; justify-content: space-between; color: white; 
             font-size: 14px; font-weight: 600; z-index: 2000;
-            transition: color 0.6s cubic-bezier(0.25, 1, 0.5, 1); /* Animación hermosa */
+            transition: color 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
-        
-        .status-bar.dark {
-            color: #000; /* Texto oscuro para apps claras */
-        }
+        .status-bar.dark { color: #000; }
 
         /* Calculator Grid */
         .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 20px; background: black; height: 100%; align-content: end; }
@@ -256,7 +250,12 @@
             <!-- HOME SCREEN -->
             <div class="home-screen">
                 <div class="app-grid">
-                    <div class="app-item" onclick="openApp('mail')"><div class="app-icon icon-mail"><i data-lucide="mail"></i></div><span class="app-name">Mail</span></div>
+                    <!-- MAIL ICON NUEVO -->
+                    <div class="app-item" onclick="openApp('mail')">
+                        <div class="app-icon"><img src="https://i.ibb.co/Rp6zxQc4/250.jpg" style="width:100%;height:100%;object-fit:cover;"></div>
+                        <span class="app-name">Mail</span>
+                    </div>
+                    
                     <div class="app-item" onclick="openApp('calendar')"><div class="app-icon icon-cal">DOM<span>28</span></div><span class="app-name">Calendario</span></div>
                     <div class="app-item" onclick="openApp('photos')"><div class="app-icon" style="background:white;"><i data-lucide="image" color="#ff2d55"></i></div><span class="app-name">Fotos</span></div>
                     <div class="app-item" onclick="openApp('camera')"><div class="app-icon" style="background:#ccc;"><i data-lucide="camera" color="#000"></i></div><span class="app-name">Cámara</span></div>
@@ -268,7 +267,12 @@
                     
                     <div class="app-item" onclick="openApp('notes')"><div class="app-icon" style="background:#ffd60a; color:white;"><i data-lucide="file-text"></i></div><span class="app-name">Notas</span></div>
                     <div class="app-item" onclick="openApp('calculator')"><div class="app-icon" style="background:#000; color:white;"><i data-lucide="calculator"></i></div><span class="app-name">Calculadora</span></div>
-                    <div class="app-item" onclick="openApp('settings')"><div class="app-icon icon-settings"><i data-lucide="settings-2"></i></div><span class="app-name">Ajustes</span></div>
+                    
+                    <!-- AJUSTES ICON NUEVO -->
+                    <div class="app-item" onclick="openApp('settings')">
+                        <div class="app-icon"><img src="https://ibb.co/9ds4KPT" onerror="this.style.display='none';this.parentNode.style.background='#8e8e93';this.parentNode.innerHTML='<i data-lucide=\'settings-2\'></i>'" style="width:100%;height:100%;object-fit:cover;"></div>
+                        <span class="app-name">Ajustes</span>
+                    </div>
                 </div>
 
                 <div class="dock-bar">
@@ -366,12 +370,11 @@
                 </div>
             </div>
 
-            <!-- OTHER APPS (Mail, Phone, etc. placeholders for full functionality) -->
+            <!-- OTHER APPS -->
             <div id="app-mail" class="app-window"><div class="nav-bar"><div>Buzones</div><div>Entrada</div><div onclick="closeApp('mail')">Listo</div></div><div class="app-body"><div class="list-item"><div><b>Apple</b><br>Recibo</div><div>Ayer</div></div></div></div>
             <div id="app-phone" class="app-window"><div class="app-body" style="display:flex; flex-direction:column; justify-content:flex-end;"><div id="phoneDisplay" style="font-size:32px; text-align:center; padding:20px;"></div><div class="keypad"><div class="key-btn" onclick="dial('1')">1</div><div class="key-btn" onclick="dial('2')">2</div><div class="key-btn" onclick="dial('3')">3</div><div class="key-btn" onclick="dial('4')">4</div><div class="key-btn" onclick="dial('5')">5</div><div class="key-btn" onclick="dial('6')">6</div><div class="key-btn" onclick="dial('7')">7</div><div class="key-btn" onclick="dial('8')">8</div><div class="key-btn" onclick="dial('9')">9</div><div class="key-btn" onclick="dial('*')">*</div><div class="key-btn" onclick="dial('0')">0</div><div class="key-btn" onclick="dial('#')">#</div><div class="key-btn call-btn" onclick="alert('Llamando...')"><i data-lucide="phone"></i></div></div></div></div>
             <div id="app-calculator" class="app-window"><div class="app-body" style="background:black; color:white; display:flex; flex-direction:column; justify-content:flex-end;"><div id="calcRes" style="text-align:right; font-size:80px; padding:20px;">0</div><div class="calc-grid"><div class="calc-btn light" onclick="calc('C')">AC</div><div class="calc-btn light">+/-</div><div class="calc-btn light">%</div><div class="calc-btn orange" onclick="calc('/')">÷</div><div class="calc-btn" onclick="calc(7)">7</div><div class="calc-btn" onclick="calc(8)">8</div><div class="calc-btn" onclick="calc(9)">9</div><div class="calc-btn orange" onclick="calc('*')">×</div><div class="calc-btn" onclick="calc(4)">4</div><div class="calc-btn" onclick="calc(5)">5</div><div class="calc-btn" onclick="calc(6)">6</div><div class="calc-btn orange" onclick="calc('-')">-</div><div class="calc-btn" onclick="calc(1)">1</div><div class="calc-btn" onclick="calc(2)">2</div><div class="calc-btn" onclick="calc(3)">3</div><div class="calc-btn orange" onclick="calc('+')">+</div><div class="calc-btn" style="grid-column:span 2; justify-content:flex-start; padding-left:30px;" onclick="calc(0)">0</div><div class="calc-btn">.</div><div class="calc-btn orange" onclick="calc('=')">=</div></div></div></div>
             
-            <!-- EXTRAS -->
             <div id="app-calendar" class="app-window"><div class="nav-bar"><div style="color:red">2026</div><div>Calendario</div><div onclick="closeApp('calendar')">Hoy</div></div><div class="app-body" style="padding:20px; text-align:center;"><h1 style="color:red;">ABRIL</h1></div></div>
             <div id="app-photos" class="app-window"><div class="nav-bar"><div style="color:#007aff" onclick="closeApp('photos')">Atrás</div><div>Fotos</div><div></div></div><div class="app-body" style="background:white;"><div class="grid-3" id="photoGrid"></div></div></div>
             <div id="app-maps" class="app-window"><div class="app-body"><iframe width="100%" height="100%" frameborder="0" src="https://www.openstreetmap.org/export/embed.html"></iframe></div></div>
