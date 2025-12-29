@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WTC Liquid IOS 26.16</title>
+    <title>WTC Liquid IOS 26.16.1</title>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;600&display=swap');
@@ -54,11 +54,11 @@
         }
         @keyframes fadeUp { 0% { opacity: 0; transform: translateY(10px); } 50% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-10px); } }
 
-        /* --- ISLA DINÁMICA (SUPERIOR A TODO) --- */
+        /* --- ISLA DINÁMICA --- */
         .notch {
             position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
             width: 120px; height: 35px; background: #000; border-radius: 20px; 
-            z-index: 6000; /* Z-INDEX MÁS ALTO QUE WELCOME SCREEN */
+            z-index: 6000;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             color: white; overflow: hidden; display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
             cursor: pointer; box-shadow: 0 0 0 0px transparent;
@@ -76,10 +76,9 @@
         }
 
         /* Estados de la Isla */
-        .notch.expanded-charge { width: 220px; height: 50px; border-radius: 25px; justify-content: center; background: #000; border: 1px solid #333; }
+        .notch.expanded-charge { width: 240px; height: 50px; border-radius: 25px; justify-content: center; background: #000; border: 1px solid #333; }
         .notch.expanded-faceid { width: 160px; height: 160px; border-radius: 40px; justify-content: center; flex-direction: column; }
         
-        /* Animación Cambio de Idioma */
         .notch.expanded-language {
             width: 280px; height: 60px; border-radius: 30px; justify-content: center;
             background: linear-gradient(45deg, #000, #1a1a1a);
@@ -92,7 +91,6 @@
         .notch.expanded-faceid .faceid-ui,
         .notch.expanded-language .lang-ui { display: flex; opacity: 1; align-items: center; justify-content: center; gap: 10px; }
         
-        /* Animación Globo */
         .globe-spin { animation: spin 2s linear infinite; color: #007aff; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
@@ -124,10 +122,19 @@
         .glass-btn { width: 50px; height: 50px; border-radius: 50%; background: rgba(0,0,0,0.4); backdrop-filter: blur(20px); display: flex; justify-content: center; align-items: center; color: white; cursor: pointer; }
 
         /* HOME SCREEN */
-        .home-screen { position: relative; z-index: 1; padding: 70px 20px 20px 20px; height: 100%; display: flex; flex-direction: column; gap: 20px; }
-        .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px 10px; padding: 10px 0; overflow-y: auto; scrollbar-width: none; }
+        .home-screen { 
+            position: relative; z-index: 1; 
+            padding: 60px 20px 20px 20px; /* Reduced top padding from 70px */
+            height: 100%; display: flex; flex-direction: column; 
+            gap: 15px; /* Reduced gap from 20px */
+        }
+        .app-grid { 
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px 8px; /* Tighter gap */
+            padding: 5px 0; /* Reduced padding */
+            overflow-y: auto; scrollbar-width: none; 
+        }
         .app-grid::-webkit-scrollbar { display: none; }
-        .app-item { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; }
+        .app-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
         
         .app-icon { width: 62px; height: 62px; border-radius: 14px; display: flex; justify-content: center; align-items: center; background: var(--glass-bg); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 4px 10px rgba(0,0,0,0.2); color: white; font-size: 28px; position: relative; overflow: hidden; }
         .icon-cal { background: #fff; color: #ff3b30; flex-direction: column; font-size: 10px; font-weight: 800; gap: 2px; }
@@ -202,10 +209,11 @@
             <!-- ISLA DINÁMICA (Aura Welcome) -->
             <div class="notch welcome-aura" id="notch">
                 <div class="notch-content charge-ui">
-                    <i data-lucide="zap" color="#34c759"></i> <span style="color:#34c759; font-weight:600;">Cargando</span>
+                    <i data-lucide="zap" color="#34c759"></i> <span style="color:#34c759; font-weight:600;" id="notchChargeText">Cargando 100%</span>
                 </div>
                 <div class="notch-content faceid-ui">
                     <div class="scan-line"></div>
+                    <span style="font-size:12px; margin-top:5px;" id="notchFaceIdText">Face ID</span>
                 </div>
                 <div class="notch-content lang-ui">
                     <i data-lucide="globe" class="globe-spin"></i> <span style="font-weight:600;" id="langNotchText">Cambiando Idioma...</span>
@@ -215,7 +223,7 @@
             <!-- TUTORIAL -->
             <div id="tutorialOverlay">
                 <div class="tut-card active" id="tut1">
-                    <h2>Bienvenido</h2>
+                    <h2>Bienvenido a iOS 26</h2>
                     <p style="margin:20px 0; opacity:0.8;">Liquid Glass UI</p>
                     <button class="tut-btn" onclick="nextTut(1)">Siguiente</button>
                 </div>
@@ -247,11 +255,13 @@
 
             <div class="wallpaper-layer" id="wallpaper"></div>
 
-            <!-- HOME SCREEN -->
+            <!-- HOME SCREEN (Adjusted Spacing) -->
             <div class="home-screen">
                 <div class="app-grid">
+                    <!-- MAIL -->
                     <div class="app-item" onclick="openApp('mail')">
-                        <div class="app-icon"><img src="https://i.ibb.co/Rp6zxQc4/250.jpg" style="width:100%;height:100%;object-fit:cover;"></div><span class="app-name" data-key="mail">Mail</span>
+                        <div class="app-icon"><img src="https://i.ibb.co/Rp6zxQc4/250.jpg" style="width:100%;height:100%;object-fit:cover;"></div>
+                        <span class="app-name" data-key="mail">Mail</span>
                     </div>
                     <div class="app-item" onclick="openApp('calendar')"><div class="app-icon icon-cal">DOM<span>28</span></div><span class="app-name" data-key="calendar">Calendario</span></div>
                     <div class="app-item" onclick="openApp('photos')"><div class="app-icon" style="background:white;"><i data-lucide="image" color="#ff2d55"></i></div><span class="app-name" data-key="photos">Fotos</span></div>
@@ -264,9 +274,11 @@
                     
                     <div class="app-item" onclick="openApp('notes')"><div class="app-icon" style="background:#ffd60a; color:white;"><i data-lucide="file-text"></i></div><span class="app-name" data-key="notes">Notas</span></div>
                     <div class="app-item" onclick="openApp('calculator')">
-                        <div class="app-icon"><img src="https://i.ibb.co/JRPgZLNR/images-removebg-preview.png" style="width:100%;height:100%;object-fit:cover;"></div><span class="app-name" data-key="calculator">Calculadora</span>
+                        <div class="app-icon"><img src="https://i.ibb.co/JRPgZLNR/images-removebg-preview.png" style="width:100%;height:100%;object-fit:cover;"></div>
+                        <span class="app-name" data-key="calculator">Calculadora</span>
                     </div>
                     
+                    <!-- AJUSTES -->
                     <div class="app-item" onclick="openApp('settings')">
                         <div class="app-icon"><img src="https://i.ibb.co/JS5p6Z7/Settings-29-dark-removebg-preview.png" onerror="this.style.display='none';this.parentNode.style.background='#8e8e93';this.parentNode.innerHTML='<i data-lucide=\'settings-2\'></i>'" style="width:100%;height:100%;object-fit:cover;"></div>
                         <span class="app-name" data-key="settings">Ajustes</span>
@@ -281,16 +293,26 @@
                 </div>
             </div>
 
-            <!-- APPS WINDOWS -->
+            <!-- WINDOWS -->
 
-            <!-- CAMERA -->
+            <!-- CAMERA (PRO) -->
             <div id="app-camera" class="app-window" style="z-index: 1200;">
                 <div class="camera-app" style="height:100%;">
                     <div style="flex:1; position:relative; overflow:hidden;">
                         <video id="camFeed" autoplay playsinline style="width:100%; height:100%; object-fit:cover; transform:scaleX(-1);"></video>
+                        <div style="position:absolute; top:20px; width:100%; display:flex; justify-content:space-between; padding:0 20px;">
+                            <i data-lucide="zap-off"></i>
+                            <i data-lucide="chevron-up"></i>
+                            <i data-lucide="aperture"></i>
+                        </div>
+                    </div>
+                    <div class="cam-modes">
+                        <span>Cine</span><span>Video</span><span class="active">Foto</span><span>Retrato</span><span>Pano</span>
                     </div>
                     <div class="cam-controls">
-                        <div style="width:50px; height:50px; background:#333; border-radius:5px;" onclick="openApp('photos')"><img id="lastPhoto" style="width:100%; height:100%; object-fit:cover; display:none;"></div>
+                        <div style="width:50px; height:50px; background:#333; border-radius:5px; overflow:hidden;" onclick="openApp('photos')">
+                            <img id="lastPhoto" style="width:100%; height:100%; object-fit:cover; display:none;">
+                        </div>
                         <div class="shutter" onclick="takePhoto()"></div>
                         <div class="cam-filter-btn" onclick="toggleFilter()"><i data-lucide="filter" size="20"></i></div>
                     </div>
@@ -314,6 +336,9 @@
                                 <div style="color:#888; display:flex; align-items:center;" id="currentLangDisplay">Español <i data-lucide="chevron-right" size="16"></i></div>
                             </div>
                             <div class="list-item"><div style="display:flex; gap:10px;"><i data-lucide="moon" style="color:#5856d6"></i> <span data-key="dark_mode">Modo Oscuro</span></div><div class="toggle" id="darkToggle" onclick="toggleDark()"><div class="toggle-handle"></div></div></div>
+                        </div>
+                        <div class="list-group">
+                            <div class="list-item" onclick="triggerChargeAnim()"><div style="display:flex; gap:10px;"><i data-lucide="zap" style="color:#34c759"></i> <span data-key="charging">Simular Carga</span></div><div style="color:#888">Probar</div></div>
                         </div>
                     </div>
 
@@ -351,7 +376,7 @@
                 </div>
             </div>
 
-            <!-- OTHER APPS (Placeholders) -->
+            <!-- OTHER APPS -->
             <div id="app-mail" class="app-window"><div class="nav-bar"><div>Buzones</div><div>Entrada</div><div onclick="closeApp('mail')">Listo</div></div><div class="app-body"><div class="list-item"><div><b>Apple</b><br>Recibo</div><div>Ayer</div></div></div></div>
             <div id="app-phone" class="app-window"><div class="app-body" style="display:flex; flex-direction:column; justify-content:flex-end;"><div id="phoneDisplay" style="font-size:32px; text-align:center; padding:20px;"></div><div class="keypad" style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px; padding:40px; justify-items:center;"><div class="key-btn" onclick="dial('1')">1</div><div class="key-btn" onclick="dial('2')">2</div><div class="key-btn" onclick="dial('3')">3</div><div class="key-btn" onclick="dial('4')">4</div><div class="key-btn" onclick="dial('5')">5</div><div class="key-btn" onclick="dial('6')">6</div><div class="key-btn" onclick="dial('7')">7</div><div class="key-btn" onclick="dial('8')">8</div><div class="key-btn" onclick="dial('9')">9</div><div class="key-btn" onclick="dial('*')">*</div><div class="key-btn" onclick="dial('0')">0</div><div class="key-btn" onclick="dial('#')">#</div><div class="key-btn" style="background:#34c759; color:white; grid-column:2;" onclick="alert('Llamando...')"><i data-lucide="phone"></i></div></div></div></div>
             <div id="app-calculator" class="app-window"><div class="app-body" style="background:black; color:white; display:flex; flex-direction:column; justify-content:flex-end;"><div id="calcRes" style="text-align:right; font-size:80px; padding:20px;">0</div><div class="calc-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; padding:20px; background:black;"><div class="calc-btn" style="background:#a5a5a5; color:black;" onclick="calc('C')">AC</div><div class="calc-btn" style="background:#a5a5a5; color:black;">+/-</div><div class="calc-btn" style="background:#a5a5a5; color:black;">%</div><div class="calc-btn" style="background:#ff9f0a;" onclick="calc('/')">÷</div><div class="calc-btn" onclick="calc(7)">7</div><div class="calc-btn" onclick="calc(8)">8</div><div class="calc-btn" onclick="calc(9)">9</div><div class="calc-btn" style="background:#ff9f0a;" onclick="calc('*')">×</div><div class="calc-btn" onclick="calc(4)">4</div><div class="calc-btn" onclick="calc(5)">5</div><div class="calc-btn" onclick="calc(6)">6</div><div class="calc-btn" style="background:#ff9f0a;" onclick="calc('-')">-</div><div class="calc-btn" onclick="calc(1)">1</div><div class="calc-btn" onclick="calc(2)">2</div><div class="calc-btn" onclick="calc(3)">3</div><div class="calc-btn" style="background:#ff9f0a;" onclick="calc('+')">+</div><div class="calc-btn" style="grid-column:span 2; justify-content:flex-start; padding-left:30px;" onclick="calc(0)">0</div><div class="calc-btn">.</div><div class="calc-btn" style="background:#ff9f0a;" onclick="calc('=')">=</div></div></div></div>
@@ -377,17 +402,16 @@
         
         // --- TRANSLATIONS CONFIG ---
         const translations = {
-            es: { welcome: "Desliza para empezar", mail: "Mail", calendar: "Calendario", photos: "Fotos", camera: "Cámara", maps: "Mapas", clock: "Reloj", weather: "Clima", wallet: "Cartera", notes: "Notas", calculator: "Calculadora", settings: "Ajustes", lang_region: "Idioma y Región", dark_mode: "Modo Oscuro" },
-            en: { welcome: "Swipe to start", mail: "Mail", calendar: "Calendar", photos: "Photos", camera: "Camera", maps: "Maps", clock: "Clock", weather: "Weather", wallet: "Wallet", notes: "Notes", calculator: "Calculator", settings: "Settings", lang_region: "Language & Region", dark_mode: "Dark Mode" },
-            fr: { welcome: "Balayez pour commencer", mail: "Mail", calendar: "Calendrier", photos: "Photos", camera: "Appareil photo", maps: "Plans", clock: "Horloge", weather: "Météo", wallet: "Cartes", notes: "Notes", calculator: "Calculatrice", settings: "Réglages", lang_region: "Langue et région", dark_mode: "Mode sombre" },
-            it: { welcome: "Scorri per iniziare", mail: "Mail", calendar: "Calendario", photos: "Foto", camera: "Fotocamera", maps: "Mappe", clock: "Orologio", weather: "Meteo", wallet: "Wallet", notes: "Note", calculator: "Calcolatrice", settings: "Impostazioni", lang_region: "Lingua e zona", dark_mode: "Modalità scura" },
-            jp: { welcome: "スワイプして始める", mail: "メール", calendar: "カレンダー", photos: "写真", camera: "カメラ", maps: "マップ", clock: "時計", weather: "天気", wallet: "ウォレット", notes: "メモ", calculator: "電卓", settings: "設定", lang_region: "言語と地域", dark_mode: "ダークモード" },
-            cn: { welcome: "向上轻扫以开始", mail: "邮件", calendar: "日历", photos: "照片", camera: "相机", maps: "地图", clock: "时钟", weather: "天气", wallet: "钱包", notes: "备忘录", calculator: "计算器", settings: "设置", lang_region: "语言与地区", dark_mode: "深色模式" }
+            es: { welcome: "Desliza para empezar", mail: "Mail", calendar: "Calendario", photos: "Fotos", camera: "Cámara", maps: "Mapas", clock: "Reloj", weather: "Clima", wallet: "Cartera", notes: "Notas", calculator: "Calculadora", settings: "Ajustes", lang_region: "Idioma y Región", dark_mode: "Modo Oscuro", charging: "Cargando", face_id: "Face ID", changing_lang: "Cambiando Idioma..." },
+            en: { welcome: "Swipe to start", mail: "Mail", calendar: "Calendar", photos: "Photos", camera: "Camera", maps: "Maps", clock: "Clock", weather: "Weather", wallet: "Wallet", notes: "Notes", calculator: "Calculator", settings: "Settings", lang_region: "Language & Region", dark_mode: "Dark Mode", charging: "Charging", face_id: "Face ID", changing_lang: "Changing Language..." },
+            fr: { welcome: "Balayez pour commencer", mail: "Mail", calendar: "Calendrier", photos: "Photos", camera: "Appareil photo", maps: "Plans", clock: "Horloge", weather: "Météo", wallet: "Cartes", notes: "Notes", calculator: "Calculatrice", settings: "Réglages", lang_region: "Langue et région", dark_mode: "Mode sombre", charging: "En charge", face_id: "Face ID", changing_lang: "Changement de langue..." },
+            it: { welcome: "Scorri per iniziare", mail: "Mail", calendar: "Calendario", photos: "Foto", camera: "Fotocamera", maps: "Mappe", clock: "Orologio", weather: "Meteo", wallet: "Wallet", notes: "Note", calculator: "Calcolatrice", settings: "Impostazioni", lang_region: "Lingua e zona", dark_mode: "Modalità scura", charging: "In carica", face_id: "Face ID", changing_lang: "Cambio lingua..." },
+            jp: { welcome: "スワイプして始める", mail: "メール", calendar: "カレンダー", photos: "写真", camera: "カメラ", maps: "マップ", clock: "時計", weather: "天気", wallet: "ウォレット", notes: "メモ", calculator: "電卓", settings: "設定", lang_region: "言語と地域", dark_mode: "ダークモード", charging: "充電中", face_id: "Face ID", changing_lang: "言語を変更中..." },
+            cn: { welcome: "向上轻扫以开始", mail: "邮件", calendar: "日历", photos: "照片", camera: "相机", maps: "地图", clock: "时钟", weather: "天气", wallet: "钱包", notes: "备忘录", calculator: "计算器", settings: "设置", lang_region: "语言与地区", dark_mode: "深色模式", charging: "充电中", face_id: "Face ID", changing_lang: "正在更改语言..." }
         };
         let currentLang = 'es';
 
         // --- HELLO SEQUENCE ---
-        // Se agregaron Chino y Japonés antes de Provechito
         const greetings = ["hello", "hola", "bonjour", "ciao", "hallo", "olá", "你好", "こんにちは", "Provechito"];
         let greetIdx = 0;
         const welcomeText = document.getElementById('welcomeText');
@@ -416,6 +440,11 @@
             // Animación Isla
             const n = document.getElementById('notch');
             n.classList.add('expanded-language');
+            
+            // Update Dynamic Island Texts immediately
+            document.getElementById('langNotchText').textContent = t.changing_lang;
+            document.getElementById('notchChargeText').textContent = t.charging + ' 100%';
+            // Note: Face ID text is usually static "Face ID" brand, but we can translate if needed
             
             // Actualizar Textos UI (Claves data-key)
             document.querySelectorAll('[data-key]').forEach(el => {
@@ -537,6 +566,8 @@
         function triggerChargeAnim() {
             const n = document.getElementById('notch');
             n.classList.add('expanded-charge');
+            // Ensure text is updated based on current lang
+            document.getElementById('notchChargeText').textContent = translations[currentLang].charging + ' 100%';
             setTimeout(() => n.classList.remove('expanded-charge'), 3000);
         }
 
