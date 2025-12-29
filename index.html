@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WTC Liquid IOS 26.15</title>
+    <title>WTC Liquid IOS 26.15.1</title>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;600&display=swap');
@@ -266,7 +266,10 @@
                     <div class="app-item" onclick="openApp('wallet')"><div class="app-icon icon-wallet"><i data-lucide="wallet-cards"></i></div><span class="app-name">Cartera</span></div>
                     
                     <div class="app-item" onclick="openApp('notes')"><div class="app-icon" style="background:#ffd60a; color:white;"><i data-lucide="file-text"></i></div><span class="app-name">Notas</span></div>
-                    <div class="app-item" onclick="openApp('calculator')"><div class="app-icon" style="background:#000; color:white;"><i data-lucide="calculator"></i></div><span class="app-name">Calculadora</span></div>
+                    <div class="app-item" onclick="openApp('calculator')">
+                        <div class="app-icon"><img src="https://i.ibb.co/JRPgZLNR/images-removebg-preview.png" style="width:100%;height:100%;object-fit:cover;"></div>
+                        <span class="app-name">Calculadora</span>
+                    </div>
                     
                     <!-- AJUSTES ICON NUEVO -->
                     <div class="app-item" onclick="openApp('settings')">
@@ -395,7 +398,7 @@
         lucide.createIcons();
         
         // HELLO SEQUENCE
-        const greetings = ["hello", "hola", "bonjour", "ciao", "hallo", "olá"];
+        const greetings = ["hello", "hola", "bonjour", "ciao", "hallo", "olá", "Provechito"];
         let greetIdx = 0;
         const welcomeText = document.getElementById('welcomeText');
         
