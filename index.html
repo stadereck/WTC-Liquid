@@ -3,1108 +3,546 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>iOS 26 Liquid Glass - Ultimate</title>
-    <!-- Importar iconos -->
+    <title>iOS 26 Liquid Glass - Hello Edition</title>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;600&display=swap');
+
         :root {
-            --glass-border: rgba(255, 255, 255, 0.4);
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-            --liquid-highlight: inset 0 0 20px rgba(255, 255, 255, 0.15), 
-                                inset 1px 1px 2px rgba(255, 255, 255, 0.6), 
-                                inset -1px -1px 2px rgba(0, 0, 0, 0.1);
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --app-bg: #f2f2f7;
+            --app-text: #000;
+            --accent: #007aff;
+            --list-bg: #fff;
+            --border-color: #e5e5ea;
         }
 
-        * {
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
+        /* MODO OSCURO GLOBAL */
+        .iphone-frame.dark-mode {
+            --app-bg: #000;
+            --app-text: #fff;
+            --glass-bg: rgba(30, 30, 30, 0.6);
+            --list-bg: #1c1c1e;
+            --border-color: #38383a;
         }
 
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #111;
-            height: 100vh;
-            width: 100vw;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
+        * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif; background: #111; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        
+        #scaler { transition: transform 0.1s; display: flex; gap: 20px; align-items: center; }
 
-        /* Contenedor wrapper para el escalado */
-        #scaler {
-            transform-origin: center center;
-            transition: transform 0.1s;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* El contenedor del iPhone */
         .iphone-frame {
-            width: 380px;
-            height: 800px;
-            background: #000;
-            border-radius: 55px;
-            position: relative;
-            box-shadow: 0 0 0 12px #1a1a1a, 0 0 0 14px #4a4a4a, 0 20px 50px rgba(0,0,0,0.5);
-            overflow: hidden;
-            z-index: 10;
-            flex-shrink: 0; /* Evitar que flexbox lo aplaste */
+            width: 380px; height: 800px; background: #000; border-radius: 55px;
+            position: relative; box-shadow: 0 0 0 12px #1a1a1a, 0 0 0 14px #4a4a4a, 0 20px 50px rgba(0,0,0,0.5);
+            overflow: hidden; z-index: 10; transition: background 0.3s;
         }
 
-        /* Botón Lateral (Para Siri/Bloqueo) */
-        .side-button {
-            position: absolute;
-            right: -16px; /* Fuera del frame visual */
-            top: 200px;
-            width: 4px;
-            height: 80px;
-            background: #2a2a2a;
-            border-radius: 2px 0 0 2px;
-            z-index: 5;
+        /* --- PANTALLA DE BIENVENIDA (HELLO) --- */
+        #welcomeScreen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; z-index: 5000; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+            transition: transform 0.8s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+        }
+        #welcomeText {
+            font-family: 'Dancing Script', cursive; font-size: 60px; font-weight: 700;
+            opacity: 0; transition: opacity 1s; color: black;
+        }
+        .swipe-hint-text {
+            position: absolute; bottom: 50px; font-family: -apple-system, sans-serif;
+            font-weight: 500; font-size: 16px; opacity: 0; animation: fadeUp 2s infinite;
+        }
+        @keyframes fadeUp { 0% { opacity: 0; transform: translateY(10px); } 50% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-10px); } }
+
+        /* --- TUTORIAL --- */
+        #tutorialOverlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 4000;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            color: white; padding: 40px; text-align: center;
+        }
+        .tut-card {
+            background: #1c1c1e; padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            transform: scale(0.9); opacity: 0; transition: all 0.5s;
+        }
+        .tut-card.active { transform: scale(1); opacity: 1; }
+        .tut-btn {
+            margin-top: 20px; background: #007aff; border: none; padding: 12px 24px;
+            border-radius: 25px; color: white; font-weight: 600; font-size: 16px; cursor: pointer;
         }
 
-        /* Fondo Animado Vibrante (Home Screen) */
-        .wallpaper {
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: 
-                radial-gradient(circle at 50% 50%, rgba(76, 29, 149, 1), transparent 60%),
-                radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 1), transparent 50%),
-                radial-gradient(circle at 20% 80%, rgba(34, 211, 238, 1), transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(251, 146, 60, 1), transparent 50%),
-                radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 1), transparent 50%);
-            background-color: #1e1b4b;
-            filter: blur(60px);
-            animation: moveGradient 15s infinite alternate ease-in-out;
-            z-index: 0;
+        /* FONDOS */
+        .wallpaper-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
+            background: linear-gradient(135deg, #021B79, #0575E6, #00F260);
+            background-size: 400% 400%; animation: gradientAnim 15s ease infinite;
         }
+        @keyframes gradientAnim { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        @keyframes moveGradient {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            100% { transform: translate(-10%, -10%) rotate(5deg); }
-        }
-
-        /* --- ISLA DINÁMICA (DYNAMIC ISLAND) --- */
+        /* ISLA DINÁMICA */
         .notch {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 120px;
-            height: 35px;
-            background: #000;
-            border-radius: 20px;
-            z-index: 200;
+            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+            width: 120px; height: 35px; background: #000; border-radius: 20px; z-index: 2000;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 12px;
-            color: white;
-            overflow: hidden;
+            color: white; overflow: hidden; display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+            cursor: pointer;
         }
-
-        /* Estados de la Isla */
-        .notch.expanded-faceid {
-            width: 160px;
-            height: 160px;
-            border-radius: 40px;
-            flex-direction: column;
-            justify-content: center;
-        }
+        .notch.expanded-charge { width: 220px; height: 50px; border-radius: 25px; justify-content: center; background: #000; border: 1px solid #333; }
+        .notch.expanded-faceid { width: 160px; height: 160px; border-radius: 40px; justify-content: center; flex-direction: column; }
         
-        .notch.expanded-music {
-            width: 340px;
-            height: 60px;
-            border-radius: 30px;
-            top: 15px; /* Sube un poco */
-        }
+        .notch-content { display: none; width: 100%; opacity: 0; transition: opacity 0.2s; }
+        .notch.expanded-charge .charge-ui, .notch.expanded-faceid .faceid-ui { display: flex; opacity: 1; align-items: center; justify-content: center; gap: 10px; }
+        
+        .scan-line { width: 50px; height: 50px; border: 2px solid #007aff; border-radius: 10px; position: relative; }
+        .scan-line::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: #007aff; animation: scan 1.5s infinite; }
+        @keyframes scan { 0% { top: 0; opacity: 0; } 50% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
 
-        .notch-content {
-            opacity: 0;
-            transition: opacity 0.2s;
-            display: none;
-            width: 100%;
-        }
-
-        .notch.expanded-faceid .faceid-content,
-        .notch.expanded-music .music-content {
-            opacity: 1;
-            display: flex;
-        }
-
-        /* Face ID UI */
-        .faceid-icon {
-            color: #007aff;
-            margin-bottom: 10px;
-            animation: faceScan 1.5s infinite;
-        }
-        @keyframes faceScan {
-            0% { transform: scale(0.9); opacity: 0.7; }
-            50% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(0.9); opacity: 0.7; }
-        }
-
-        /* Music UI en Isla */
-        .music-content {
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            padding: 0 10px;
-        }
-        .music-wave {
-            display: flex;
-            gap: 3px;
-            height: 20px;
-            align-items: center;
-        }
-        .bar {
-            width: 3px;
-            background: #00F260;
-            border-radius: 2px;
-            animation: equalize 1s infinite;
-        }
-        .bar:nth-child(2) { animation-delay: 0.2s; height: 15px; }
-        .bar:nth-child(3) { animation-delay: 0.4s; height: 10px; }
-        @keyframes equalize {
-            0%, 100% { height: 8px; }
-            50% { height: 20px; }
-        }
-
-        /* --- FIN ISLA DINÁMICA --- */
-
-        /* Barra de Estado */
-        .status-bar {
-            position: absolute;
-            top: 15px;
-            width: 100%;
-            padding: 0 25px;
-            display: flex;
-            justify-content: space-between;
-            color: white;
-            font-size: 14px;
-            font-weight: 600;
-            z-index: 190;
-        }
-
-        /* --- PANTALLA DE BLOQUEO (Ondas Azules/Verdes) --- */
+        /* PANTALLA DE BLOQUEO */
         .lock-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 150;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
-            background: linear-gradient(135deg, #021B79 0%, #0575E6 50%, #00F260 100%);
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;
+            background: linear-gradient(135deg, #021B79, #0575E6, #00F260);
+            background-size: 400% 400%; animation: gradientAnim 15s ease infinite;
+            display: flex; flex-direction: column; align-items: center;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
-        .lock-screen.unlocked {
-            transform: translateY(-100%);
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .lock-content {
-            position: relative;
-            z-index: 2;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 60px;
-            color: white;
-        }
-
-        .lock-date {
-            font-size: 18px;
-            font-weight: 500;
-            margin-bottom: -5px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            text-transform: capitalize;
-            opacity: 0.8;
-        }
-
-        .lock-time {
-            font-size: 90px;
-            font-family: 'SF Pro Rounded', 'Arial Rounded MT Bold', 'Nunito', sans-serif;
-            font-weight: 800;
-            letter-spacing: -3px;
-            text-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            background: -webkit-linear-gradient(top, #fff, rgba(255,255,255,0.7));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
-
-        .lock-buttons {
-            margin-top: auto;
-            margin-bottom: 50px;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 40px;
-        }
-
-        .circle-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(20px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            cursor: pointer;
-            transition: background 0.2s;
-        }
+        .lock-screen.unlocked { transform: translateY(-100%); }
         
-        .circle-btn:active {
-            background: rgba(255, 255, 255, 0.2);
-        }
+        .clock-container { margin-top: 80px; text-align: center; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .lock-time { font-size: 90px; font-weight: 700; letter-spacing: -3px; line-height: 1; }
+        .lock-date { font-size: 20px; font-weight: 500; text-transform: capitalize; margin-top: 5px; }
+        .lock-shortcuts { margin-top: auto; margin-bottom: 50px; width: 100%; display: flex; justify-content: space-between; padding: 0 40px; }
+        .glass-btn { width: 50px; height: 50px; border-radius: 50%; background: rgba(0,0,0,0.4); backdrop-filter: blur(20px); display: flex; justify-content: center; align-items: center; color: white; cursor: pointer; }
 
-        /* --- UI HOME SCREEN --- */
-        .home-screen {
-            position: relative;
-            z-index: 1;
-            padding: 70px 20px 20px 20px;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            transition: transform 0.5s ease;
-        }
-
-        .liquid-glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px) saturate(180%);
-            -webkit-backdrop-filter: blur(16px) saturate(180%);
-            border-radius: 28px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: var(--glass-shadow), var(--liquid-highlight);
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
+        /* HOME SCREEN */
+        .home-screen { position: relative; z-index: 1; padding: 70px 20px 20px 20px; height: 100%; display: flex; flex-direction: column; gap: 20px; }
+        .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px 10px; padding: 10px 0; overflow-y: auto; scrollbar-width: none; }
+        .app-grid::-webkit-scrollbar { display: none; }
+        .app-item { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; }
         
-        .liquid-glass::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 50%;
-            background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 100%);
-            border-radius: 28px 28px 0 0;
-            pointer-events: none;
-        }
+        .app-icon { width: 62px; height: 62px; border-radius: 14px; display: flex; justify-content: center; align-items: center; background: var(--glass-bg); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 4px 10px rgba(0,0,0,0.2); color: white; font-size: 28px; position: relative; overflow: hidden; }
+        .icon-mail { background: linear-gradient(#007aff, #00c6ff); }
+        .icon-cal { background: #fff; color: #ff3b30; flex-direction: column; font-size: 10px; font-weight: 800; gap: 2px; }
+        .icon-cal span { font-size: 28px; color: #000; }
+        .icon-maps { background: #4cd964; }
+        .icon-clock { background: #000; color: #fff; border: 1px solid #333; }
+        .icon-weather { background: #5ac8fa; }
+        .icon-phone { background: #34c759; }
+        .icon-messages { background: #34c759; }
+        .icon-wallet { background: #000; border: 1px solid #333; }
+        .icon-settings { background: #8e8e93; }
+        .app-name { font-size: 11px; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
 
-        .liquid-glass:active { transform: scale(0.96); }
+        .dock-bar { margin-top: auto; width: 100%; height: 95px; border-radius: 35px; background: rgba(255,255,255,0.2); backdrop-filter: blur(30px); display: flex; justify-content: space-evenly; align-items: center; border: 1px solid rgba(255,255,255,0.2); }
 
-        /* Widget */
-        .widget-large {
-            width: 100%;
-            height: 160px;
-            padding: 20px;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .weather-info h2 { margin: 0; font-size: 42px; font-weight: 300; }
-        .city-name { font-size: 14px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; }
-
-        /* Grid Apps */
-        .app-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px 15px;
-            padding: 10px 0;
-        }
-        .app-item {
-            display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer;
-        }
-        .app-icon {
-            width: 62px; height: 62px;
-            border-radius: 16px;
-            display: flex; justify-content: center; align-items: center;
-            font-size: 24px; color: white;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px) saturate(150%);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2), inset 0 0 10px rgba(255,255,255,0.2), inset 1px 1px 2px rgba(255,255,255,0.5);
-            position: relative;
-        }
-        
-        /* Icon Colors */
-        .app-icon.mail { background: rgba(59, 130, 246, 0.25); }
-        .app-icon.photos { background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(236, 72, 153, 0.2)); }
-        .app-icon.camera { background: rgba(107, 114, 128, 0.3); }
-        .app-icon.maps { background: rgba(34, 197, 94, 0.25); }
-        .app-icon.music { background: rgba(239, 68, 68, 0.25); }
-        .app-icon.health { background: rgba(255, 255, 255, 0.2); }
-        .app-icon.notes { background: rgba(252, 211, 77, 0.3); }
-        .app-icon.safari { background: rgba(56, 189, 248, 0.3); }
-        .app-icon.settings { background: rgba(100, 100, 100, 0.4); }
-        .app-icon.siri-icon { background: linear-gradient(135deg, #444 0%, #000 100%); border: 1px solid rgba(255,255,255,0.1); }
-
-        .app-name { color: white; font-size: 11px; font-weight: 500; text-shadow: 0 1px 3px rgba(0,0,0,0.6); }
-
-        /* Dock */
-        .dock-container {
-            margin-top: auto; width: 100%; height: 95px;
-            display: flex; justify-content: center; align-items: center;
-        }
-        .dock {
-            width: 100%; height: 85px; border-radius: 35px;
-            display: flex; justify-content: space-evenly; align-items: center;
-            background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(25px) saturate(200%);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2); padding-bottom: 5px;
-        }
-
-        /* --- APPS / VENTANAS --- */
-        .app-window {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 100;
-            display: flex; flex-direction: column;
-            transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
-            border-radius: 55px; overflow: hidden;
-        }
+        /* WINDOWS */
+        .app-window { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--app-bg); color: var(--app-text); z-index: 1100; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1); border-radius: 55px; overflow: hidden; }
         .app-window.open { transform: translateY(0); }
+        .nav-bar { height: 90px; padding: 45px 20px 10px 20px; display: flex; align-items: center; justify-content: space-between; background: rgba(245,245,245,0.9); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0,0,0,0.1); font-weight: 600; z-index: 20; }
+        .iphone-frame.dark-mode .nav-bar { background: #1c1c1e; border-bottom: 1px solid #333; color: white; }
+        .app-body { flex: 1; overflow-y: auto; }
 
-        .app-header {
-            height: 90px; padding-top: 40px; padding-left: 20px; padding-right: 20px;
-            display: flex; align-items: center; justify-content: space-between;
-            color: white; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); z-index: 101;
-        }
-        .app-content { flex: 1; background: white; position: relative; overflow-y: auto; }
+        /* CAMERA UI ENHANCED */
+        .camera-app { background: black !important; color: white; display: flex; flex-direction: column; }
+        .cam-controls { padding: 20px; background: black; display: flex; justify-content: space-around; align-items: center; height: 150px; }
+        .cam-modes { display: flex; justify-content: center; gap: 20px; padding: 10px; font-size: 13px; font-weight: 600; color: #888; text-transform: uppercase; background: black; }
+        .cam-modes .active { color: #f0c330; }
+        .shutter { width: 70px; height: 70px; border-radius: 50%; border: 4px solid white; position: relative; }
+        .shutter::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 56px; height: 56px; background: white; border-radius: 50%; transition: 0.1s; }
+        .shutter:active::after { transform: translate(-50%,-50%) scale(0.9); }
+        .cam-filter-btn { width: 40px; height: 40px; border-radius: 50%; background: #333; display: flex; justify-content: center; align-items: center; }
 
-        /* CÁMARA & GALERÍA */
-        .camera-app { background: black; display: flex; flex-direction: column; height: 100%; }
-        #cameraFeed { flex: 1; object-fit: cover; width: 100%; }
-        .camera-ui {
-            height: 150px; display: flex; justify-content: space-around; align-items: center; background: black; padding-bottom: 30px;
-        }
-        .shutter-btn {
-            width: 70px; height: 70px; border-radius: 50%; border: 4px solid white;
-            background: transparent; position: relative;
-        }
-        .shutter-btn::after {
-            content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 56px; height: 56px; background: white; border-radius: 50%; transition: 0.1s;
-        }
-        .shutter-btn:active::after { transform: translate(-50%, -50%) scale(0.9); background: #ddd; }
+        /* Estilos Listas */
+        .list-group { background: var(--list-bg); margin: 20px; border-radius: 12px; overflow: hidden; }
+        .list-item { padding: 15px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .list-item:last-child { border-bottom: none; }
         
-        .gallery-preview-btn {
-            width: 50px; height: 50px; background: #333; border-radius: 8px; overflow: hidden; border: 1px solid #555;
-            background-size: cover; background-position: center;
-        }
+        .toggle { width: 50px; height: 30px; background: #e9e9ea; border-radius: 15px; position: relative; transition: 0.3s; }
+        .toggle.active { background: #34c759; }
+        .toggle-handle { width: 26px; height: 26px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .toggle.active .toggle-handle { transform: translateX(20px); }
 
-        /* PHOTOS APP */
-        .photos-app { background: black; color: white; padding: 10px; }
-        .photos-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
-        }
-        .photo-thumb {
-            width: 100%; aspect-ratio: 1; background: #222; object-fit: cover;
-        }
+        /* Wallet Styles */
+        .card-container { perspective: 1000px; padding: 20px; }
+        .credit-card { background: linear-gradient(135deg, #1a1a1a, #444); border-radius: 15px; height: 200px; color: white; padding: 25px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .card-chip { width: 40px; height: 30px; background: #ffd700; border-radius: 5px; margin-bottom: 20px; }
+        .card-number { font-size: 22px; letter-spacing: 2px; font-family: monospace; margin-bottom: 20px; }
+        .cvc-bar { width: 40px; height: 4px; background: #555; border-radius: 2px; margin-top: 5px; overflow: hidden; }
+        .cvc-progress { width: 100%; height: 100%; background: #34c759; transition: width 1s linear; }
 
-        /* SETTINGS (Estilo Original) */
-        .settings-app { background: #f2f2f7; color: black; }
-        .settings-header-lg {
-            font-size: 30px; font-weight: 700; padding: 0 20px 10px 20px;
+        /* Home Indicator & Status Bar Transition */
+        .home-indicator { 
+            position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); 
+            width: 130px; height: 5px; background: white; border-radius: 10px; z-index: 2000; cursor: pointer; 
+            transition: background-color 0.6s cubic-bezier(0.25, 1, 0.5, 1); /* Animación hermosa */
         }
-        .settings-group {
-            background: white; border-radius: 10px; margin: 0 16px 20px 16px; overflow: hidden;
-        }
-        .settings-row {
-            padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;
-            border-bottom: 1px solid #e5e5ea; cursor: pointer;
-        }
-        .settings-row:last-child { border-bottom: none; }
-        .settings-icon {
-            width: 28px; height: 28px; border-radius: 6px; display: flex; justify-content: center; align-items: center; margin-right: 12px; color: white;
-        }
-        .row-label { flex: 1; font-size: 16px; }
-        .row-value { color: #8e8e93; font-size: 16px; display: flex; align-items: center; gap: 5px; }
-
-        /* SIRI UI */
-        .siri-overlay {
-            position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.2); backdrop-filter: blur(5px);
-            z-index: 500; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
-            opacity: 0; pointer-events: none; transition: opacity 0.3s;
-        }
-        .siri-overlay.active { opacity: 1; pointer-events: auto; }
         
-        /* Efecto borde brillante de "Apple Intelligence" */
-        .siri-edge-glow {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            border-radius: 55px;
-            box-shadow: inset 0 0 40px 10px rgba(255, 50, 150, 0.6), inset 0 0 80px 20px rgba(50, 100, 255, 0.4);
-            animation: siriPulse 2s infinite alternate;
-            pointer-events: none;
-        }
-        @keyframes siriPulse {
-            0% { box-shadow: inset 0 0 30px 5px rgba(255, 50, 150, 0.5), inset 0 0 60px 10px rgba(50, 100, 255, 0.3); }
-            100% { box-shadow: inset 0 0 50px 15px rgba(255, 50, 150, 0.8), inset 0 0 90px 30px rgba(50, 100, 255, 0.6); }
+        .home-indicator.dark {
+            background-color: #000; /* Color oscuro para apps claras */
         }
 
-        .siri-orb {
-            width: 80px; height: 80px; border-radius: 50%;
-            background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(100,200,255,0.5) 50%, rgba(200,50,150,0.5) 100%);
-            box-shadow: 0 0 30px rgba(255,255,255,0.5);
-            margin-bottom: 50px;
-            animation: orbFloat 3s infinite ease-in-out;
+        .status-bar { 
+            position: absolute; top: 15px; width: 100%; padding: 0 25px; 
+            display: flex; justify-content: space-between; color: white; 
+            font-size: 14px; font-weight: 600; z-index: 2000;
+            transition: color 0.6s cubic-bezier(0.25, 1, 0.5, 1); /* Animación hermosa */
         }
-        @keyframes orbFloat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
         
-        .siri-text { color: white; font-size: 24px; margin-bottom: 20px; font-weight: 500; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
-
-        /* SAFARI */
-        .browser-app { display: flex; flex-direction: column; height: 100%; background: #fff; }
-        .browser-toolbar-top { height: 50px; background: #f9f9f9; display: flex; align-items: center; padding: 0 10px; border-bottom: 1px solid #ddd; gap: 10px; }
-        .url-bar {
-            flex: 1; background: #e5e5ea; border-radius: 10px; padding: 8px 30px; text-align: center;
-            font-size: 14px; position: relative; border: none; outline: none;
-        }
-        .browser-content { flex: 1; overflow: auto; padding: 20px; }
-        .favorites-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 20px; }
-        .fav-icon { width: 50px; height: 50px; background: #eee; border-radius: 10px; display: flex; justify-content: center; align-items: center; margin: 0 auto 5px auto; }
-
-        /* Indicador de inicio */
-        .home-indicator {
-            position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
-            width: 130px; height: 5px; background: white; border-radius: 10px; z-index: 300; cursor: pointer;
+        .status-bar.dark {
+            color: #000; /* Texto oscuro para apps claras */
         }
 
-        /* Toggle UI */
-        .toggle-switch {
-            width: 50px; height: 30px; background: #e9e9ea; border-radius: 15px; position: relative; transition: 0.3s;
-        }
-        .toggle-switch.active { background: #34c759; }
-        .toggle-knob {
-            width: 26px; height: 26px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px;
-            transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        .toggle-switch.active .toggle-knob { transform: translateX(20px); }
+        /* Calculator Grid */
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 20px; background: black; height: 100%; align-content: end; }
+        .calc-btn { height: 70px; border-radius: 35px; background: #333; color: white; display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; }
+        .calc-btn.orange { background: #ff9f0a; } .calc-btn.light { background: #a5a5a5; color: black; }
 
-        /* --- WARNING MODAL --- */
-        .warning-modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(10px);
-            z-index: 9999;
-            display: none; /* Oculto por defecto, se activa por JS */
-            justify-content: center;
-            align-items: center;
-        }
-        .warning-modal {
-            background: #1c1c1e;
-            color: white;
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .warning-icon {
-            font-size: 40px;
-            margin-bottom: 15px;
-            color: #ff9f0a;
-        }
-        .warning-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-        .warning-text {
-            font-size: 15px;
-            color: #aeaeb2;
-            margin-bottom: 25px;
-            line-height: 1.5;
-        }
-        .warning-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
-        .btn-modal {
-            padding: 12px 20px;
-            border-radius: 12px;
-            border: none;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            flex: 1;
-        }
-        .btn-continue {
-            background: #34c759;
-            color: white;
-        }
-        .btn-exit {
-            background: #3a3a3c;
-            color: #ff453a;
-        }
+        /* Phone Keypad */
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 40px; justify-items: center; }
+        .key-btn { width: 70px; height: 70px; background: #e5e5ea; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; }
+        .call-btn { grid-column: 2; background: #34c759; color: white; }
 
     </style>
 </head>
 <body>
 
-    <!-- ADVERTENCIA PARA PC/TABLET -->
-    <div class="warning-modal-overlay" id="deviceWarning">
-        <div class="warning-modal">
-            <div class="warning-icon">⚠️</div>
-            <div class="warning-title">Optimizado para Móviles</div>
-            <p class="warning-text">
-                Es posible que este diseño se vea más grande o chico de lo normal en tu dispositivo (Tablet/PC). 
-                La experiencia está diseñada para pantallas de teléfono.
-                <br><br>
-                ¿Deseas continuar?
-            </p>
-            <div class="warning-buttons">
-                <button class="btn-modal btn-exit" onclick="window.location.href='https://www.google.com'">No, salir</button>
-                <button class="btn-modal btn-continue" onclick="document.getElementById('deviceWarning').style.display='none'">Sí, acepto y continúo</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- WRAPPER PARA ESCALAR -->
     <div id="scaler">
-        <div class="iphone-frame">
-            <div class="side-button"></div> <!-- Botón estético -->
+        <div class="iphone-frame" id="iphoneFrame">
+            
+            <!-- BIENVENIDA / HELLO SCREEN -->
+            <div id="welcomeScreen" onclick="startSetup()">
+                <div id="welcomeText">hello</div>
+                <div class="swipe-hint-text">Desliza para empezar</div>
+            </div>
 
-            <!-- PANTALLA DE BLOQUEO -->
-            <div class="lock-screen" id="lockScreen" onclick="unlockPhone()">
-                <div class="lock-content">
-                    <div class="lock-date" id="lockDate">Martes, 1 de Abril</div>
-                    <div class="lock-time" id="lockTime">9:41</div>
-                    
-                    <div class="lock-buttons">
-                        <div class="circle-btn"> <i data-lucide="flashlight" size="24"></i> </div>
-                        <div class="circle-btn" onclick="openApp('camera', event)"> <i data-lucide="camera" size="24"></i> </div>
-                    </div>
+            <!-- TUTORIAL -->
+            <div id="tutorialOverlay">
+                <div class="tut-card active" id="tut1">
+                    <h2>Bienvenido a iOS 26</h2>
+                    <p style="margin:20px 0; opacity:0.8;">Liquid Glass UI</p>
+                    <p>Experimenta el nuevo diseño hiperrealista y fluido.</p>
+                    <button class="tut-btn" onclick="nextTut(1)">Siguiente</button>
                 </div>
-                <div class="swipe-hint"></div>
+                <div class="tut-card" id="tut2">
+                    <h2>Isla Dinámica</h2>
+                    <p style="margin:20px 0; opacity:0.8;">Interactiva y Viva</p>
+                    <p>La isla reacciona a la carga y notificaciones. Pruébalo en Ajustes.</p>
+                    <button class="tut-btn" onclick="nextTut(2)">Siguiente</button>
+                </div>
+                <div class="tut-card" id="tut3">
+                    <h2>Gestos</h2>
+                    <p style="margin:20px 0; opacity:0.8;">Navegación Fluida</p>
+                    <p>Usa la barra inferior para ir al inicio desde cualquier app.</p>
+                    <button class="tut-btn" onclick="closeTutorial()">Empezar</button>
+                </div>
             </div>
 
-            <!-- SIRI OVERLAY -->
-            <div class="siri-overlay" id="siriOverlay" onclick="toggleSiri()">
-                <div class="siri-edge-glow"></div>
-                <div class="siri-text">¿En qué puedo ayudarte?</div>
-                <div class="siri-orb"></div>
+            <!-- PANTALLA BLOQUEO -->
+            <div class="lock-screen" id="lockScreen">
+                <div class="clock-container">
+                    <div style="font-size:16px; margin-bottom:5px;"><i data-lucide="lock" size="14"></i></div>
+                    <div class="lock-time" id="lockTime">--:--</div>
+                    <div class="lock-date" id="lockDate">...</div>
+                </div>
+                <div class="lock-shortcuts">
+                    <div class="glass-btn"><i data-lucide="flashlight"></i></div>
+                    <div class="glass-btn" onclick="openApp('camera')"><i data-lucide="camera"></i></div>
+                </div>
+                <div style="position:absolute; top:0; width:100%; height:100%;" onclick="unlockPhone()"></div>
             </div>
 
-            <!-- PANTALLA DE INICIO -->
+            <div class="wallpaper-layer" id="wallpaper"></div>
+
+            <!-- HOME SCREEN -->
             <div class="home-screen">
-                <div class="wallpaper"></div>
-
-                <div class="liquid-glass widget-large">
-                    <div class="city-name"><i data-lucide="map-pin" size="12"></i> &nbsp;Ciudad de México</div>
-                    <div class="weather-info">
-                        <h2>22°</h2>
-                        <p>Soleado · H:24° L:12°</p>
-                    </div>
-                    <div style="position: absolute; right: 20px; top: 20px;">
-                        <i data-lucide="sun" size="40" color="yellow"></i>
-                    </div>
-                </div>
-
                 <div class="app-grid">
-                    <!-- Fila 1 -->
-                    <div class="app-item" onclick="openApp('mail')">
-                        <div class="app-icon mail"><i data-lucide="mail"></i></div>
-                        <span class="app-name">Correo</span>
-                    </div>
-                    <div class="app-item">
-                        <div class="app-icon"><i data-lucide="calendar"></i></div>
-                        <span class="app-name">Calendario</span>
-                    </div>
-                    <!-- APP FOTOS -->
-                    <div class="app-item" onclick="openApp('photos')">
-                        <div class="app-icon photos"><i data-lucide="image"></i></div>
-                        <span class="app-name">Fotos</span>
-                    </div>
-                    <!-- APP CÁMARA -->
-                    <div class="app-item" onclick="openApp('camera')">
-                        <div class="app-icon camera"><i data-lucide="camera"></i></div>
-                        <span class="app-name">Cámara</span>
-                    </div>
-
-                    <!-- Fila 2 -->
-                    <div class="app-item">
-                        <div class="app-icon maps"><i data-lucide="map"></i></div>
-                        <span class="app-name">Mapas</span>
-                    </div>
-                    <div class="app-item">
-                        <div class="app-icon"><i data-lucide="clock"></i></div>
-                        <span class="app-name">Reloj</span>
-                    </div>
-                    <div class="app-item">
-                        <div class="app-icon"><i data-lucide="cloud"></i></div>
-                        <span class="app-name">Clima</span>
-                    </div>
-                    <div class="app-item">
-                        <div class="app-icon"><i data-lucide="home"></i></div>
-                        <span class="app-name">Casa</span>
-                    </div>
-
-                    <!-- Fila 3 -->
-                    <div class="app-item" onclick="openApp('notes')">
-                        <div class="app-icon notes"><i data-lucide="file-text"></i></div>
-                        <span class="app-name">Notas</span>
-                    </div>
-                    <div class="app-item">
-                        <div class="app-icon"><i data-lucide="briefcase"></i></div>
-                        <span class="app-name">Bolsa</span>
-                    </div>
-                    <!-- SIRI APP ICON -->
-                    <div class="app-item" onclick="toggleSiri()">
-                        <div class="app-icon siri-icon"><i data-lucide="mic"></i></div>
-                        <span class="app-name">Siri</span>
-                    </div>
-                    <!-- APP AJUSTES -->
-                    <div class="app-item" onclick="openApp('settings')">
-                        <div class="app-icon settings"><i data-lucide="settings"></i></div>
-                        <span class="app-name">Ajustes</span>
-                    </div>
+                    <div class="app-item" onclick="openApp('mail')"><div class="app-icon icon-mail"><i data-lucide="mail"></i></div><span class="app-name">Mail</span></div>
+                    <div class="app-item" onclick="openApp('calendar')"><div class="app-icon icon-cal">DOM<span>28</span></div><span class="app-name">Calendario</span></div>
+                    <div class="app-item" onclick="openApp('photos')"><div class="app-icon" style="background:white;"><i data-lucide="image" color="#ff2d55"></i></div><span class="app-name">Fotos</span></div>
+                    <div class="app-item" onclick="openApp('camera')"><div class="app-icon" style="background:#ccc;"><i data-lucide="camera" color="#000"></i></div><span class="app-name">Cámara</span></div>
+                    
+                    <div class="app-item" onclick="openApp('maps')"><div class="app-icon icon-maps"><i data-lucide="map-pinned"></i></div><span class="app-name">Mapas</span></div>
+                    <div class="app-item" onclick="openApp('clock')"><div class="app-icon icon-clock"><i data-lucide="clock"></i></div><span class="app-name">Reloj</span></div>
+                    <div class="app-item" onclick="openApp('weather')"><div class="app-icon icon-weather"><i data-lucide="cloud-sun"></i></div><span class="app-name">Clima</span></div>
+                    <div class="app-item" onclick="openApp('wallet')"><div class="app-icon icon-wallet"><i data-lucide="wallet-cards"></i></div><span class="app-name">Cartera</span></div>
+                    
+                    <div class="app-item" onclick="openApp('notes')"><div class="app-icon" style="background:#ffd60a; color:white;"><i data-lucide="file-text"></i></div><span class="app-name">Notas</span></div>
+                    <div class="app-item" onclick="openApp('calculator')"><div class="app-icon" style="background:#000; color:white;"><i data-lucide="calculator"></i></div><span class="app-name">Calculadora</span></div>
+                    <div class="app-item" onclick="openApp('settings')"><div class="app-icon icon-settings"><i data-lucide="settings-2"></i></div><span class="app-name">Ajustes</span></div>
                 </div>
 
-                <div class="dock-container">
-                    <div class="dock">
-                        <div class="app-item" style="margin-top: 20px;"> 
-                            <div class="app-icon" style="background: #4cd964;"><i data-lucide="phone"></i></div>
-                        </div>
-                        <!-- SAFARI -->
-                        <div class="app-item" style="margin-top: 20px;" onclick="openApp('browser')">
-                            <div class="app-icon safari"><i data-lucide="compass"></i></div>
-                        </div>
-                        <div class="app-item" style="margin-top: 20px;">
-                            <div class="app-icon" style="background: #4cd964;"><i data-lucide="message-circle"></i></div>
-                        </div>
-                        <!-- MUSICA -->
-                        <div class="app-item" style="margin-top: 20px;" onclick="openApp('music')">
-                            <div class="app-icon music"><i data-lucide="music"></i></div>
-                        </div>
-                    </div>
+                <div class="dock-bar">
+                    <div class="app-item" onclick="openApp('phone')"><div class="app-icon icon-phone"><i data-lucide="phone"></i></div></div>
+                    <div class="app-item" onclick="openApp('safari')"><div class="app-icon" style="background:white; color:#007aff;"><i data-lucide="compass"></i></div></div>
+                    <div class="app-item" onclick="openApp('messages')"><div class="app-icon icon-messages"><i data-lucide="message-circle"></i></div></div>
+                    <div class="app-item" onclick="openApp('music')"><div class="app-icon" style="background:#ff2d55;"><i data-lucide="music"></i></div></div>
                 </div>
             </div>
 
             <!-- ISLA DINÁMICA -->
-            <div class="notch" id="dynamicIsland">
-                <div class="notch-content faceid-content">
-                    <div style="text-align:center; width:100%;">
-                        <i data-lucide="scan-face" class="faceid-icon" size="40"></i>
-                        <div style="font-size:12px;">Face ID</div>
-                    </div>
+            <div class="notch" id="notch">
+                <div class="notch-content charge-ui">
+                    <i data-lucide="zap" color="#34c759"></i> <span style="color:#34c759; font-weight:600;">Cargando 100%</span>
                 </div>
-                <div class="notch-content music-content">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <div style="width:40px; height:40px; background:#333; border-radius:5px; overflow:hidden;">
-                            <img src="https://upload.wikimedia.org/wikipedia/en/3/3b/Dark_Side_of_the_Moon.png" width="40">
+                <div class="notch-content faceid-ui">
+                    <div class="scan-line"></div>
+                </div>
+            </div>
+
+            <!-- WINDOWS -->
+
+            <!-- CAMERA (PRO) -->
+            <div id="app-camera" class="app-window" style="z-index: 1200;">
+                <div class="camera-app" style="height:100%;">
+                    <div style="flex:1; position:relative; overflow:hidden;">
+                        <video id="camFeed" autoplay playsinline style="width:100%; height:100%; object-fit:cover; transform:scaleX(-1);"></video>
+                        <div style="position:absolute; top:20px; width:100%; display:flex; justify-content:space-between; padding:0 20px;">
+                            <i data-lucide="zap-off"></i>
+                            <i data-lucide="chevron-up"></i>
+                            <i data-lucide="aperture"></i>
                         </div>
-                        <div style="font-size:12px;">
-                            <div style="font-weight:700;">Money</div>
-                            <div style="opacity:0.7;">Pink Floyd</div>
+                    </div>
+                    <div class="cam-modes">
+                        <span>Cine</span><span>Video</span><span class="active">Foto</span><span>Retrato</span><span>Pano</span>
+                    </div>
+                    <div class="cam-controls">
+                        <div style="width:50px; height:50px; background:#333; border-radius:5px; overflow:hidden;" onclick="openApp('photos')">
+                            <img id="lastPhoto" style="width:100%; height:100%; object-fit:cover; display:none;">
                         </div>
-                    </div>
-                    <div class="music-wave">
-                        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                        <div class="shutter" onclick="takePhoto()"></div>
+                        <div class="cam-filter-btn" onclick="toggleFilter()"><i data-lucide="filter" size="20"></i></div>
                     </div>
                 </div>
+                <canvas id="photoCanvas" style="display:none;"></canvas>
             </div>
 
-            <!-- APPS (WINDOWS) -->
-
-            <!-- CÁMARA -->
-            <div id="app-camera" class="app-window">
-                <div class="camera-app">
-                    <div style="height:50px; display:flex; justify-content:center; align-items:center; color:white; padding-top:20px;">
-                        <i data-lucide="chevron-down" onclick="closeApp('camera')"></i>
-                    </div>
-                    <video id="cameraFeed" autoplay playsinline></video>
-                    <canvas id="photoCanvas" style="display:none;"></canvas>
-                    <div class="camera-ui">
-                        <div class="gallery-preview-btn" id="camGalleryPreview" onclick="closeApp('camera'); openApp('photos');"></div>
-                        <button class="shutter-btn" onclick="takePhoto()"></button>
-                        <div style="width:50px;"><i data-lucide="refresh-ccw" color="white"></i></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- FOTOS (GALERÍA) -->
-            <div id="app-photos" class="app-window">
-                <div class="app-header" style="background:white; color:black;">
-                    <span onclick="closeApp('photos')" style="color:#007aff; cursor:pointer;">Álbumes</span>
-                    <span style="font-weight:600;">Recientes</span>
-                    <span style="color:#007aff;">Seleccionar</span>
-                </div>
-                <div class="app-content photos-app" style="background:white;">
-                    <div class="photos-grid" id="photosGrid">
-                        <!-- Las fotos se inyectan aquí -->
-                    </div>
-                    <div id="noPhotosMsg" style="text-align:center; padding:50px; color:#999;">
-                        No hay fotos.<br>Usa la cámara.
-                    </div>
-                </div>
-            </div>
-
-            <!-- AJUSTES -->
+            <!-- SETTINGS -->
             <div id="app-settings" class="app-window">
-                <div class="app-header" style="background:#f2f2f7; color:black; height:50px;">
-                    <div onclick="closeApp('settings')" style="display:flex; align-items:center; gap:5px; color:#007aff; cursor:pointer; font-size:14px;">
-                        <i data-lucide="chevron-left" size="20"></i> Atrás
+                <div class="nav-bar"><div onclick="closeApp('settings')" style="color:var(--accent)">Atrás</div><div>Ajustes</div><div></div></div>
+                <div class="app-body">
+                    <h1 style="padding:20px 20px 0;">Ajustes</h1>
+                    <div class="list-group">
+                        <div class="list-item"><div style="display:flex; gap:10px;"><i data-lucide="user"></i> Usuario</div><div style="color:#888">Apple ID</div></div>
                     </div>
-                    <span style="font-weight:600;">Ajustes</span>
-                    <div style="width:50px;"></div>
+                    <div class="list-group">
+                        <div class="list-item"><div style="display:flex; gap:10px;"><i data-lucide="moon" style="color:#5856d6"></i> Modo Oscuro</div><div class="toggle" id="darkToggle" onclick="toggleDark()"><div class="toggle-handle"></div></div></div>
+                        <div class="list-item" onclick="triggerChargeAnim()"><div style="display:flex; gap:10px;"><i data-lucide="zap" style="color:#34c759"></i> Simular Carga</div><div style="color:#888">Probar</div></div>
+                    </div>
                 </div>
-                <div class="app-content settings-app">
-                    <div class="settings-header-lg">Ajustes</div>
-                    
-                    <!-- Perfil -->
-                    <div class="settings-group" style="padding:15px; display:flex; align-items:center; gap:15px;">
-                        <div style="width:60px; height:60px; border-radius:50%; background:#ccc; display:flex; justify-content:center; align-items:center; font-size:24px; color:white;">JP</div>
-                        <div>
-                            <div style="font-size:18px; font-weight:500;">Juan Pérez</div>
-                            <div style="font-size:13px; color:#8e8e93;">Apple ID, iCloud+, Contenido y compras</div>
+            </div>
+
+            <!-- WALLET -->
+            <div id="app-wallet" class="app-window">
+                <div class="nav-bar" style="background:black; color:white; border:none;"><div></div><div>Cartera</div><div onclick="closeApp('wallet')">Listo</div></div>
+                <div class="app-body" style="background:black; color:white;">
+                    <div class="card-container">
+                        <div class="credit-card">
+                            <div style="display:flex; justify-content:space-between;">
+                                <div class="card-chip"></div>
+                                <div class="card-cvc-timer">
+                                    <div style="font-size:10px; color:#aaa;">CVC Dinámico</div>
+                                    <div style="font-weight:bold; color:#fff;" id="walletCVC">---</div>
+                                    <div class="cvc-bar"><div class="cvc-progress" id="cvcProgress"></div></div>
+                                </div>
+                            </div>
+                            <div class="card-number" id="walletNum">**** **** **** ****</div>
+                            <div style="display:flex; justify-content:space-between;">
+                                <div style="font-weight:600;">JUAN PEREZ</div>
+                                <div style="font-weight:600;">12/28</div>
+                            </div>
                         </div>
                     </div>
-
-                    <!-- Conexiones -->
-                    <div class="settings-group">
-                        <div class="settings-row">
-                            <div style="display:flex; align-items:center;">
-                                <div class="settings-icon" style="background:#f09a37;"><i data-lucide="plane" size="18"></i></div>
-                                <span class="row-label">Modo Avión</span>
-                            </div>
-                            <div class="toggle-switch" onclick="this.classList.toggle('active')"><div class="toggle-knob"></div></div>
-                        </div>
-                        <div class="settings-row">
-                            <div style="display:flex; align-items:center;">
-                                <div class="settings-icon" style="background:#007aff;"><i data-lucide="wifi" size="18"></i></div>
-                                <span class="row-label">Wi-Fi</span>
-                            </div>
-                            <span class="row-value">LiquidNet <i data-lucide="chevron-right" size="16"></i></span>
-                        </div>
-                        <div class="settings-row">
-                            <div style="display:flex; align-items:center;">
-                                <div class="settings-icon" style="background:#007aff;"><i data-lucide="bluetooth" size="18"></i></div>
-                                <span class="row-label">Bluetooth</span>
-                            </div>
-                            <span class="row-value">Sí <i data-lucide="chevron-right" size="16"></i></span>
-                        </div>
+                    <div class="balance-section">
+                        <div style="color:#aaa; font-size:14px;">Saldo Total</div>
+                        <div class="balance-amount">$5,000.00 <span style="font-size:20px;">USD</span></div>
                     </div>
-
-                    <!-- General -->
-                    <div class="settings-group">
-                        <div class="settings-row">
-                            <div style="display:flex; align-items:center;">
-                                <div class="settings-icon" style="background:#8e8e93;"><i data-lucide="settings-2" size="18"></i></div>
-                                <span class="row-label">General</span>
-                            </div>
-                            <i data-lucide="chevron-right" size="16" color="#c7c7cc"></i>
-                        </div>
-                        <div class="settings-row">
-                            <div style="display:flex; align-items:center;">
-                                <div class="settings-icon" style="background:#8e8e93;"><i data-lucide="sliders" size="18"></i></div>
-                                <span class="row-label">Centro de Control</span>
-                            </div>
-                            <i data-lucide="chevron-right" size="16" color="#c7c7cc"></i>
-                        </div>
-                        <div class="settings-row">
-                            <div style="display:flex; align-items:center;">
-                                <div class="settings-icon" style="background:#007aff;"><i data-lucide="monitor" size="18"></i></div>
-                                <span class="row-label">Pantalla y Brillo</span>
-                            </div>
-                            <i data-lucide="chevron-right" size="16" color="#c7c7cc"></i>
+                    <div class="trans-list">
+                        <h4 style="margin-bottom:10px; color:#888;">Hoy</h4>
+                        <div class="trans-item">
+                            <div style="display:flex; gap:10px;"><div style="background:#fff; width:40px; height:40px; border-radius:50%; display:flex; justify-content:center; align-items:center;"><i data-lucide="coffee" color="black"></i></div><div>Starbucks</div></div>
+                            <div>-$5.50</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- SAFARI -->
-            <div id="app-browser" class="app-window">
-                <div class="app-content browser-app" style="background:white; padding:0;">
-                    <div class="browser-toolbar-top">
-                        <i data-lucide="type" size="16"></i>
-                        <input type="text" class="url-bar" value="apple.com/es" id="safariUrl">
-                        <i data-lucide="rotate-cw" size="14"></i>
-                    </div>
-                    <div class="browser-content">
-                        <h1 style="text-align:center; margin-top:40px; color:#333;">Favoritos</h1>
-                        <div class="favorites-grid">
-                            <div style="text-align:center;">
-                                <div class="fav-icon" onclick="navigateBrowser('Apple')"><i data-lucide="apple"></i></div>
-                                <span style="font-size:11px; color:black;">Apple</span>
-                            </div>
-                            <div style="text-align:center;">
-                                <div class="fav-icon" onclick="navigateBrowser('Bing')"><i data-lucide="search"></i></div>
-                                <span style="font-size:11px; color:black;">Bing</span>
-                            </div>
-                            <div style="text-align:center;">
-                                <div class="fav-icon" onclick="navigateBrowser('Wiki')"><i data-lucide="book"></i></div>
-                                <span style="font-size:11px; color:black;">Wiki</span>
-                            </div>
-                            <div style="text-align:center;">
-                                <div class="fav-icon" onclick="navigateBrowser('News')"><i data-lucide="newspaper"></i></div>
-                                <span style="font-size:11px; color:black;">Noticias</span>
-                            </div>
-                        </div>
-                        <!-- Frame de navegación segura -->
-                        <iframe id="browserFrame" style="width:100%; height:400px; border:none; margin-top:20px; border-radius:10px; background:#f2f2f2;" src=""></iframe>
-                    </div>
-                    <!-- Barra inferior safari -->
-                    <div style="height:50px; border-top:1px solid #ddd; display:flex; justify-content:space-around; align-items:center; color:#007aff;">
-                        <i data-lucide="chevron-left" onclick="closeApp('browser')"></i> <!-- Usar como Atrás/Cerrar -->
-                        <i data-lucide="chevron-right" style="opacity:0.3;"></i>
-                        <i data-lucide="share"></i>
-                        <i data-lucide="book-open"></i>
-                        <i data-lucide="copy"></i>
-                    </div>
-                </div>
-            </div>
+            <!-- OTHER APPS (Mail, Phone, etc. placeholders for full functionality) -->
+            <div id="app-mail" class="app-window"><div class="nav-bar"><div>Buzones</div><div>Entrada</div><div onclick="closeApp('mail')">Listo</div></div><div class="app-body"><div class="list-item"><div><b>Apple</b><br>Recibo</div><div>Ayer</div></div></div></div>
+            <div id="app-phone" class="app-window"><div class="app-body" style="display:flex; flex-direction:column; justify-content:flex-end;"><div id="phoneDisplay" style="font-size:32px; text-align:center; padding:20px;"></div><div class="keypad"><div class="key-btn" onclick="dial('1')">1</div><div class="key-btn" onclick="dial('2')">2</div><div class="key-btn" onclick="dial('3')">3</div><div class="key-btn" onclick="dial('4')">4</div><div class="key-btn" onclick="dial('5')">5</div><div class="key-btn" onclick="dial('6')">6</div><div class="key-btn" onclick="dial('7')">7</div><div class="key-btn" onclick="dial('8')">8</div><div class="key-btn" onclick="dial('9')">9</div><div class="key-btn" onclick="dial('*')">*</div><div class="key-btn" onclick="dial('0')">0</div><div class="key-btn" onclick="dial('#')">#</div><div class="key-btn call-btn" onclick="alert('Llamando...')"><i data-lucide="phone"></i></div></div></div></div>
+            <div id="app-calculator" class="app-window"><div class="app-body" style="background:black; color:white; display:flex; flex-direction:column; justify-content:flex-end;"><div id="calcRes" style="text-align:right; font-size:80px; padding:20px;">0</div><div class="calc-grid"><div class="calc-btn light" onclick="calc('C')">AC</div><div class="calc-btn light">+/-</div><div class="calc-btn light">%</div><div class="calc-btn orange" onclick="calc('/')">÷</div><div class="calc-btn" onclick="calc(7)">7</div><div class="calc-btn" onclick="calc(8)">8</div><div class="calc-btn" onclick="calc(9)">9</div><div class="calc-btn orange" onclick="calc('*')">×</div><div class="calc-btn" onclick="calc(4)">4</div><div class="calc-btn" onclick="calc(5)">5</div><div class="calc-btn" onclick="calc(6)">6</div><div class="calc-btn orange" onclick="calc('-')">-</div><div class="calc-btn" onclick="calc(1)">1</div><div class="calc-btn" onclick="calc(2)">2</div><div class="calc-btn" onclick="calc(3)">3</div><div class="calc-btn orange" onclick="calc('+')">+</div><div class="calc-btn" style="grid-column:span 2; justify-content:flex-start; padding-left:30px;" onclick="calc(0)">0</div><div class="calc-btn">.</div><div class="calc-btn orange" onclick="calc('=')">=</div></div></div></div>
             
-            <!-- MÚSICA (Spotify) -->
-            <div id="app-music" class="app-window">
-                <div class="app-header" style="background: #121212;">
-                    <button class="close-app-btn" onclick="closeApp('music')"><i data-lucide="chevron-down"></i></button>
-                    <span style="color: white; font-weight: 600;">En reproducción</span>
-                    <i data-lucide="more-horizontal" color="white"></i>
-                </div>
-                <div class="app-content" style="background:#121212; overflow:hidden;">
-                    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator&theme=0" width="100%" height="100%" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-                </div>
-            </div>
+            <!-- EXTRAS -->
+            <div id="app-calendar" class="app-window"><div class="nav-bar"><div style="color:red">2026</div><div>Calendario</div><div onclick="closeApp('calendar')">Hoy</div></div><div class="app-body" style="padding:20px; text-align:center;"><h1 style="color:red;">ABRIL</h1></div></div>
+            <div id="app-photos" class="app-window"><div class="nav-bar"><div style="color:#007aff" onclick="closeApp('photos')">Atrás</div><div>Fotos</div><div></div></div><div class="app-body" style="background:white;"><div class="grid-3" id="photoGrid"></div></div></div>
+            <div id="app-maps" class="app-window"><div class="app-body"><iframe width="100%" height="100%" frameborder="0" src="https://www.openstreetmap.org/export/embed.html"></iframe></div></div>
+            <div id="app-clock" class="app-window"><div class="app-body" style="background:black; color:white; padding:20px; padding-top:60px;"><h1>9:41</h1>Ciudad de México</div></div>
+            <div id="app-weather" class="app-window"><div class="app-body" style="background:linear-gradient(#1e3c72, #2a5298); color:white; text-align:center; padding-top:60px;"><h1>22°</h1>Soleado</div></div>
+            <div id="app-notes" class="app-window"><div class="nav-bar"><div style="color:#ffd60a">Atrás</div><div>Notas</div><div onclick="closeApp('notes')">Listo</div></div><div class="app-body"><textarea style="width:100%; height:100%; border:none; padding:20px; font-size:18px;">Nueva nota...</textarea></div></div>
+            <div id="app-safari" class="app-window"><div class="app-body"><div style="padding:10px; background:#eee; text-align:center;">apple.com</div><iframe src="https://www.bing.com" style="width:100%; height:100%; border:none;"></iframe></div></div>
+            <div id="app-messages" class="app-window"><div class="nav-bar"><div>Editar</div><div>Mensajes</div><div></div></div><div class="app-body" style="padding:20px;">Sin mensajes</div></div>
+            <div id="app-music" class="app-window"><div class="app-body" style="background:#111;"><iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator&theme=0" width="100%" height="100%" frameBorder="0" allowfullscreen="" loading="lazy"></iframe></div></div>
 
-            <!-- Indicador de inicio (Cierra apps también) - Mantener presionado para Siri -->
-            <div class="home-indicator" id="homeIndicator"></div>
-            
-            <!-- Barra de Estado (Universal) -->
-            <div class="status-bar">
-                <span id="statusBarClock">9:41</span>
-                <div style="display: flex; gap: 5px; align-items: center;">
-                    <i data-lucide="signal" size="14"></i>
-                    <i data-lucide="wifi" size="14"></i>
-                    <i data-lucide="battery-medium" size="18"></i>
-                </div>
-            </div>
+            <div class="home-indicator" id="homeIndicator" onclick="goHome()"></div>
+            <div class="status-bar" id="statusBar"><span id="statusBarClock">9:41</span><div style="display:flex; gap:5px;"><i data-lucide="signal" size="14"></i><i data-lucide="wifi" size="14"></i><i data-lucide="battery-full" size="18"></i></div></div>
 
-        </div> <!-- Fin .iphone-frame -->
-    </div> <!-- Fin #scaler -->
+        </div>
+    </div>
 
     <script>
         lucide.createIcons();
-
-        // --- SISTEMA DE ESCALADO Y DETECCIÓN DE DISPOSITIVO ---
-        function handleResize() {
-            const frameWidth = 380;
-            const frameHeight = 800;
-            const padding = 20;
-
-            const availableWidth = window.innerWidth;
-            const availableHeight = window.innerHeight;
-
-            const scaleX = (availableWidth - padding) / frameWidth;
-            const scaleY = (availableHeight - padding) / frameHeight;
-
-            // Usar el menor de los dos para que quepa en pantalla
-            const scale = Math.min(scaleX, scaleY, 1); // Nunca escalar más grande que 1 (opcional, quitar el 1 si quieres que se agrande en monitores gigantes)
-
-            const scaler = document.getElementById('scaler');
-            scaler.style.transform = `scale(${scale})`;
-        }
-
-        // Ejecutar al cargar y al redimensionar
-        window.addEventListener('load', handleResize);
-        window.addEventListener('resize', handleResize);
-
-        // --- DETECCIÓN DE TABLET/PC PARA MODAL ---
-        window.addEventListener('load', () => {
-            // Umbral simple: Si el ancho es mayor a 768px, asumimos Tablet/PC
-            if (window.innerWidth > 768) {
-                document.getElementById('deviceWarning').style.display = 'flex';
-            }
-        });
-
-        // --- ESTADO GLOBAL ---
-        let photos = [];
-        let isLocked = true;
-        let siriActive = false;
-
-        // --- RELOJ ---
-        function updateTime() {
-            const now = new Date();
-            let h = now.getHours() % 12 || 12;
-            let m = now.getMinutes().toString().padStart(2, '0');
-            document.getElementById('statusBarClock').textContent = `${h}:${m}`;
-            document.getElementById('lockTime').textContent = `${h}:${m}`;
-        }
-        setInterval(updateTime, 1000);
-        updateTime();
-
-        // --- ISLA DINÁMICA & BLOQUEO ---
-        function unlockPhone() {
-            isLocked = false;
-            const notch = document.getElementById('dynamicIsland');
-            
-            // Animación FaceID
-            notch.classList.add('expanded-faceid');
+        
+        // HELLO SEQUENCE
+        const greetings = ["hello", "hola", "bonjour", "ciao", "hallo", "olá"];
+        let greetIdx = 0;
+        const welcomeText = document.getElementById('welcomeText');
+        
+        const greetInterval = setInterval(() => {
+            welcomeText.style.opacity = 0;
             setTimeout(() => {
-                // Desbloqueo exitoso
-                notch.classList.remove('expanded-faceid');
+                greetIdx = (greetIdx + 1) % greetings.length;
+                welcomeText.innerText = greetings[greetIdx];
+                welcomeText.style.opacity = 1;
+            }, 500);
+        }, 2000);
+
+        function startSetup() {
+            clearInterval(greetInterval);
+            document.getElementById('welcomeScreen').style.transform = "translateY(-100%)";
+            document.getElementById('tutorialOverlay').style.display = "flex";
+        }
+
+        // TUTORIAL
+        function nextTut(n) {
+            document.getElementById('tut'+n).classList.remove('active');
+            document.getElementById('tut'+(n+1)).classList.add('active');
+        }
+        function closeTutorial() {
+            document.getElementById('tutorialOverlay').style.display = "none";
+        }
+
+        // SYSTEM
+        function updateClock() {
+            const d = new Date();
+            const t = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+            document.getElementById('lockTime').innerText = t;
+            document.getElementById('statusBarClock').innerText = t;
+            const o = {weekday:'long', day:'numeric', month:'long'};
+            document.getElementById('lockDate').innerText = d.toLocaleDateString('es-ES', o);
+        }
+        setInterval(updateClock, 1000); updateClock();
+
+        function resize() {
+            const s = Math.min((window.innerWidth-20)/380, (window.innerHeight-20)/800, 1);
+            document.getElementById('scaler').style.transform = `scale(${s})`;
+        }
+        window.onresize = resize; window.onload = resize;
+
+        function unlockPhone() {
+            const n = document.getElementById('notch');
+            n.classList.add('expanded-faceid');
+            setTimeout(() => {
+                n.classList.remove('expanded-faceid');
                 document.getElementById('lockScreen').classList.add('unlocked');
             }, 1000);
         }
 
-        // --- GESTIÓN DE APPS ---
-        function openApp(id, e) {
-            if(e) e.stopPropagation();
-            document.getElementById('app-'+id).classList.add('open');
-            
-            if(id === 'camera') startCamera();
-            if(id === 'music') {
-                // Animar isla al abrir música
-                document.getElementById('dynamicIsland').classList.add('expanded-music');
-            }
-        }
-
-        function closeApp(id) {
-            document.getElementById('app-'+id).classList.remove('open');
-            if(id === 'camera') stopCamera();
-            if(id === 'music') {
-                document.getElementById('dynamicIsland').classList.remove('expanded-music');
-            }
-        }
-
-        // Home Indicator Logic (Tap to Close All, Long Press Siri)
-        const homeBtn = document.getElementById('homeIndicator');
-        let pressTimer;
-
-        homeBtn.addEventListener('mousedown', () => {
-            pressTimer = setTimeout(toggleSiri, 600); // 600ms long press = Siri
-        });
-        homeBtn.addEventListener('mouseup', () => {
-            clearTimeout(pressTimer);
-        });
-        homeBtn.addEventListener('click', () => {
-            // Cerrar todas las apps
+        function goHome() {
             document.querySelectorAll('.app-window').forEach(w => w.classList.remove('open'));
-            document.getElementById('dynamicIsland').className = 'notch'; // Reset notch
-        });
+            clearInterval(cvcInterval);
+            // RESET INDICATOR COLORS ON EXIT
+            document.getElementById('homeIndicator').classList.remove('dark');
+            document.getElementById('statusBar').classList.remove('dark');
+        }
 
+        const lightApps = ['mail', 'calendar', 'photos', 'maps', 'notes', 'settings', 'phone', 'safari', 'messages'];
 
-        // --- CÁMARA & FOTOS ---
+        function openApp(id) {
+            if(id === 'wallet') startWallet();
+            if(id === 'camera') startCamera();
+            const app = document.getElementById('app-' + id);
+            if(app) {
+                app.classList.add('open');
+                // CHECK IF LIGHT APP AND APPLY DARK UI
+                if(lightApps.includes(id)) {
+                    document.getElementById('homeIndicator').classList.add('dark');
+                    document.getElementById('statusBar').classList.add('dark');
+                }
+            }
+        }
+        function closeApp(id) {
+            document.getElementById('app-' + id).classList.remove('open');
+            if(id === 'wallet') clearInterval(cvcInterval);
+            if(id === 'camera') stopCamera();
+            goHome(); // Ensure colors reset
+        }
+
+        // SETTINGS & DARK MODE
+        function toggleDark() {
+            document.getElementById('iphoneFrame').classList.toggle('dark-mode');
+            document.getElementById('darkToggle').classList.toggle('active');
+        }
+        function triggerChargeAnim() {
+            const n = document.getElementById('notch');
+            n.classList.add('expanded-charge');
+            setTimeout(() => n.classList.remove('expanded-charge'), 3000);
+        }
+
+        // CAMERA
+        let videoStream;
+        let filterIdx = 0;
+        const filters = ['none', 'grayscale(1)', 'sepia(1)', 'saturate(2)'];
         async function startCamera() {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                document.getElementById('cameraFeed').srcObject = stream;
-            } catch(e) { console.log("Cam error/denied"); }
+                videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                document.getElementById('camFeed').srcObject = videoStream;
+            } catch(e) {}
         }
         function stopCamera() {
-            const v = document.getElementById('cameraFeed');
-            if(v.srcObject) v.srcObject.getTracks().forEach(t => t.stop());
+            if(videoStream) videoStream.getTracks().forEach(t => t.stop());
         }
-
-        // Sonido de obturador generado por código (beep corto)
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playShutterSound() {
-            if(audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.frequency.value = 800;
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.1);
+        function toggleFilter() {
+            filterIdx = (filterIdx + 1) % filters.length;
+            document.getElementById('camFeed').style.filter = filters[filterIdx];
         }
-
         function takePhoto() {
-            playShutterSound();
-            
-            // Efecto visual flash
-            const camApp = document.querySelector('.camera-app');
-            camApp.style.opacity = '0.5';
-            setTimeout(() => camApp.style.opacity = '1', 100);
-
-            // Capturar
-            const video = document.getElementById('cameraFeed');
-            const canvas = document.getElementById('photoCanvas');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            canvas.getContext('2d').drawImage(video, 0, 0);
-            
-            // Guardar
-            const dataUrl = canvas.toDataURL('image/jpeg');
-            photos.unshift(dataUrl); // Agregar al inicio
-            
-            // Actualizar miniatura
-            document.getElementById('camGalleryPreview').style.backgroundImage = `url(${dataUrl})`;
-            
-            updateGallery();
+            const c = document.getElementById('photoCanvas');
+            const v = document.getElementById('camFeed');
+            c.width = v.videoWidth; c.height = v.videoHeight;
+            const ctx = c.getContext('2d');
+            ctx.filter = filters[filterIdx];
+            ctx.drawImage(v,0,0);
+            document.getElementById('lastPhoto').src = c.toDataURL('image/jpeg');
+            document.getElementById('lastPhoto').style.display = 'block';
         }
 
-        function updateGallery() {
-            const grid = document.getElementById('photosGrid');
-            const msg = document.getElementById('noPhotosMsg');
-            
-            if(photos.length > 0) {
-                msg.style.display = 'none';
-                grid.innerHTML = photos.map(src => `<img src="${src}" class="photo-thumb">`).join('');
+        // WALLET
+        let cvcInterval;
+        function startWallet() {
+            let num = "";
+            for(let i=0; i<4; i++) num += Math.floor(1000 + Math.random() * 9000) + " ";
+            document.getElementById('walletNum').innerText = num.trim();
+
+            function updateCVC() {
+                document.getElementById('walletCVC').innerText = Math.floor(100 + Math.random() * 900);
+                const bar = document.getElementById('cvcProgress');
+                bar.style.transition = 'none'; bar.style.width = '100%';
+                setTimeout(() => { bar.style.transition = 'width 30s linear'; bar.style.width = '0%'; }, 10);
             }
+            updateCVC();
+            clearInterval(cvcInterval);
+            cvcInterval = setInterval(updateCVC, 30000);
         }
 
-        // --- SIRI ---
-        function toggleSiri() {
-            siriActive = !siriActive;
-            const overlay = document.getElementById('siriOverlay');
-            if(siriActive) overlay.classList.add('active');
-            else overlay.classList.remove('active');
+        // PHONE & CALC
+        function dial(n) { document.getElementById('phoneDisplay').innerText += n; }
+        let cVal = "0";
+        function calc(v) {
+            const d = document.getElementById('calcRes');
+            if(v==='C') cVal="0";
+            else if(v==='=') { try{cVal=eval(cVal)}catch{cVal="Error"} }
+            else { if(cVal==="0") cVal=""; cVal+=v; }
+            d.innerText = cVal;
         }
-
-        // --- SAFARI SIMULATION ---
-        function navigateBrowser(dest) {
-            const frame = document.getElementById('browserFrame');
-            const urlBar = document.getElementById('safariUrl');
-            
-            if(dest === 'Wiki') {
-                frame.src = 'https://es.m.wikipedia.org/wiki/Apple';
-                urlBar.value = 'es.wikipedia.org/Apple';
-            } else if (dest === 'Bing') {
-                frame.src = 'https://www.bing.com/search?q=iOS+Concepts';
-                urlBar.value = 'bing.com';
-            } else if (dest === 'Apple') {
-                frame.src = 'https://www.apple.com/mx/'; // Algunos sitios bloquean iframes, si falla es normal
-                urlBar.value = 'apple.com';
-            } else {
-                 // Fallback
-                 frame.src = ''; 
-            }
-        }
-        
-        // Listener básico para la barra URL
-        document.getElementById('safariUrl').addEventListener('change', (e) => {
-             // Simulación básica
-             navigateBrowser('Bing'); 
-        });
 
     </script>
 </body>
