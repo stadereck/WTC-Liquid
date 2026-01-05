@@ -2,205 +2,173 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Login Form Neon</title>
+<title>Neon Login</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* RESET */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Segoe UI", Arial, sans-serif;
+    font-family: Segoe UI, Arial, sans-serif;
 }
 
-/* BACKGROUND */
 body {
-    min-height: 100vh;
-    background: radial-gradient(circle at top, #0f0f0f, #000);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    height: 100vh;
+    background: #050505;
     overflow: hidden;
 }
 
-/* GRID BACKGROUND */
-body::before {
-    content: "";
-    position: absolute;
+/* === FONDO DE CUADROS === */
+#background {
+    position: fixed;
     inset: 0;
-    background:
-        linear-gradient(#0f0 1px, transparent 1px),
-        linear-gradient(90deg, #0f0 1px, transparent 1px);
-    background-size: 60px 60px;
-    opacity: 0.05;
+    overflow: hidden;
+    z-index: 0;
 }
 
-/* LOGIN CARD */
-.login-card {
+.square {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: radial-gradient(circle, #7cff00, #3b7a00);
+    filter: blur(1.5px);
+    opacity: 0.85;
+    box-shadow: 0 0 25px rgba(124,255,0,.7);
+    transition: transform 0.1s linear;
+}
+
+/* === LOGIN === */
+.login {
     position: relative;
+    z-index: 2;
     width: 340px;
     padding: 30px;
     background: #111;
     border-radius: 10px;
-    box-shadow:
-        0 0 20px rgba(0,255,0,0.25),
-        inset 0 0 10px rgba(0,255,0,0.1);
-    z-index: 1;
+    box-shadow: 0 0 25px rgba(124,255,0,.35);
+    margin: auto;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
-/* TITLE */
-.login-card h2 {
+.login h2 {
+    color: #7cff00;
     text-align: center;
-    color: #7CFF00;
     margin-bottom: 25px;
     letter-spacing: 1px;
 }
 
-/* INPUTS */
-.login-card input {
+.login input {
     width: 100%;
     padding: 12px;
-    margin-bottom: 15px;
-    background: #2a2a2a;
+    background: #222;
     border: none;
     border-radius: 4px;
     color: #fff;
+    margin-bottom: 15px;
+}
+
+.login input:focus {
     outline: none;
+    box-shadow: 0 0 10px rgba(124,255,0,.6);
 }
 
-.login-card input::placeholder {
-    color: #aaa;
-}
-
-.login-card input:focus {
-    box-shadow: 0 0 8px rgba(124,255,0,0.6);
-}
-
-/* LINKS */
-.options {
+.links {
     display: flex;
     justify-content: space-between;
     font-size: 12px;
+    color: #aaa;
     margin-bottom: 20px;
 }
 
-.options a {
-    color: #7CFF00;
+.links a {
+    color: #7cff00;
     text-decoration: none;
 }
 
-.options a:hover {
-    text-decoration: underline;
-}
-
-/* BUTTON */
-.login-card button {
+button {
     width: 100%;
     padding: 12px;
-    background: linear-gradient(90deg, #7CFF00, #4CAF00);
+    background: linear-gradient(90deg,#7cff00,#4caf00);
     border: none;
     border-radius: 4px;
-    color: #000;
     font-weight: bold;
     cursor: pointer;
-    transition: transform 0.1s, box-shadow 0.1s;
 }
 
-.login-card button:hover {
-    box-shadow: 0 0 15px rgba(124,255,0,0.8);
+button:hover {
+    box-shadow: 0 0 15px rgba(124,255,0,.8);
 }
 
-.login-card button:active {
-    transform: scale(0.97);
-}
-
-/* STATUS MESSAGE */
 #status {
-    margin-top: 15px;
-    font-size: 13px;
+    margin-top: 12px;
     text-align: center;
-}
-
-/* DECORATIVE BARS (RIGHT SIDE) */
-.bars {
-    position: absolute;
-    right: -70px;
-    bottom: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.bar {
-    width: 50px;
-    height: 30px;
-    background: linear-gradient(180deg, #7CFF00, #3a7a00);
-    box-shadow: 0 0 10px rgba(124,255,0,0.6);
-    animation: pulse 2s infinite ease-in-out;
-}
-
-.bar:nth-child(2) { animation-delay: .2s; }
-.bar:nth-child(3) { animation-delay: .4s; }
-.bar:nth-child(4) { animation-delay: .6s; }
-.bar:nth-child(5) { animation-delay: .8s; }
-
-@keyframes pulse {
-    0%,100% { opacity: 0.6; }
-    50% { opacity: 1; }
+    font-size: 13px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="login-card">
+<div id="background"></div>
+
+<div class="login">
     <h2>LOGIN FORM</h2>
+    <input id="user" placeholder="Username">
+    <input id="pass" type="password" placeholder="Password">
 
-    <input type="text" id="username" placeholder="Username">
-    <input type="password" id="password" placeholder="Password">
-
-    <div class="options">
+    <div class="links">
         <span>I forgot my password.</span>
         <a href="#">Register</a>
     </div>
 
     <button onclick="login()">Start</button>
-
     <div id="status"></div>
-
-    <div class="bars">
-        <div class="bar"></div>
-        <div class="bar"></div>
-        <div class="bar"></div>
-        <div class="bar"></div>
-        <div class="bar"></div>
-    </div>
 </div>
 
 <script>
+/* === CUADROS DINÁMICOS === */
+const bg = document.getElementById("background");
+const squares = [];
+const COUNT = 25;
+
+for (let i = 0; i < COUNT; i++) {
+    const s = document.createElement("div");
+    s.className = "square";
+    s.x = Math.random() * window.innerWidth;
+    s.y = Math.random() * window.innerHeight;
+    s.speed = Math.random() * 0.4 + 0.2;
+    bg.appendChild(s);
+    squares.push(s);
+}
+
+document.addEventListener("mousemove", e => {
+    squares.forEach(s => {
+        const dx = (e.clientX - s.x) * 0.02 * s.speed;
+        const dy = (e.clientY - s.y) * 0.02 * s.speed;
+        s.style.transform = `translate(${s.x + dx}px, ${s.y + dy}px)`;
+    });
+});
+
+/* Movimiento lento automático */
+function animate() {
+    squares.forEach(s => {
+        s.x += Math.sin(Date.now() * 0.0005 + s.y) * 0.3;
+        s.y += Math.cos(Date.now() * 0.0005 + s.x) * 0.3;
+        s.style.left = s.x + "px";
+        s.style.top = s.y + "px";
+    });
+    requestAnimationFrame(animate);
+}
+animate();
+
+/* === LOGIN === */
 function login() {
-    const user = document.getElementById("username").value.trim();
-    const pass = document.getElementById("password").value.trim();
-    const status = document.getElementById("status");
-
-    if (!user || !pass) {
-        status.style.color = "#ff4d4d";
-        status.textContent = "Please fill in all fields.";
-        return;
-    }
-
-    status.style.color = "#7CFF00";
-    status.textContent = "Logging in...";
-
-    setTimeout(() => {
-        if (user === "admin" && pass === "1234") {
-            status.textContent = "Access granted.";
-        } else {
-            status.style.color = "#ff4d4d";
-            status.textContent = "Invalid credentials.";
-        }
-    }, 1000);
+    const u = user.value.trim();
+    const p = pass.value.trim();
+    status.style.color = u && p ? "#7cff00" : "#ff4444";
+    status.textContent = u && p ? "Authenticating..." : "Fill all fields";
 }
 </script>
 
