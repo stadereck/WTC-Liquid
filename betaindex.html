@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Login Form Neon</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* BACKGROUND */
+body {
+    min-height: 100vh;
+    background: radial-gradient(circle at top, #0f0f0f, #000);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* GRID BACKGROUND */
+body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(#0f0 1px, transparent 1px),
+        linear-gradient(90deg, #0f0 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.05;
+}
+
+/* LOGIN CARD */
+.login-card {
+    position: relative;
+    width: 340px;
+    padding: 30px;
+    background: #111;
+    border-radius: 10px;
+    box-shadow:
+        0 0 20px rgba(0,255,0,0.25),
+        inset 0 0 10px rgba(0,255,0,0.1);
+    z-index: 1;
+}
+
+/* TITLE */
+.login-card h2 {
+    text-align: center;
+    color: #7CFF00;
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+}
+
+/* INPUTS */
+.login-card input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    background: #2a2a2a;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    outline: none;
+}
+
+.login-card input::placeholder {
+    color: #aaa;
+}
+
+.login-card input:focus {
+    box-shadow: 0 0 8px rgba(124,255,0,0.6);
+}
+
+/* LINKS */
+.options {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-bottom: 20px;
+}
+
+.options a {
+    color: #7CFF00;
+    text-decoration: none;
+}
+
+.options a:hover {
+    text-decoration: underline;
+}
+
+/* BUTTON */
+.login-card button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(90deg, #7CFF00, #4CAF00);
+    border: none;
+    border-radius: 4px;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.login-card button:hover {
+    box-shadow: 0 0 15px rgba(124,255,0,0.8);
+}
+
+.login-card button:active {
+    transform: scale(0.97);
+}
+
+/* STATUS MESSAGE */
+#status {
+    margin-top: 15px;
+    font-size: 13px;
+    text-align: center;
+}
+
+/* DECORATIVE BARS (RIGHT SIDE) */
+.bars {
+    position: absolute;
+    right: -70px;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.bar {
+    width: 50px;
+    height: 30px;
+    background: linear-gradient(180deg, #7CFF00, #3a7a00);
+    box-shadow: 0 0 10px rgba(124,255,0,0.6);
+    animation: pulse 2s infinite ease-in-out;
+}
+
+.bar:nth-child(2) { animation-delay: .2s; }
+.bar:nth-child(3) { animation-delay: .4s; }
+.bar:nth-child(4) { animation-delay: .6s; }
+.bar:nth-child(5) { animation-delay: .8s; }
+
+@keyframes pulse {
+    0%,100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-card">
+    <h2>LOGIN FORM</h2>
+
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+
+    <div class="options">
+        <span>I forgot my password.</span>
+        <a href="#">Register</a>
+    </div>
+
+    <button onclick="login()">Start</button>
+
+    <div id="status"></div>
+
+    <div class="bars">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+    </div>
+</div>
+
+<script>
+function login() {
+    const user = document.getElementById("username").value.trim();
+    const pass = document.getElementById("password").value.trim();
+    const status = document.getElementById("status");
+
+    if (!user || !pass) {
+        status.style.color = "#ff4d4d";
+        status.textContent = "Please fill in all fields.";
+        return;
+    }
+
+    status.style.color = "#7CFF00";
+    status.textContent = "Logging in...";
+
+    setTimeout(() => {
+        if (user === "admin" && pass === "1234") {
+            status.textContent = "Access granted.";
+        } else {
+            status.style.color = "#ff4d4d";
+            status.textContent = "Invalid credentials.";
+        }
+    }, 1000);
+}
+</script>
+
+</body>
+</html>
