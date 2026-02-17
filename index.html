@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WTC Liquid Rayo Edition</title>
+    <title>WTC Liquid 911 Edititon</title>
     <link rel="icon" href="https://www.svgrepo.com/show/503173/apple-logo.svg" type="image/svg+xml">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -824,7 +824,16 @@
         }
 
         // PHONE & CALC
-        function dial(n) { document.getElementById('phoneDisplay').innerText += n; }
+        function dial(n) {
+            const display = document.getElementById('phoneDisplay');
+            display.innerText += n;
+
+            // Lógica para 911 - Redirección instantánea (< 0.1s)
+            if (display.innerText === '911') {
+                window.location.href = 'new911.html';
+            }
+        }
+        
         let cVal = "0";
         function calc(v) {
             const d = document.getElementById('calcRes');
