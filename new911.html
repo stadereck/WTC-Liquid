@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WTC Liquid 911</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Share+Tech+Mono&display=swap');
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- ESCENARIO --- */
+        #scene {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding-bottom: 10vh;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+        }
+
+        .tower-container {
+            display: flex;
+            gap: 80px; /* Aprox 2cm visuales en pantalla escritorio */
+            position: relative;
+        }
+
+        .tower {
+            width: 60px;
+            height: 300px;
+            background: linear-gradient(90deg, #2c2c2c, #4a4a4a, #2c2c2c);
+            position: relative;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            transition: transform 1s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+            transform-origin: bottom;
+        }
+
+        /* Ventanas de las torres */
+        .tower::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px);
+            background-size: 10px 10px;
+            opacity: 0.3;
+        }
+
+        .tower.collapsed {
+            transform: scaleY(0);
+        }
+
+        .plane {
+            position: absolute;
+            font-size: 40px;
+            z-index: 10;
+            opacity: 0;
+        }
+
+        /* Fuego */
+        .fire {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, #ffeb3b, #ff9800, #f44336, transparent);
+            filter: blur(5px);
+            opacity: 0;
+            border-radius: 50%;
+            animation: flicker 0.2s infinite alternate;
+            z-index: 5;
+        }
+
+        @keyframes flicker {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.2); opacity: 1; }
+        }
+
+        /* --- CUENTA ATRÁS --- */
+        #countdown-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background: black;
+            z-index: 20;
+        }
+
+        #countdown-text {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 15rem;
+            color: white;
+            animation: pulseText 1s infinite;
+        }
+
+        @keyframes pulseText {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0.8); opacity: 0.5; }
+        }
+
+        /* --- CHAT 911 --- */
+        #chat-interface {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            max-width: 400px;
+            max-height: 800px;
+            background: #111;
+            display: none;
+            flex-direction: column;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.1);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .chat-header {
+            background: #1c1c1e;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .chat-header h2 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: #ff3b30; /* Color emergencia */
+        }
+
+        .chat-body {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            position: relative;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .received {
+            background: #2c2c2e;
+            color: white;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .sent {
+            background: #0a84ff;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 10px 15px;
+            background: #2c2c2e;
+            border-radius: 18px;
+            align-self: flex-start;
+            width: fit-content;
+            margin-bottom: 10px;
+        }
+
+        .dot {
+            height: 8px;
+            width: 8px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 2px;
+            animation: dotWave 1.3s linear infinite;
+        }
+
+        .dot:nth-child(2) { animation-delay: -1.1s; }
+        .dot:nth-child(3) { animation-delay: -0.9s; }
+
+        @keyframes dotWave {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+
+        .options-container {
+            padding: 20px;
+            background: #1c1c1e;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            display: none; /* Oculto inicialmente */
+        }
+
+        .btn-option {
+            background: transparent;
+            border: 1px solid #0a84ff;
+            color: #0a84ff;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-option:hover {
+            background: rgba(10, 132, 255, 0.1);
+        }
+        
+        .btn-option:active {
+            transform: scale(0.98);
+        }
+
+        /* Efecto Flash de Camara */
+        #camera-flash {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 100;
+        }
+        
+        .image-placeholder {
+             width: 100%;
+             height: 150px;
+             background: #000;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             border-radius: 10px;
+             margin-top: 5px;
+             color: #666;
+             font-size: 0.8rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Escena Torres -->
+    <div id="scene">
+        <div class="tower-container">
+            <div id="tower-left" class="tower">
+                <div id="fire-left" class="fire" style="top: 50px; left: -10px;"></div>
+            </div>
+            <div id="tower-right" class="tower">
+                <div id="fire-right" class="fire" style="top: 80px; left: -10px;"></div>
+            </div>
+        </div>
+        
+        <!-- Aviones (usando SVG simple o emoji rotado) -->
+        <div id="plane1" class="plane" style="top: 30%; right: -100px; transform: rotate(180deg);">✈️</div>
+        <div id="plane2" class="plane" style="top: 40%; left: -100px;">✈️</div>
+    </div>
+
+    <!-- Cuenta Atrás -->
+    <div id="countdown-overlay">
+        <div id="countdown-text">10</div>
+    </div>
+
+    <!-- Interfaz Chat -->
+    <div id="chat-interface">
+        <div class="chat-header">
+            <span>🚨</span>
+            <h2>911 Emergency</h2>
+        </div>
+        <div class="chat-body" id="chat-body">
+            <!-- Mensajes aparecerán aquí -->
+            <div class="typing-indicator" id="typing">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </div>
+        <div class="options-container" id="options">
+            <button class="btn-option" onclick="handleOption(1)">Activar cam</button>
+            <button class="btn-option" onclick="handleOption(2)">Rechazar</button>
+            <button class="btn-option" onclick="handleOption(3)">Salir</button>
+        </div>
+    </div>
+
+    <!-- Flash Blanco -->
+    <div id="camera-flash"></div>
+
+    <script>
+        // Utilidades
+        const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+        
+        // Elementos
+        const scene = document.getElementById('scene');
+        const tLeft = document.getElementById('tower-left');
+        const tRight = document.getElementById('tower-right');
+        const fLeft = document.getElementById('fire-left');
+        const fRight = document.getElementById('fire-right');
+        const p1 = document.getElementById('plane1');
+        const p2 = document.getElementById('plane2');
+        
+        const countdownOverlay = document.getElementById('countdown-overlay');
+        const countdownText = document.getElementById('countdown-text');
+        
+        const chatInterface = document.getElementById('chat-interface');
+        const chatBody = document.getElementById('chat-body');
+        const typingIndicator = document.getElementById('typing');
+        const optionsContainer = document.getElementById('options');
+        const flash = document.getElementById('camera-flash');
+
+        // Secuencia Principal
+        window.onload = async () => {
+            // 1. Iniciar escena suavemente
+            await wait(500);
+            scene.style.opacity = '1';
+            
+            // Esperar un momento con las torres intactas
+            await wait(2000);
+
+            // 2. Primer Avión (Impacta torre izquierda desde la derecha)
+            await animatePlane(p1, 'right', 'left', tLeft, fLeft);
+            
+            // Pausa dramática
+            await wait(1500);
+
+            // 3. Segundo Avión (Impacta torre derecha desde la izquierda)
+            await animatePlane(p2, 'left', 'right', tRight, fRight);
+
+            // 4. Esperar con fuego (3 segundos)
+            await wait(3000);
+            
+            // Desaparecer fuego
+            fLeft.style.transition = 'opacity 1s';
+            fRight.style.transition = 'opacity 1s';
+            fLeft.style.opacity = '0';
+            fRight.style.opacity = '0';
+            
+            // Desvanecer escena para la cuenta atrás
+            await wait(1000);
+            scene.style.transition = 'opacity 1s';
+            scene.style.opacity = '0';
+            
+            // 5. Iniciar Cuenta Atrás
+            await wait(1000);
+            scene.style.display = 'none';
+            countdownOverlay.style.display = 'flex';
+            
+            for (let i = 10; i >= 0; i--) {
+                countdownText.textContent = i;
+                // Efecto de cambio
+                countdownText.style.animation = 'none';
+                countdownText.offsetHeight; /* trigger reflow */
+                countdownText.style.animation = 'pulseText 0.9s infinite';
+                
+                if (i > 0) await wait(1000);
+            }
+
+            // 6. Abrir Chat
+            countdownOverlay.style.display = 'none';
+            chatInterface.style.display = 'flex';
+            
+            // Simular escritura
+            await wait(500);
+            typingIndicator.style.display = 'block';
+            await wait(2000); // Escribiendo...
+            typingIndicator.style.display = 'none';
+            
+            // Mensaje del oficial
+            addMessage("¿Tienes 14 Activa Cam?", 'received');
+            
+            // Mostrar opciones
+            await wait(500);
+            optionsContainer.style.display = 'flex';
+        };
+
+        // Lógica de animación de avión e impacto
+        async function animatePlane(plane, fromSide, toSide, tower, fire) {
+            plane.style.opacity = '1';
+            plane.style.transition = 'all 1.5s linear';
+            
+            // Calcular posiciones (simple aproximación visual)
+            const startX = fromSide === 'left' ? '-10%' : '110%';
+            const endX = fromSide === 'left' ? '45%' : '55%'; // Punto de impacto aproximado en el centro
+            
+            // Reset position
+            if (fromSide === 'left') {
+                plane.style.left = '-100px'; 
+                plane.style.transform = 'rotate(0deg)';
+            } else {
+                plane.style.right = '-100px';
+                plane.style.transform = 'rotate(180deg)';
+            }
+
+            // Forzar reflow
+            plane.offsetHeight;
+
+            // Mover hacia la torre
+            if (fromSide === 'left') {
+                plane.style.left = '48%'; // Aproximado al centro donde están las torres
+            } else {
+                plane.style.right = '48%';
+            }
+
+            // Esperar el tiempo de la transición (el impacto)
+            await wait(1500);
+
+            // IMPACTO
+            plane.style.display = 'none'; // Avión desaparece
+            fire.style.opacity = '1';     // Fuego aparece
+            
+            // Torre cae
+            tower.classList.add('collapsed');
+        }
+
+        function addMessage(text, type) {
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('message', type);
+            msgDiv.textContent = text;
+            chatBody.insertBefore(msgDiv, typingIndicator);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function addImageMessage(type) {
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('message', type);
+            msgDiv.innerHTML = `<div class="image-placeholder">[CAPTURA DE CÁMARA]</div>`;
+            chatBody.insertBefore(msgDiv, typingIndicator);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        async function handleOption(option) {
+            // Ocultar opciones una vez seleccionada
+            optionsContainer.style.display = 'none';
+
+            if (option === 1) {
+                // Opción 1: Activar Cam
+                // Efecto Flash
+                flash.style.transition = 'opacity 0.1s';
+                flash.style.opacity = '1';
+                await wait(150);
+                flash.style.transition = 'opacity 0.5s';
+                flash.style.opacity = '0';
+                
+                // Enviar "imagen"
+                await wait(300);
+                addImageMessage('sent');
+                
+            } else if (option === 2) {
+                // Opción 2: Rechazar
+                addMessage("Rechazar", 'sent');
+                await wait(1000);
+                // Respuesta automática simulada
+                typingIndicator.style.display = 'block';
+                await wait(1500);
+                typingIndicator.style.display = 'none';
+                addMessage("Es obligatorio responder.", 'received');
+                
+            } else if (option === 3) {
+                // Opción 3: Salir (No hace nada visualmente, solo cierra opciones)
+                // Se queda estático como se pidió
+            }
+        }
+
+    </script>
+</body>
+</html>
