@@ -3,490 +3,1285 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WTC Liquid 911</title>
+    <title>WTC Liquid 911.2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Black+Ops+One&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Share+Tech+Mono&display=swap');
-
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #000;
-            overflow: hidden;
-            font-family: 'Inter', sans-serif;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        :root {
+            --fire-orange: #ff6b00;
+            --fire-red: #ff1a00;
+            --smoke-gray: #3a3a3a;
+            --sky-blood: #1a0505;
+            --ember: #ffcc00;
+            --glass: rgba(255,255,255,0.05);
+            --emergency-red: #ff3b30;
+            --emergency-blue: #0a84ff;
+            --steel: #8a9bb0;
         }
 
-        /* --- ESCENARIO --- */
-        #scene {
-            position: relative;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body, html {
             width: 100%;
             height: 100%;
+            overflow: hidden;
+            background: #000;
+            font-family: 'Orbitron', sans-serif;
+            color: white;
+        }
+
+        /* ===== CANVAS BG ===== */
+        #bgCanvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+        }
+
+        /* ===== SCENE ===== */
+        #scene {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             display: flex;
             justify-content: center;
             align-items: flex-end;
-            padding-bottom: 10vh;
+            padding-bottom: 8vh;
             opacity: 0;
-            transition: opacity 2s ease-in-out;
+            transition: opacity 2.5s ease;
+            z-index: 2;
+        }
+
+        /* Ground glow */
+        #scene::before {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 700px;
+            height: 120px;
+            background: radial-gradient(ellipse, rgba(255,80,0,0.18) 0%, transparent 70%);
+            pointer-events: none;
         }
 
         .tower-container {
             display: flex;
-            gap: 80px; /* Aprox 2cm visuales en pantalla escritorio */
+            gap: 70px;
             position: relative;
+            align-items: flex-end;
+        }
+
+        .tower-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Antenna */
+        .antenna {
+            width: 4px;
+            height: 40px;
+            background: linear-gradient(to top, var(--steel), #ccc);
+            position: relative;
+            box-shadow: 0 0 6px rgba(255,200,100,0.4);
+        }
+        .antenna::after {
+            content: '';
+            position: absolute;
+            top: -4px; left: 50%;
+            transform: translateX(-50%);
+            width: 8px; height: 8px;
+            background: var(--ember);
+            border-radius: 50%;
+            box-shadow: 0 0 12px var(--ember), 0 0 24px rgba(255,200,0,0.5);
+            animation: beaconBlink 2s infinite;
+        }
+        @keyframes beaconBlink {
+            0%,100% { opacity: 1; }
+            50% { opacity: 0.2; }
         }
 
         .tower {
-            width: 60px;
-            height: 300px;
-            background: linear-gradient(90deg, #2c2c2c, #4a4a4a, #2c2c2c);
+            width: 68px;
+            height: 320px;
+            background: linear-gradient(
+                to right,
+                #1a1f2a 0%,
+                #2c3445 15%,
+                #3d4a5c 30%,
+                #4a5870 50%,
+                #3d4a5c 70%,
+                #2c3445 85%,
+                #1a1f2a 100%
+            );
             position: relative;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-            transition: transform 1s cubic-bezier(0.55, 0.055, 0.675, 0.19);
-            transform-origin: bottom;
+            transform-origin: bottom center;
+            transition: transform 1.8s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+            box-shadow:
+                -4px 0 20px rgba(0,0,0,0.8),
+                4px 0 20px rgba(0,0,0,0.8),
+                inset 2px 0 0 rgba(255,255,255,0.05),
+                inset -2px 0 0 rgba(0,0,0,0.3);
+            overflow: hidden;
         }
 
-        /* Ventanas de las torres */
+        /* Window grid */
+        .tower::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 14px,
+                    rgba(0,0,0,0.7) 14px,
+                    rgba(0,0,0,0.7) 16px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 12px,
+                    rgba(0,0,0,0.6) 12px,
+                    rgba(0,0,0,0.6) 14px
+                );
+            z-index: 1;
+        }
+
+        /* Window lights overlay */
         .tower::after {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px);
-            background-size: 10px 10px;
-            opacity: 0.3;
+            inset: 0;
+            background-image:
+                radial-gradient(1px 1px at 10px 10px, rgba(255,255,180,0.6) 0%, transparent 100%),
+                radial-gradient(1px 1px at 24px 10px, rgba(255,255,180,0.4) 0%, transparent 100%),
+                radial-gradient(1px 1px at 38px 10px, rgba(255,255,180,0.5) 0%, transparent 100%),
+                radial-gradient(1px 1px at 52px 10px, rgba(255,255,180,0.3) 0%, transparent 100%);
+            background-size: 14px 16px;
+            z-index: 2;
+            animation: windowFlicker 3s infinite;
+        }
+
+        @keyframes windowFlicker {
+            0%,100% { opacity: 0.8; }
+            50% { opacity: 1; }
+            75% { opacity: 0.6; }
         }
 
         .tower.collapsed {
             transform: scaleY(0);
         }
 
+        .tower.shaking {
+            animation: towerShake 0.5s ease-in-out;
+        }
+        @keyframes towerShake {
+            0%,100% { transform: translateX(0); }
+            20% { transform: translateX(-5px) rotate(-0.5deg); }
+            40% { transform: translateX(5px) rotate(0.5deg); }
+            60% { transform: translateX(-3px) rotate(-0.3deg); }
+            80% { transform: translateX(3px) rotate(0.3deg); }
+        }
+
+        /* Floor indicator lines */
+        .tower-floors {
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                180deg,
+                transparent,
+                transparent 19px,
+                rgba(100,120,150,0.15) 19px,
+                rgba(100,120,150,0.15) 20px
+            );
+            z-index: 3;
+        }
+
+        /* ===== FIRE ===== */
+        .fire-container {
+            position: absolute;
+            z-index: 8;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .fire-layer {
+            position: absolute;
+            border-radius: 50% 50% 30% 30%;
+            filter: blur(4px);
+            mix-blend-mode: screen;
+        }
+
+        .fire-core {
+            width: 60px; height: 70px;
+            background: radial-gradient(ellipse, #fff 0%, #ffeb00 20%, #ff8c00 50%, #ff3000 80%, transparent 100%);
+            animation: fireCore 0.15s infinite alternate;
+        }
+        .fire-mid {
+            width: 80px; height: 90px;
+            left: -10px; top: -15px;
+            background: radial-gradient(ellipse, #ffcc00 0%, #ff6600 40%, #cc2200 80%, transparent 100%);
+            animation: fireMid 0.2s infinite alternate;
+        }
+        .fire-outer {
+            width: 110px; height: 120px;
+            left: -25px; top: -25px;
+            background: radial-gradient(ellipse, #ff9900 0%, #cc3300 50%, #660000 80%, transparent 100%);
+            animation: fireOuter 0.25s infinite alternate;
+        }
+        .fire-smoke {
+            width: 100px; height: 200px;
+            left: -20px; top: -180px;
+            background: linear-gradient(to top, rgba(40,40,40,0.8), rgba(80,80,80,0.4), transparent);
+            filter: blur(15px);
+            animation: smokeRise 2s infinite linear;
+            border-radius: 50%;
+        }
+
+        @keyframes fireCore {
+            from { transform: scale(1) skewX(-3deg); opacity: 0.9; }
+            to { transform: scale(1.15) skewX(3deg); opacity: 1; }
+        }
+        @keyframes fireMid {
+            from { transform: scale(1) skewX(2deg) rotate(-2deg); opacity: 0.8; }
+            to { transform: scale(1.1) skewX(-2deg) rotate(2deg); opacity: 0.95; }
+        }
+        @keyframes fireOuter {
+            from { transform: scale(1) rotate(-1deg); opacity: 0.6; }
+            to { transform: scale(1.08) rotate(1deg); opacity: 0.75; }
+        }
+        @keyframes smokeRise {
+            0% { transform: translateY(0) scale(1); opacity: 0.7; }
+            100% { transform: translateY(-100px) scale(2); opacity: 0; }
+        }
+
+        /* ===== PLANE ===== */
         .plane {
             position: absolute;
-            font-size: 40px;
             z-index: 10;
             opacity: 0;
-        }
-
-        /* Fuego */
-        .fire {
-            position: absolute;
+            font-size: 0;
             width: 80px;
-            height: 80px;
-            background: radial-gradient(circle, #ffeb3b, #ff9800, #f44336, transparent);
-            filter: blur(5px);
-            opacity: 0;
-            border-radius: 50%;
-            animation: flicker 0.2s infinite alternate;
-            z-index: 5;
+            height: 28px;
         }
 
-        @keyframes flicker {
-            0% { transform: scale(1); opacity: 0.8; }
-            100% { transform: scale(1.2); opacity: 1; }
+        .plane svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 8px rgba(200,220,255,0.6));
         }
 
-        /* --- CUENTA ATRÁS --- */
-        #countdown-overlay {
+        .plane-trail {
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
+            height: 3px;
+            background: linear-gradient(to right, transparent, rgba(200,220,255,0.4));
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            z-index: 9;
+            opacity: 0;
+            width: 200px;
+            right: 100%;
+        }
+        .plane-trail-left {
+            left: 100%;
+            background: linear-gradient(to left, transparent, rgba(200,220,255,0.4));
+        }
+
+        /* ===== DEBRIS PARTICLES ===== */
+        .debris {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ff6600;
+            border-radius: 1px;
+            z-index: 7;
+            pointer-events: none;
+        }
+
+        /* ===== COUNTDOWN ===== */
+        #countdown-overlay {
+            position: fixed;
+            inset: 0;
             display: none;
             justify-content: center;
             align-items: center;
-            background: black;
+            background: #000;
             z-index: 20;
+            overflow: hidden;
+        }
+
+        #countdown-overlay::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 50% 50%, rgba(180,0,0,0.15) 0%, transparent 70%);
+            animation: pulseGlow 2s infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%,100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Scanlines */
+        #countdown-overlay::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0,0,0,0.15) 2px,
+                rgba(0,0,0,0.15) 4px
+            );
+            pointer-events: none;
+            z-index: 1;
         }
 
         #countdown-text {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 15rem;
-            color: white;
-            animation: pulseText 1s infinite;
+            font-family: 'Black Ops One', sans-serif;
+            font-size: clamp(8rem, 25vw, 20rem);
+            color: transparent;
+            -webkit-text-stroke: 3px #ff3300;
+            text-shadow:
+                0 0 30px #ff3300,
+                0 0 60px rgba(255,50,0,0.5),
+                0 0 120px rgba(255,50,0,0.2);
+            animation: countPulse 0.9s ease-in-out infinite;
+            position: relative;
+            z-index: 2;
+            letter-spacing: -0.05em;
         }
 
-        @keyframes pulseText {
-            0% { transform: scale(0.8); opacity: 0.5; }
-            50% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(0.8); opacity: 0.5; }
+        @keyframes countPulse {
+            0%,100% { transform: scale(0.85); opacity: 0.7; filter: brightness(0.8); }
+            50% { transform: scale(1.05); opacity: 1; filter: brightness(1.2); }
         }
 
-        /* --- CHAT 911 --- */
-        #chat-interface {
+        .countdown-label {
             position: absolute;
-            width: 100%;
-            height: 100%;
-            max-width: 400px;
-            max-height: 800px;
-            background: #111;
-            display: none;
-            flex-direction: column;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 0 50px rgba(255, 255, 255, 0.1);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            bottom: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1rem;
+            letter-spacing: 0.4em;
+            color: #ff6600;
+            z-index: 2;
+            text-transform: uppercase;
+            animation: labelBlink 1s steps(2) infinite;
         }
 
-        .chat-header {
-            background: #1c1c1e;
-            padding: 15px;
-            text-align: center;
-            border-bottom: 1px solid #333;
+        @keyframes labelBlink {
+            0%,100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Countdown rings */
+        .countdown-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid;
+            z-index: 1;
+            animation: ringExpand 2s linear infinite;
+        }
+        @keyframes ringExpand {
+            0% { transform: translate(-50%,-50%) scale(0.5); opacity: 0.8; }
+            100% { transform: translate(-50%,-50%) scale(3); opacity: 0; }
+        }
+
+        /* ===== CHAT INTERFACE ===== */
+        #chat-interface {
+            position: fixed;
+            inset: 0;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,0.97);
+            z-index: 25;
+            overflow: hidden;
+        }
+
+        /* CRT background effect */
+        #chat-interface::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 3px,
+                    rgba(0,255,80,0.015) 3px,
+                    rgba(0,255,80,0.015) 4px
+                );
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .chat-phone {
+            width: 100%;
+            max-width: 390px;
+            height: 100%;
+            max-height: 780px;
+            background: linear-gradient(175deg, #0d0d12 0%, #0a0a10 100%);
+            display: flex;
+            flex-direction: column;
+            border-radius: 44px;
+            overflow: hidden;
+            box-shadow:
+                0 0 0 1px rgba(255,255,255,0.08),
+                0 0 40px rgba(255,0,0,0.15),
+                0 30px 80px rgba(0,0,0,0.9),
+                inset 0 1px 0 rgba(255,255,255,0.05);
+            position: relative;
+            z-index: 1;
+            animation: phoneAppear 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+        }
+
+        @keyframes phoneAppear {
+            from { transform: scale(0.8) translateY(40px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        /* Notch */
+        .phone-notch {
+            position: absolute;
+            top: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 120px; height: 30px;
+            background: #000;
+            border-radius: 0 0 20px 20px;
+            z-index: 10;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
+        }
+        .notch-dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: #1a1a1a;
+        }
+        .notch-camera {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: #1a1a2e;
+            box-shadow: 0 0 0 2px #111, inset 0 0 4px rgba(100,150,255,0.3);
         }
 
-        .chat-header h2 {
+        /* Status bar */
+        .status-bar {
+            padding: 38px 24px 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.7);
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        /* Chat header */
+        .chat-header {
+            padding: 10px 20px 14px;
+            background: linear-gradient(180deg, rgba(30,10,10,0.95) 0%, rgba(20,10,10,0.9) 100%);
+            border-bottom: 1px solid rgba(255,50,30,0.2);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chat-header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,50,30,0.05), transparent);
+            animation: headerSweep 3s linear infinite;
+        }
+
+        @keyframes headerSweep {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .emergency-avatar {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a0505, #3d0a0a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            border: 2px solid rgba(255,50,30,0.4);
+            box-shadow: 0 0 15px rgba(255,30,0,0.3);
+            position: relative;
+        }
+
+        .avatar-status {
+            position: absolute;
+            bottom: 1px; right: 1px;
+            width: 10px; height: 10px;
+            background: #00ff88;
+            border-radius: 50%;
+            border: 2px solid #0a0a10;
+            box-shadow: 0 0 6px #00ff88;
+        }
+
+        .header-info h2 {
             margin: 0;
-            font-size: 1.2rem;
-            color: #ff3b30; /* Color emergencia */
+            font-size: 0.95rem;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: #ff4422;
+            letter-spacing: 0.05em;
         }
 
+        .header-info p {
+            margin: 2px 0 0;
+            font-size: 0.65rem;
+            font-family: 'Share Tech Mono', monospace;
+            color: rgba(255,200,150,0.6);
+            letter-spacing: 0.1em;
+        }
+
+        .header-badges {
+            margin-left: auto;
+            display: flex;
+            gap: 8px;
+        }
+
+        .badge {
+            font-size: 0.55rem;
+            font-family: 'Share Tech Mono', monospace;
+            padding: 3px 7px;
+            border-radius: 4px;
+            letter-spacing: 0.08em;
+        }
+
+        .badge-live {
+            background: rgba(255,30,0,0.2);
+            color: #ff4433;
+            border: 1px solid rgba(255,30,0,0.4);
+            animation: liveBlink 1.5s steps(2) infinite;
+        }
+
+        @keyframes liveBlink {
+            0%,100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .badge-enc {
+            background: rgba(0,150,255,0.15);
+            color: #0a84ff;
+            border: 1px solid rgba(0,150,255,0.3);
+        }
+
+        /* Chat body */
         .chat-body {
             flex: 1;
-            padding: 20px;
+            padding: 16px 16px 8px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 10px;
             overflow-y: auto;
+            scrollbar-width: none;
+            background:
+                radial-gradient(ellipse at top, rgba(30,10,10,0.3) 0%, transparent 60%);
         }
 
+        .chat-body::-webkit-scrollbar { display: none; }
+
+        /* Date divider */
+        .date-divider {
+            text-align: center;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.6rem;
+            color: rgba(255,100,80,0.5);
+            letter-spacing: 0.15em;
+            padding: 4px;
+        }
+
+        /* Messages */
         .message {
-            max-width: 80%;
-            padding: 12px 16px;
+            max-width: 78%;
+            padding: 11px 15px;
             border-radius: 18px;
-            font-size: 0.95rem;
-            line-height: 1.4;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
             position: relative;
-            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: msgPopIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
         }
 
-        @keyframes popIn {
-            from { transform: scale(0); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+        @keyframes msgPopIn {
+            from { transform: scale(0.7) translateY(10px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
         }
 
         .received {
-            background: #2c2c2e;
-            color: white;
+            background: linear-gradient(135deg, #1e1e26, #252530);
+            color: #e8e8f0;
             align-self: flex-start;
             border-bottom-left-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.06);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.4);
         }
 
         .sent {
-            background: #0a84ff;
+            background: linear-gradient(135deg, #004db3, #0060df);
             color: white;
             align-self: flex-end;
             border-bottom-right-radius: 4px;
+            box-shadow: 0 2px 15px rgba(0,100,255,0.3);
         }
 
+        .message-time {
+            font-size: 0.55rem;
+            font-family: 'Share Tech Mono', monospace;
+            opacity: 0.45;
+            display: block;
+            margin-top: 4px;
+            letter-spacing: 0.05em;
+        }
+
+        .sent .message-time { text-align: right; }
+
+        /* System message */
+        .sys-message {
+            align-self: center;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.6rem;
+            color: rgba(255,80,60,0.7);
+            letter-spacing: 0.1em;
+            padding: 4px 12px;
+            background: rgba(255,30,0,0.08);
+            border: 1px solid rgba(255,30,0,0.15);
+            border-radius: 20px;
+            animation: msgPopIn 0.35s both;
+        }
+
+        /* Typing indicator */
         .typing-indicator {
             display: none;
-            padding: 10px 15px;
-            background: #2c2c2e;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #1e1e26, #252530);
             border-radius: 18px;
+            border-bottom-left-radius: 4px;
             align-self: flex-start;
-            width: fit-content;
-            margin-bottom: 10px;
+            border: 1px solid rgba(255,255,255,0.06);
+            animation: msgPopIn 0.35s both;
         }
 
         .dot {
-            height: 8px;
-            width: 8px;
-            background-color: #bbb;
+            height: 7px;
+            width: 7px;
+            background: #8888aa;
             border-radius: 50%;
             display: inline-block;
             margin: 0 2px;
-            animation: dotWave 1.3s linear infinite;
+            animation: dotBounce 1.2s ease-in-out infinite;
+        }
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes dotBounce {
+            0%,80%,100% { transform: translateY(0) scale(1); opacity: 0.6; }
+            40% { transform: translateY(-6px) scale(1.1); opacity: 1; }
         }
 
-        .dot:nth-child(2) { animation-delay: -1.1s; }
-        .dot:nth-child(3) { animation-delay: -0.9s; }
-
-        @keyframes dotWave {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-5px); }
-        }
-
-        .options-container {
-            padding: 20px;
-            background: #1c1c1e;
-            display: flex;
+        /* Options / input bar */
+        .options-bar {
+            padding: 12px 16px;
+            padding-bottom: max(12px, env(safe-area-inset-bottom));
+            background: linear-gradient(180deg, rgba(15,10,10,0.98) 0%, rgba(10,8,8,1) 100%);
+            border-top: 1px solid rgba(255,50,30,0.1);
+            display: none;
             flex-direction: column;
-            gap: 10px;
-            display: none; /* Oculto inicialmente */
+            gap: 8px;
+        }
+
+        .options-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.6rem;
+            color: rgba(255,100,80,0.5);
+            letter-spacing: 0.15em;
+            text-align: center;
+            text-transform: uppercase;
         }
 
         .btn-option {
             background: transparent;
-            border: 1px solid #0a84ff;
-            color: #0a84ff;
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 1rem;
+            border: 1px solid rgba(10,132,255,0.4);
+            color: #4da6ff;
+            padding: 13px 16px;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
             cursor: pointer;
             transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
+        .btn-icon {
+            font-size: 1.1rem;
+        }
+
+        .btn-option::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(10,132,255,0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.4s;
+        }
+
+        .btn-option:hover::before { transform: translateX(100%); }
         .btn-option:hover {
-            background: rgba(10, 132, 255, 0.1);
-        }
-        
-        .btn-option:active {
-            transform: scale(0.98);
+            background: rgba(10,132,255,0.1);
+            border-color: rgba(10,132,255,0.7);
+            box-shadow: 0 0 15px rgba(10,132,255,0.2);
         }
 
-        /* Efecto Flash de Camara */
+        .btn-option:active { transform: scale(0.98); }
+
+        .btn-danger {
+            border-color: rgba(255,50,30,0.4);
+            color: #ff6b55;
+        }
+        .btn-danger:hover {
+            background: rgba(255,50,30,0.1);
+            border-color: rgba(255,50,30,0.7);
+            box-shadow: 0 0 15px rgba(255,50,30,0.2);
+        }
+
+        .btn-ghost {
+            border-color: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.35);
+        }
+        .btn-ghost:hover {
+            background: rgba(255,255,255,0.04);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        /* Image message */
+        .img-message {
+            width: 200px;
+            height: 130px;
+            background: linear-gradient(135deg, #0a0a15, #111125);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.7rem;
+            font-family: 'Share Tech Mono', monospace;
+            letter-spacing: 0.1em;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .img-message::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.03) 50%, transparent 60%);
+            animation: imgSheen 2s ease-in-out infinite;
+        }
+
+        @keyframes imgSheen {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .img-icon { font-size: 2rem; opacity: 0.5; }
+
+        /* Flash */
         #camera-flash {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            inset: 0;
             background: white;
             opacity: 0;
             pointer-events: none;
             z-index: 100;
-        }
-        
-        .image-placeholder {
-             width: 100%;
-             height: 150px;
-             background: #000;
-             display: flex;
-             align-items: center;
-             justify-content: center;
-             border-radius: 10px;
-             margin-top: 5px;
-             color: #666;
-             font-size: 0.8rem;
+            mix-blend-mode: overlay;
         }
 
+        /* ===== EXPLOSION OVERLAY ===== */
+        #explosion-overlay {
+            position: fixed;
+            inset: 0;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 15;
+            background: radial-gradient(circle at 50% 50%, rgba(255,200,100,0.8), rgba(255,100,0,0.5), transparent 70%);
+        }
+
+        /* ===== GLITCH EFFECT ===== */
+        .glitch {
+            animation: glitchEffect 0.3s steps(2) both;
+        }
+
+        @keyframes glitchEffect {
+            0% { transform: translateX(0); filter: none; }
+            20% { transform: translateX(-4px); filter: hue-rotate(90deg) brightness(2); }
+            40% { transform: translateX(4px); filter: hue-rotate(-90deg); }
+            60% { transform: translateX(-2px); filter: none; }
+            80% { transform: translateX(2px); filter: brightness(1.5); }
+            100% { transform: translateX(0); filter: none; }
+        }
+
+        /* ===== STARS ===== */
+        #stars-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Escena Torres -->
+    <canvas id="bgCanvas"></canvas>
+    <canvas id="stars-bg"></canvas>
+
+    <!-- Scene -->
     <div id="scene">
         <div class="tower-container">
-            <div id="tower-left" class="tower">
-                <div id="fire-left" class="fire" style="top: 50px; left: -10px;"></div>
+            <!-- Left Tower -->
+            <div class="tower-wrap" id="wrap-left">
+                <div class="antenna" id="ant-left"></div>
+                <div class="tower" id="tower-left">
+                    <div class="tower-floors"></div>
+                    <div id="fire-left" class="fire-container" style="bottom: 180px; left: -15px;">
+                        <div class="fire-layer fire-smoke"></div>
+                        <div class="fire-layer fire-outer"></div>
+                        <div class="fire-layer fire-mid"></div>
+                        <div class="fire-layer fire-core"></div>
+                    </div>
+                </div>
             </div>
-            <div id="tower-right" class="tower">
-                <div id="fire-right" class="fire" style="top: 80px; left: -10px;"></div>
+
+            <!-- Right Tower -->
+            <div class="tower-wrap" id="wrap-right">
+                <div class="antenna" id="ant-right"></div>
+                <div class="tower" id="tower-right">
+                    <div class="tower-floors"></div>
+                    <div id="fire-right" class="fire-container" style="bottom: 155px; left: -12px;">
+                        <div class="fire-layer fire-smoke"></div>
+                        <div class="fire-layer fire-outer"></div>
+                        <div class="fire-layer fire-mid"></div>
+                        <div class="fire-layer fire-core"></div>
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <!-- Aviones (usando SVG simple o emoji rotado) -->
-        <div id="plane1" class="plane" style="top: 30%; right: -100px; transform: rotate(180deg);">✈️</div>
-        <div id="plane2" class="plane" style="top: 40%; left: -100px;">✈️</div>
+
+        <!-- Planes -->
+        <div id="plane1" class="plane" style="top: 30%; right: -120px;">
+            <div class="plane-trail plane-trail-left"></div>
+            <svg viewBox="0 0 100 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M95 17L60 5 50 0 40 5 5 17 40 17 38 25 55 22 60 25 75 22z" fill="#c8d4e8"/>
+                <path d="M5 17L15 20 40 17" fill="#a0b0c8"/>
+                <circle cx="55" cy="17" r="3" fill="#8090a8"/>
+            </svg>
+        </div>
+        <div id="plane2" class="plane" style="top: 40%; left: -120px; transform: scaleX(-1);">
+            <div class="plane-trail"></div>
+            <svg viewBox="0 0 100 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M95 17L60 5 50 0 40 5 5 17 40 17 38 25 55 22 60 25 75 22z" fill="#c8d4e8"/>
+                <path d="M5 17L15 20 40 17" fill="#a0b0c8"/>
+                <circle cx="55" cy="17" r="3" fill="#8090a8"/>
+            </svg>
+        </div>
     </div>
 
-    <!-- Cuenta Atrás -->
+    <!-- Countdown -->
     <div id="countdown-overlay">
+        <div class="countdown-ring" style="width:200px;height:200px;top:50%;left:50%;border-color:rgba(255,50,0,0.4);animation-delay:0s;"></div>
+        <div class="countdown-ring" style="width:200px;height:200px;top:50%;left:50%;border-color:rgba(255,100,0,0.3);animation-delay:0.7s;"></div>
+        <div class="countdown-ring" style="width:200px;height:200px;top:50%;left:50%;border-color:rgba(255,150,0,0.2);animation-delay:1.4s;"></div>
         <div id="countdown-text">10</div>
+        <div class="countdown-label">CONECTANDO · LÍNEA SEGURA</div>
     </div>
 
-    <!-- Interfaz Chat -->
+    <!-- Chat -->
     <div id="chat-interface">
-        <div class="chat-header">
-            <span>🚨</span>
-            <h2>911 Emergency</h2>
-        </div>
-        <div class="chat-body" id="chat-body">
-            <!-- Mensajes aparecerán aquí -->
-            <div class="typing-indicator" id="typing">
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
+        <div class="chat-phone">
+            <div class="phone-notch">
+                <div class="notch-dot"></div>
+                <div class="notch-camera"></div>
+                <div class="notch-dot"></div>
+            </div>
+            <div class="status-bar">
+                <span>9:11</span>
+                <span>▌▌▌▌ LTE</span>
+            </div>
+            <div class="chat-header">
+                <div class="emergency-avatar">
+                    🚨
+                    <div class="avatar-status"></div>
+                </div>
+                <div class="header-info">
+                    <h2>911 EMERGENCIAS</h2>
+                    <p>SERVICIO NACIONAL · CIFRADO E2E</p>
+                </div>
+                <div class="header-badges">
+                    <div class="badge badge-live">● VIVO</div>
+                    <div class="badge badge-enc">🔒 ENC</div>
+                </div>
+            </div>
+            <div class="chat-body" id="chat-body">
+                <div class="date-divider">HOY · CANAL PRIORITARIO #4471</div>
+                <div class="typing-indicator" id="typing">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+            </div>
+            <div class="options-bar" id="options">
+                <div class="options-label">SELECCIONA UNA ACCIÓN</div>
+                <button class="btn-option" onclick="handleOption(1)">
+                    <span class="btn-icon">📸</span> Activar Cámara
+                </button>
+                <button class="btn-option btn-danger" onclick="handleOption(2)">
+                    <span class="btn-icon">✕</span> Rechazar
+                </button>
+                <button class="btn-option btn-ghost" onclick="handleOption(3)">
+                    <span class="btn-icon">⎋</span> Salir
+                </button>
             </div>
         </div>
-        <div class="options-container" id="options">
-            <button class="btn-option" onclick="handleOption(1)">Activar cam</button>
-            <button class="btn-option" onclick="handleOption(2)">Rechazar</button>
-            <button class="btn-option" onclick="handleOption(3)">Salir</button>
-        </div>
     </div>
 
-    <!-- Flash Blanco -->
+    <!-- Flash & Explosion -->
     <div id="camera-flash"></div>
+    <div id="explosion-overlay"></div>
 
     <script>
-        // Utilidades
-        const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-        
-        // Elementos
+        const wait = ms => new Promise(r => setTimeout(r, ms));
+
+        // ─── Stars background ─────────────────────────────────────────────
+        const starsCvs = document.getElementById('stars-bg');
+        const sCtx = starsCvs.getContext('2d');
+        starsCvs.width = window.innerWidth;
+        starsCvs.height = window.innerHeight;
+        const stars = Array.from({length: 180}, () => ({
+            x: Math.random() * starsCvs.width,
+            y: Math.random() * starsCvs.height * 0.7,
+            r: Math.random() * 1.2 + 0.2,
+            a: Math.random(),
+            da: (Math.random() - 0.5) * 0.005
+        }));
+        function drawStars() {
+            sCtx.clearRect(0, 0, starsCvs.width, starsCvs.height);
+            stars.forEach(s => {
+                s.a = Math.max(0.1, Math.min(1, s.a + s.da));
+                if (s.a <= 0.1 || s.a >= 1) s.da *= -1;
+                sCtx.beginPath();
+                sCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                sCtx.fillStyle = `rgba(200,220,255,${s.a})`;
+                sCtx.fill();
+            });
+            requestAnimationFrame(drawStars);
+        }
+        drawStars();
+
+        // ─── Particles BG canvas ───────────────────────────────────────────
+        const cvs = document.getElementById('bgCanvas');
+        const ctx = cvs.getContext('2d');
+        cvs.width = window.innerWidth;
+        cvs.height = window.innerHeight;
+        const particles = [];
+        let smokeActive = false;
+
+        function spawnSmoke() {
+            if (!smokeActive) return;
+            particles.push({
+                x: cvs.width/2 + (Math.random()-0.5)*120,
+                y: cvs.height * 0.45,
+                vx: (Math.random()-0.5)*0.8,
+                vy: -Math.random()*1.5 - 0.5,
+                r: Math.random()*30 + 15,
+                a: Math.random()*0.2 + 0.05,
+                life: 1
+            });
+        }
+
+        function renderBg() {
+            ctx.clearRect(0, 0, cvs.width, cvs.height);
+            // Sky gradient
+            const skyGrd = ctx.createLinearGradient(0, 0, 0, cvs.height);
+            skyGrd.addColorStop(0, smokeActive ? '#0d0508' : '#08090e');
+            skyGrd.addColorStop(0.5, smokeActive ? '#1a0808' : '#0a0c14');
+            skyGrd.addColorStop(1, smokeActive ? '#2a0a06' : '#0d0f1a');
+            ctx.fillStyle = skyGrd;
+            ctx.fillRect(0, 0, cvs.width, cvs.height);
+
+            // Smoke particles
+            spawnSmoke();
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx; p.y += p.vy;
+                p.r += 0.3; p.life -= 0.006;
+                if (p.life <= 0) { particles.splice(i, 1); continue; }
+                const gr = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+                gr.addColorStop(0, `rgba(60,50,50,${p.a * p.life})`);
+                gr.addColorStop(1, `rgba(20,15,15,0)`);
+                ctx.fillStyle = gr;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            requestAnimationFrame(renderBg);
+        }
+        renderBg();
+
+        // ─── Elements ─────────────────────────────────────────────────────
         const scene = document.getElementById('scene');
         const tLeft = document.getElementById('tower-left');
         const tRight = document.getElementById('tower-right');
+        const wrapLeft = document.getElementById('wrap-left');
+        const wrapRight = document.getElementById('wrap-right');
         const fLeft = document.getElementById('fire-left');
         const fRight = document.getElementById('fire-right');
         const p1 = document.getElementById('plane1');
         const p2 = document.getElementById('plane2');
-        
         const countdownOverlay = document.getElementById('countdown-overlay');
         const countdownText = document.getElementById('countdown-text');
-        
         const chatInterface = document.getElementById('chat-interface');
         const chatBody = document.getElementById('chat-body');
         const typingIndicator = document.getElementById('typing');
         const optionsContainer = document.getElementById('options');
         const flash = document.getElementById('camera-flash');
+        const explosionOverlay = document.getElementById('explosion-overlay');
 
-        // Secuencia Principal
-        window.onload = async () => {
-            // 1. Iniciar escena suavemente
-            await wait(500);
-            scene.style.opacity = '1';
-            
-            // Esperar un momento con las torres intactas
-            await wait(2000);
-
-            // 2. Primer Avión (Impacta torre izquierda desde la derecha)
-            await animatePlane(p1, 'right', 'left', tLeft, fLeft);
-            
-            // Pausa dramática
-            await wait(1500);
-
-            // 3. Segundo Avión (Impacta torre derecha desde la izquierda)
-            await animatePlane(p2, 'left', 'right', tRight, fRight);
-
-            // 4. Esperar con fuego (3 segundos)
-            await wait(3000);
-            
-            // Desaparecer fuego
-            fLeft.style.transition = 'opacity 1s';
-            fRight.style.transition = 'opacity 1s';
-            fLeft.style.opacity = '0';
-            fRight.style.opacity = '0';
-            
-            // Desvanecer escena para la cuenta atrás
-            await wait(1000);
-            scene.style.transition = 'opacity 1s';
-            scene.style.opacity = '0';
-            
-            // 5. Iniciar Cuenta Atrás
-            await wait(1000);
-            scene.style.display = 'none';
-            countdownOverlay.style.display = 'flex';
-            
-            for (let i = 10; i >= 0; i--) {
-                countdownText.textContent = i;
-                // Efecto de cambio
-                countdownText.style.animation = 'none';
-                countdownText.offsetHeight; /* trigger reflow */
-                countdownText.style.animation = 'pulseText 0.9s infinite';
-                
-                if (i > 0) await wait(1000);
+        function spawnDebris(x, y, count = 20) {
+            for (let i = 0; i < count; i++) {
+                const d = document.createElement('div');
+                d.className = 'debris';
+                d.style.cssText = `
+                    left:${x}px; top:${y}px; position:fixed; z-index:12;
+                    width:${Math.random()*5+2}px; height:${Math.random()*5+2}px;
+                    background:${Math.random()>0.5?'#ff8800':'#cc4400'};
+                    border-radius:${Math.random()>0.5?'50%':'2px'};
+                `;
+                document.body.appendChild(d);
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 200 + 80;
+                const tx = Math.cos(angle) * speed;
+                const ty = Math.sin(angle) * speed - 100;
+                d.animate([
+                    { transform: 'translate(0,0) rotate(0deg)', opacity: 1 },
+                    { transform: `translate(${tx}px,${ty}px) rotate(${Math.random()*720}deg)`, opacity: 0 }
+                ], { duration: Math.random()*800+500, easing: 'cubic-bezier(0,0,0.2,1)', fill:'forwards' })
+                .onfinish = () => d.remove();
             }
+        }
 
-            // 6. Abrir Chat
-            countdownOverlay.style.display = 'none';
-            chatInterface.style.display = 'flex';
-            
-            // Simular escritura
-            await wait(500);
-            typingIndicator.style.display = 'block';
-            await wait(2000); // Escribiendo...
-            typingIndicator.style.display = 'none';
-            
-            // Mensaje del oficial
-            addMessage("¿Tienes 14 Activa Cam?", 'received');
-            
-            // Mostrar opciones
-            await wait(500);
-            optionsContainer.style.display = 'flex';
-        };
+        async function explosionFlash(intensity = 1) {
+            explosionOverlay.style.transition = 'opacity 0.05s';
+            explosionOverlay.style.opacity = String(0.6 * intensity);
+            await wait(80);
+            explosionOverlay.style.transition = 'opacity 0.6s';
+            explosionOverlay.style.opacity = '0';
+            // Screen shake via CSS var
+            document.body.style.animation = 'none';
+        }
 
-        // Lógica de animación de avión e impacto
-        async function animatePlane(plane, fromSide, toSide, tower, fire) {
+        // ─── Plane animation ──────────────────────────────────────────────
+        async function animatePlane(plane, fromSide, tower, fire, wrap) {
+            const trail = plane.querySelector('.plane-trail, .plane-trail-left');
             plane.style.opacity = '1';
-            plane.style.transition = 'all 1.5s linear';
-            
-            // Calcular posiciones (simple aproximación visual)
-            const startX = fromSide === 'left' ? '-10%' : '110%';
-            const endX = fromSide === 'left' ? '45%' : '55%'; // Punto de impacto aproximado en el centro
-            
-            // Reset position
-            if (fromSide === 'left') {
-                plane.style.left = '-100px'; 
-                plane.style.transform = 'rotate(0deg)';
+            if (trail) { trail.style.opacity = '1'; }
+
+            const duration = 1800;
+            plane.style.transition = `all ${duration}ms linear`;
+
+            if (fromSide === 'right') {
+                plane.style.right = '-120px';
+                plane.offsetHeight;
+                plane.style.right = '46%';
             } else {
-                plane.style.right = '-100px';
-                plane.style.transform = 'rotate(180deg)';
+                plane.style.left = '-120px';
+                plane.offsetHeight;
+                plane.style.left = '43%';
             }
 
-            // Forzar reflow
-            plane.offsetHeight;
+            await wait(duration);
 
-            // Mover hacia la torre
-            if (fromSide === 'left') {
-                plane.style.left = '48%'; // Aproximado al centro donde están las torres
-            } else {
-                plane.style.right = '48%';
-            }
+            // IMPACT
+            plane.style.opacity = '0';
+            fire.style.opacity = '1';
+            smokeActive = true;
 
-            // Esperar el tiempo de la transición (el impacto)
-            await wait(1500);
+            // Tower shake
+            tower.classList.add('shaking');
+            setTimeout(() => tower.classList.remove('shaking'), 600);
 
-            // IMPACTO
-            plane.style.display = 'none'; // Avión desaparece
-            fire.style.opacity = '1';     // Fuego aparece
-            
-            // Torre cae
+            // Glitch on wrap
+            wrap.classList.add('glitch');
+            setTimeout(() => wrap.classList.remove('glitch'), 350);
+
+            // Explosion flash
+            const rect = fire.getBoundingClientRect();
+            await explosionFlash(1);
+            spawnDebris(rect.left + rect.width/2, rect.top + rect.height/2, 28);
+
+            // Tower collapse
+            await wait(400);
             tower.classList.add('collapsed');
         }
 
+        // ─── Chat helpers ─────────────────────────────────────────────────
+        function getTime() {
+            const n = new Date();
+            return `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;
+        }
+
         function addMessage(text, type) {
-            const msgDiv = document.createElement('div');
-            msgDiv.classList.add('message', type);
-            msgDiv.textContent = text;
-            chatBody.insertBefore(msgDiv, typingIndicator);
+            const d = document.createElement('div');
+            d.className = `message ${type}`;
+            d.innerHTML = `${text}<span class="message-time">${getTime()} ${type==='sent'?'✓✓':''}</span>`;
+            chatBody.insertBefore(d, typingIndicator);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function addSysMessage(text) {
+            const d = document.createElement('div');
+            d.className = 'sys-message';
+            d.textContent = text;
+            chatBody.insertBefore(d, typingIndicator);
             chatBody.scrollTop = chatBody.scrollHeight;
         }
 
         function addImageMessage(type) {
-            const msgDiv = document.createElement('div');
-            msgDiv.classList.add('message', type);
-            msgDiv.innerHTML = `<div class="image-placeholder">[CAPTURA DE CÁMARA]</div>`;
-            chatBody.insertBefore(msgDiv, typingIndicator);
+            const d = document.createElement('div');
+            d.className = `message ${type}`;
+            d.innerHTML = `
+                <div class="img-message">
+                    <div class="img-icon">📷</div>
+                    <div>[CAPTURA DE CÁMARA]</div>
+                </div>
+                <span class="message-time">${getTime()} ✓✓</span>
+            `;
+            chatBody.insertBefore(d, typingIndicator);
             chatBody.scrollTop = chatBody.scrollHeight;
         }
 
-        async function handleOption(option) {
-            // Ocultar opciones una vez seleccionada
+        // ─── MAIN SEQUENCE ────────────────────────────────────────────────
+        window.onload = async () => {
+            await wait(600);
+            scene.style.opacity = '1';
+
+            await wait(2500);
+
+            // Plane 1: from right → left tower
+            await animatePlane(p1, 'right', tLeft, fLeft, wrapLeft);
+
+            await wait(2000);
+
+            // Plane 2: from left → right tower
+            await animatePlane(p2, 'left', tRight, fRight, wrapRight);
+
+            await wait(3500);
+
+            // Fade out fires
+            fLeft.style.transition = 'opacity 1.5s';
+            fRight.style.transition = 'opacity 1.5s';
+            fLeft.style.opacity = '0';
+            fRight.style.opacity = '0';
+
+            await wait(1200);
+            scene.style.transition = 'opacity 1.5s';
+            scene.style.opacity = '0';
+
+            await wait(1500);
+            scene.style.display = 'none';
+
+            // COUNTDOWN
+            countdownOverlay.style.display = 'flex';
+
+            for (let i = 10; i >= 0; i--) {
+                countdownText.textContent = i === 0 ? '—' : i;
+                countdownText.style.animation = 'none';
+                countdownText.offsetHeight;
+                countdownText.style.animation = 'countPulse 0.9s ease-in-out infinite';
+                if (i > 0) await wait(1000);
+            }
+
+            await wait(400);
+            countdownOverlay.style.display = 'none';
+
+            // CHAT
+            chatInterface.style.display = 'flex';
+
+            await wait(600);
+            addSysMessage('⚡ CONEXIÓN ESTABLECIDA · CANAL SEGURO');
+            await wait(800);
+
+            typingIndicator.style.display = 'flex';
+            await wait(2200);
+            typingIndicator.style.display = 'none';
+
+            addMessage('¿Tienes 14? Activa Cam.', 'received');
+
+            await wait(500);
+            optionsContainer.style.display = 'flex';
+        };
+
+        // ─── Options ─────────────────────────────────────────────────────
+        async function handleOption(opt) {
             optionsContainer.style.display = 'none';
 
-            if (option === 1) {
-                // Opción 1: Activar Cam
-                // Efecto Flash
-                flash.style.transition = 'opacity 0.1s';
-                flash.style.opacity = '1';
-                await wait(150);
-                flash.style.transition = 'opacity 0.5s';
-                flash.style.opacity = '0';
-                
-                // Enviar "imagen"
+            if (opt === 1) {
+                addMessage('Activar Cámara', 'sent');
                 await wait(300);
+
+                // Flash effect
+                flash.style.transition = 'opacity 0.06s';
+                flash.style.opacity = '1';
+                await wait(80);
+                flash.style.transition = 'opacity 0.4s';
+                flash.style.opacity = '0';
+
+                await wait(600);
                 addImageMessage('sent');
-                
-            } else if (option === 2) {
-                // Opción 2: Rechazar
-                addMessage("Rechazar", 'sent');
+
                 await wait(1000);
-                // Respuesta automática simulada
-                typingIndicator.style.display = 'block';
-                await wait(1500);
+                typingIndicator.style.display = 'flex';
+                await wait(1800);
                 typingIndicator.style.display = 'none';
-                addMessage("Es obligatorio responder.", 'received');
-                
-            } else if (option === 3) {
-                // Opción 3: Salir (No hace nada visualmente, solo cierra opciones)
-                // Se queda estático como se pidió
+                addMessage('Recibido. Espera instrucciones.', 'received');
+
+            } else if (opt === 2) {
+                addMessage('Rechazar', 'sent');
+                await wait(800);
+                typingIndicator.style.display = 'flex';
+                await wait(1600);
+                typingIndicator.style.display = 'none';
+                addMessage('Es obligatorio responder.', 'received');
+                await wait(500);
+                addSysMessage('⚠ PROTOCOLO DE EMERGENCIA ACTIVO');
+
+            } else if (opt === 3) {
+                addSysMessage('✕ CONEXIÓN TERMINADA POR EL USUARIO');
             }
         }
-
     </script>
 </body>
 </html>
