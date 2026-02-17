@@ -152,6 +152,7 @@
         .notch.expanded-charge .charge-ui, 
         .notch.expanded-faceid .faceid-ui,
         .notch.expanded-language .lang-ui { display: flex; opacity: 1; align-items: center; justify-content: center; gap: 10px; }
+        .notch.expanded-music .music-island-ui { display: flex !important; opacity: 1 !important; }
 
         .charge-ui {
             flex-direction: column;
@@ -367,208 +368,293 @@
         .settings-page.sub { z-index: 2; }
 
         /* ============================
+           ISLA DINÁMICA — ESTADO MÚSICA
+           ============================ */
+        .notch.expanded-music {
+            width: 310px;
+            height: 72px;
+            border-radius: 36px;
+            justify-content: flex-start;
+            padding: 0 10px;
+            background: #000;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 8px 40px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.04);
+            overflow: hidden;
+            gap: 0;
+        }
+        .notch.expanded-music .music-island-ui { display: flex; opacity: 1; }
+
+        .music-island-ui {
+            display: none;
+            align-items: center;
+            width: 100%;
+            gap: 10px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .mi-cover {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.6);
+            animation: miCoverPulse 2s ease-in-out infinite;
+        }
+        @keyframes miCoverPulse {
+            0%,100% { box-shadow: 0 0 0 0 rgba(29,185,84,0); }
+            50%      { box-shadow: 0 0 0 3px rgba(29,185,84,0.35); }
+        }
+        .mi-info { flex: 1; overflow: hidden; }
+        .mi-title {
+            font-size: 12px; font-weight: 700; color: #fff;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            line-height: 1.2;
+        }
+        .mi-artist { font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 1px; }
+        .mi-mini-bars {
+            display: flex; align-items: flex-end; gap: 2px; height: 20px; flex-shrink: 0;
+        }
+        .mi-bar {
+            width: 3px; background: #1db954; border-radius: 1.5px;
+            animation: miBarDance 0.6s ease-in-out infinite alternate;
+        }
+        .mi-bar:nth-child(1){animation-duration:.5s; animation-delay:.0s;}
+        .mi-bar:nth-child(2){animation-duration:.7s; animation-delay:.1s;}
+        .mi-bar:nth-child(3){animation-duration:.45s;animation-delay:.2s;}
+        .mi-bar:nth-child(4){animation-duration:.8s; animation-delay:.05s;}
+        .mi-bar:nth-child(5){animation-duration:.55s;animation-delay:.15s;}
+        @keyframes miBarDance {
+            from { height: 3px; }
+            to   { height: 18px; }
+        }
+
+        /* ============================
            ADMIN ABUSE MUSIC PLAYER
            ============================ */
         #adminAbuse {
             position: absolute;
-            bottom: 100px;
+            bottom: 108px;
             left: 50%;
             transform: translateX(-50%);
-            width: 340px;
+            width: 344px;
             z-index: 9999;
-            border-radius: 22px;
+            border-radius: 24px;
             overflow: hidden;
-            background: rgba(10, 10, 10, 0.75);
-            backdrop-filter: blur(30px) saturate(200%);
-            -webkit-backdrop-filter: blur(30px) saturate(200%);
-            border: 1px solid rgba(255,255,255,0.12);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 0.5px rgba(255,255,255,0.05);
-            animation: adminSlideIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            background: rgba(8, 8, 8, 0.82);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid rgba(255,255,255,0.10);
+            box-shadow: 0 24px 70px rgba(0,0,0,0.7), 0 0 0 0.5px rgba(255,255,255,0.04);
+            animation: adminSlideIn 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
             cursor: grab;
+            user-select: none;
         }
-        #adminAbuse:active { cursor: grabbing; }
+        #adminAbuse.is-dragging { cursor: grabbing; transition: none !important; }
 
         @keyframes adminSlideIn {
-            from { transform: translateX(-50%) translateY(120px); opacity: 0; }
-            to   { transform: translateX(-50%) translateY(0);    opacity: 1; }
+            from { transform: translateX(-50%) translateY(130px); opacity: 0; }
+            to   { transform: translateX(-50%) translateY(0);     opacity: 1; }
         }
 
-        /* Album art blur background */
-        #adminAbuse::before {
-            content: '';
+        /* Fondo con imagen blur */
+        #adminAbuse .aa-bg {
             position: absolute;
             inset: 0;
-            background: var(--cover-url) center/cover no-repeat;
-            filter: blur(40px) brightness(0.3);
-            transform: scale(1.3);
+            background-image: url('https://res.cloudinary.com/dhx58lnzb/image/upload/v1771370278/ab67616d0000b27349055dce3554e72e82082980_n3qzb1.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: blur(35px) brightness(0.22) saturate(1.8);
+            transform: scale(1.4);
             z-index: 0;
         }
 
         .aa-inner {
             position: relative;
             z-index: 1;
-            padding: 14px 16px 12px;
+            padding: 14px 14px 12px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 9px;
         }
 
-        /* Top row: cover + info + viz */
+        /* ── LIVE badge ── */
+        .aa-live {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            position: absolute;
+            top: 10px;
+            right: 14px;
+            z-index: 2;
+        }
+        .aa-live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ff3b30;
+            position: relative;
+            flex-shrink: 0;
+        }
+        /* Ripple externo */
+        .aa-live-dot::before,
+        .aa-live-dot::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            border: 1.5px solid #ff3b30;
+            animation: liveRipple 1.6s ease-out infinite;
+        }
+        .aa-live-dot::after { animation-delay: 0.8s; }
+        @keyframes liveRipple {
+            0%   { transform: scale(0.6); opacity: 1; }
+            100% { transform: scale(2.2); opacity: 0; }
+        }
+        /* Inner glow */
+        .aa-live-dot-inner {
+            position: absolute;
+            inset: 1px;
+            border-radius: 50%;
+            background: #ff6b6b;
+            animation: liveBlink 1s ease-in-out infinite alternate;
+        }
+        @keyframes liveBlink {
+            from { opacity: 1; box-shadow: 0 0 4px #ff3b30; }
+            to   { opacity: 0.5; box-shadow: 0 0 10px #ff0000; }
+        }
+        .aa-live-text {
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            color: #ff3b30;
+            text-transform: uppercase;
+            text-shadow: 0 0 8px rgba(255,59,48,0.6);
+        }
+
+        /* Top row */
         .aa-top {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 11px;
         }
-
+        .aa-cover-wrap {
+            position: relative;
+            flex-shrink: 0;
+            width: 56px;
+            height: 56px;
+        }
+        .aa-cover-wrap::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 14px;
+            border: 2px solid rgba(29,185,84,0.5);
+            animation: coverGlow 2s ease-in-out infinite;
+        }
+        @keyframes coverGlow {
+            0%,100% { opacity: 0.4; transform: scale(1); }
+            50%      { opacity: 1;   transform: scale(1.04); }
+        }
         .aa-cover {
-            width: 54px;
-            height: 54px;
-            border-radius: 10px;
+            width: 56px;
+            height: 56px;
+            border-radius: 11px;
             object-fit: cover;
-            flex-shrink: 0;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
-            animation: albumSpin 8s linear infinite;
-            animation-play-state: running;
+            display: block;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
         }
-        @keyframes albumSpin {
-            from { border-radius: 10px; }
-            to   { border-radius: 10px; }
-        }
-
-        .aa-meta {
-            flex: 1;
-            overflow: hidden;
-        }
-
+        .aa-meta { flex: 1; overflow: hidden; padding-right: 50px; }
         .aa-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #fff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            letter-spacing: -0.3px;
+            font-size: 14px; font-weight: 700; color: #fff;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            letter-spacing: -0.2px;
         }
-
         .aa-artist {
-            font-size: 12px;
-            font-weight: 500;
-            color: rgba(255,255,255,0.6);
-            margin-top: 2px;
+            font-size: 12px; font-weight: 500;
+            color: rgba(255,255,255,0.55);
+            margin-top: 3px;
+        }
+        .aa-badges {
+            display: flex; gap: 5px; margin-top: 5px; flex-wrap: wrap;
+        }
+        .aa-badge {
+            font-size: 8.5px; font-weight: 800; letter-spacing: 0.8px;
+            text-transform: uppercase; padding: 2px 7px;
+            border-radius: 20px; display: flex; align-items: center; gap: 3px;
+        }
+        .aa-badge.loop {
+            background: rgba(29,185,84,0.18);
+            color: #1db954;
+            border: 1px solid rgba(29,185,84,0.3);
         }
 
-        /* Music visualizer bars */
+        /* Visualizer */
         .aa-viz {
-            display: flex;
-            align-items: flex-end;
-            gap: 3px;
-            height: 28px;
-            flex-shrink: 0;
+            display: flex; align-items: flex-end; gap: 3px;
+            height: 30px; flex-shrink: 0;
         }
         .aa-bar {
             width: 4px;
-            background: linear-gradient(to top, #1db954, #1ed760);
+            background: linear-gradient(to top, #1db954, #57e389);
             border-radius: 2px;
             animation: barDance 0.6s ease-in-out infinite alternate;
         }
-        .aa-bar:nth-child(1) { animation-duration: 0.5s;  animation-delay: 0.0s; }
-        .aa-bar:nth-child(2) { animation-duration: 0.7s;  animation-delay: 0.1s; }
-        .aa-bar:nth-child(3) { animation-duration: 0.45s; animation-delay: 0.2s; }
-        .aa-bar:nth-child(4) { animation-duration: 0.8s;  animation-delay: 0.0s; }
-        .aa-bar:nth-child(5) { animation-duration: 0.55s; animation-delay: 0.15s; }
-        .aa-bar:nth-child(6) { animation-duration: 0.65s; animation-delay: 0.05s; }
-        .aa-bar:nth-child(7) { animation-duration: 0.4s;  animation-delay: 0.25s; }
-
+        .aa-bar:nth-child(1){animation-duration:.52s; animation-delay:.00s;}
+        .aa-bar:nth-child(2){animation-duration:.71s; animation-delay:.08s;}
+        .aa-bar:nth-child(3){animation-duration:.44s; animation-delay:.18s;}
+        .aa-bar:nth-child(4){animation-duration:.83s; animation-delay:.03s;}
+        .aa-bar:nth-child(5){animation-duration:.57s; animation-delay:.13s;}
+        .aa-bar:nth-child(6){animation-duration:.66s; animation-delay:.06s;}
+        .aa-bar:nth-child(7){animation-duration:.41s; animation-delay:.22s;}
+        .aa-bar:nth-child(8){animation-duration:.75s; animation-delay:.10s;}
         @keyframes barDance {
-            from { height: 4px;  opacity: 0.7; }
-            to   { height: 24px; opacity: 1;   }
+            from { height: 3px;  opacity: 0.6; }
+            to   { height: 26px; opacity: 1;   }
         }
 
-        /* Progress bar */
+        /* Progress */
         .aa-progress-wrap {
-            position: relative;
             height: 3px;
-            background: rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.12);
             border-radius: 3px;
             overflow: hidden;
+            cursor: pointer;
         }
         .aa-progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, #1db954, #1ed760);
+            background: linear-gradient(90deg, #1db954, #57e389);
             border-radius: 3px;
             width: 0%;
             transition: width 0.5s linear;
         }
 
-        /* Controls row */
+        /* Controls */
         .aa-controls {
-            display: flex;
-            align-items: center;
+            display: flex; align-items: center;
             justify-content: space-between;
         }
         .aa-time {
-            font-size: 10px;
-            color: rgba(255,255,255,0.45);
-            font-variant-numeric: tabular-nums;
-            min-width: 34px;
+            font-size: 10px; color: rgba(255,255,255,0.4);
+            font-variant-numeric: tabular-nums; min-width: 30px;
         }
         .aa-time.right { text-align: right; }
-
         .aa-btn {
-            width: 36px;
-            height: 36px;
-            border: none;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            transition: background 0.2s, transform 0.1s;
-            font-size: 16px;
+            width: 36px; height: 36px; border: none;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            color: white; transition: background 0.15s, transform 0.1s;
+            font-size: 15px; flex-shrink: 0;
         }
-        .aa-btn:hover { background: rgba(255,255,255,0.2); }
-        .aa-btn:active { transform: scale(0.9); }
+        .aa-btn:hover  { background: rgba(255,255,255,0.18); }
+        .aa-btn:active { transform: scale(0.88); }
         .aa-btn.play-pause {
-            width: 42px;
-            height: 42px;
-            background: #fff;
-            color: #000;
-            font-size: 18px;
+            width: 44px; height: 44px;
+            background: #fff; color: #000; font-size: 19px;
+            box-shadow: 0 4px 16px rgba(255,255,255,0.2);
         }
-        .aa-btn.play-pause:hover { background: rgba(255,255,255,0.85); }
-
-        /* LOOP badge */
-        .aa-loop-badge {
-            font-size: 9px;
-            font-weight: 800;
-            color: #1db954;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            gap: 3px;
-        }
-
-        /* Pulse ring around cover when playing */
-        .aa-cover-wrap {
-            position: relative;
-            flex-shrink: 0;
-        }
-        .aa-cover-wrap::after {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            border-radius: 13px;
-            border: 2px solid rgba(29,185,84,0.6);
-            animation: pulseCover 1.8s ease-in-out infinite;
-        }
-        @keyframes pulseCover {
-            0%   { opacity: 1;   transform: scale(1);    }
-            50%  { opacity: 0.4; transform: scale(1.06); }
-            100% { opacity: 1;   transform: scale(1);    }
-        }
+        .aa-btn.play-pause:hover { background: #e8e8e8; }
 
     </style>
 </head>
@@ -584,7 +670,7 @@
             </div>
 
             <!-- ISLA DINÁMICA (Aura Welcome) -->
-            <div class="notch welcome-aura" id="notch">
+            <div class="notch welcome-aura" id="notch" onclick="notchMusicToggle()">
                 <!-- RAYOS ELÉCTRICOS -->
                 <div class="lightning" style="top: -30px;"></div>
                 <div class="lightning" style="top: -30px;"></div>
@@ -608,6 +694,23 @@
                 </div>
                 <div class="notch-content lang-ui">
                     <i data-lucide="globe" class="globe-spin"></i> <span style="font-weight:600;" id="langNotchText">Cambiando Idioma...</span>
+                </div>
+                <!-- MÚSICA STATE -->
+                <div class="notch-content music-island-ui" id="musicIslandUI" style="padding: 0 4px; gap: 8px;">
+                    <img id="miCover" class="mi-cover"
+                        src="https://res.cloudinary.com/dhx58lnzb/image/upload/v1771370278/ab67616d0000b27349055dce3554e72e82082980_n3qzb1.jpg"
+                        alt="cover">
+                    <div class="mi-info">
+                        <div class="mi-title">Locked Out of Heaven</div>
+                        <div class="mi-artist">Bruno Mars</div>
+                    </div>
+                    <div class="mi-mini-bars" id="miMiniViz">
+                        <div class="mi-bar"></div>
+                        <div class="mi-bar"></div>
+                        <div class="mi-bar"></div>
+                        <div class="mi-bar"></div>
+                        <div class="mi-bar"></div>
+                    </div>
                 </div>
             </div>
 
@@ -794,24 +897,37 @@
                  ================================ -->
             <audio id="aaAudio" src="https://res.cloudinary.com/dhx58lnzb/video/upload/v1771370212/Locked_Out_Of_Heaven_jjqgvs.mp3" preload="auto"></audio>
 
-            <div id="adminAbuse" style="--cover-url: url('https://res.cloudinary.com/dhx58lnzb/image/upload/v1771370278/ab67616d0000b27349055dce3554e72e82082980_n3qzb1.jpg');">
+            <div id="adminAbuse">
+                <!-- Fondo blur del artwork -->
+                <div class="aa-bg"></div>
+
+                <!-- Badge LIVE -->
+                <div class="aa-live">
+                    <div class="aa-live-dot">
+                        <div class="aa-live-dot-inner"></div>
+                    </div>
+                    <span class="aa-live-text">Live</span>
+                </div>
+
                 <div class="aa-inner">
-                    <!-- Top: cover + title + viz -->
+                    <!-- Top: cover + meta + viz -->
                     <div class="aa-top">
                         <div class="aa-cover-wrap">
                             <img id="aaCover" class="aa-cover"
                                 src="https://res.cloudinary.com/dhx58lnzb/image/upload/v1771370278/ab67616d0000b27349055dce3554e72e82082980_n3qzb1.jpg"
-                                alt="cover">
+                                alt="Locked Out of Heaven">
                         </div>
                         <div class="aa-meta">
                             <div class="aa-title">Locked Out of Heaven</div>
                             <div class="aa-artist">Bruno Mars</div>
-                            <div class="aa-loop-badge">
-                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
-                                En loop
+                            <div class="aa-badges">
+                                <span class="aa-badge loop">
+                                    <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                                    Loop
+                                </span>
                             </div>
                         </div>
-                        <!-- Visualizer bars -->
+                        <!-- Visualizer -->
                         <div class="aa-viz" id="aaViz">
                             <div class="aa-bar"></div>
                             <div class="aa-bar"></div>
@@ -820,28 +936,27 @@
                             <div class="aa-bar"></div>
                             <div class="aa-bar"></div>
                             <div class="aa-bar"></div>
+                            <div class="aa-bar"></div>
                         </div>
                     </div>
 
-                    <!-- Progress -->
-                    <div class="aa-progress-wrap">
+                    <!-- Barra de progreso -->
+                    <div class="aa-progress-wrap" id="aaProgressWrap">
                         <div class="aa-progress-bar" id="aaProgress"></div>
                     </div>
 
-                    <!-- Controls -->
+                    <!-- Controles -->
                     <div class="aa-controls">
                         <span class="aa-time" id="aaCurrent">0:00</span>
 
-                        <button class="aa-btn" onclick="aaSkip(-10)" title="Retroceder 10s">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.5 3a9 9 0 1 0 9 9H19a7.5 7.5 0 1 1-7.5-7.5V3zM11 3l-4 3.5L11 10V3z"/></svg>
+                        <button class="aa-btn" onclick="aaSkip(-10)" title="−10s">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.35"/><text x="8" y="16" font-size="7" fill="currentColor" stroke="none" font-weight="bold">10</text></svg>
                         </button>
 
-                        <button class="aa-btn play-pause" id="aaPlayPause" onclick="aaToggle()">
-                            ▶
-                        </button>
+                        <button class="aa-btn play-pause" id="aaPlayPause" onclick="aaToggle()">▶</button>
 
-                        <button class="aa-btn" onclick="aaSkip(10)" title="Avanzar 10s">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.5 3a9 9 0 1 1-9 9H5a7.5 7.5 0 1 0 7.5-7.5V3zM13 3l4 3.5L13 10V3z"/></svg>
+                        <button class="aa-btn" onclick="aaSkip(10)" title="+10s">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.49-3.35"/><text x="8" y="16" font-size="7" fill="currentColor" stroke="none" font-weight="bold">10</text></svg>
                         </button>
 
                         <span class="aa-time right" id="aaDuration">3:53</span>
@@ -1105,118 +1220,147 @@
         // ADMIN ABUSE MUSIC PLAYER
         // ============================
         (function() {
-            const audio = document.getElementById('aaAudio');
-            const playPauseBtn = document.getElementById('aaPlayPause');
-            const progressBar = document.getElementById('aaProgress');
-            const currentTimeEl = document.getElementById('aaCurrent');
-            const durationEl = document.getElementById('aaDuration');
-            const viz = document.getElementById('aaViz');
-            const cover = document.getElementById('aaCover');
-            const player = document.getElementById('adminAbuse');
+            const audio        = document.getElementById('aaAudio');
+            const playBtn      = document.getElementById('aaPlayPause');
+            const progressBar  = document.getElementById('aaProgress');
+            const progressWrap = document.getElementById('aaProgressWrap');
+            const currentEl    = document.getElementById('aaCurrent');
+            const durationEl   = document.getElementById('aaDuration');
+            const vizEl        = document.getElementById('aaViz');
+            const player       = document.getElementById('adminAbuse');
+            const notch        = document.getElementById('notch');
+            const miViz        = document.getElementById('miMiniViz');
 
-            let isPlaying = false;
-            let isDragging = false;
+            let playing    = false;
+            let notchShown = false;
+            let notchTimer = null;
 
-            function tryAutoPlay() {
-                audio.play().then(() => {
-                    isPlaying = true;
-                    playPauseBtn.textContent = '⏸';
-                    setVizPlaying(true);
-                }).catch(() => {
-                    document.addEventListener('click', function once() {
-                        audio.play().then(() => {
-                            isPlaying = true;
-                            playPauseBtn.textContent = '⏸';
-                            setVizPlaying(true);
-                        });
-                        document.removeEventListener('click', once);
+            // ── Helpers ──
+            function fmt(s) {
+                if (!s || isNaN(s)) return '0:00';
+                const m = Math.floor(s / 60), sec = Math.floor(s % 60);
+                return m + ':' + (sec < 10 ? '0' : '') + sec;
+            }
+            function setViz(on) {
+                [vizEl, miViz].forEach(v => {
+                    if (!v) return;
+                    v.querySelectorAll('.aa-bar, .mi-bar').forEach(b => {
+                        b.style.animationPlayState = on ? 'running' : 'paused';
                     });
                 });
             }
 
+            // ── Isla dinámica: mostrar música ──
+            function showMusicIsland() {
+                // Quitar otros estados activos del notch
+                notch.classList.remove('expanded-charge','expanded-faceid','expanded-language','welcome-aura');
+                notch.classList.add('expanded-music');
+                notchShown = true;
+                clearTimeout(notchTimer);
+                // Esconder después de 5 segundos
+                notchTimer = setTimeout(hideMusicIsland, 5000);
+            }
+            function hideMusicIsland() {
+                notch.classList.remove('expanded-music');
+                notchShown = false;
+            }
+            // Tap en la isla para toggle show/hide cuando hay música
+            window.notchMusicToggle = function() {
+                if (playing) {
+                    if (notchShown) hideMusicIsland();
+                    else showMusicIsland();
+                }
+            };
+
+            // ── Audio events ──
+            audio.addEventListener('timeupdate', () => {
+                if (!audio.duration) return;
+                progressBar.style.width = (audio.currentTime / audio.duration * 100) + '%';
+                currentEl.textContent = fmt(audio.currentTime);
+            });
+            audio.addEventListener('loadedmetadata', () => {
+                durationEl.textContent = fmt(audio.duration);
+            });
             audio.addEventListener('ended', () => {
                 audio.currentTime = 0;
                 audio.play();
             });
 
-            function fmt(s) {
-                const m = Math.floor(s / 60);
-                const sec = Math.floor(s % 60);
-                return m + ':' + (sec < 10 ? '0' : '') + sec;
+            // ── Play / Pause ──
+            function setPlaying(on) {
+                playing = on;
+                playBtn.textContent = on ? '⏸' : '▶';
+                setViz(on);
+                if (on) showMusicIsland();
+                else hideMusicIsland();
             }
 
-            audio.addEventListener('timeupdate', () => {
-                if (!audio.duration) return;
-                const pct = (audio.currentTime / audio.duration) * 100;
-                progressBar.style.width = pct + '%';
-                currentTimeEl.textContent = fmt(audio.currentTime);
-            });
-
-            audio.addEventListener('loadedmetadata', () => {
-                durationEl.textContent = fmt(audio.duration);
-            });
-
             window.aaToggle = function() {
-                if (isPlaying) {
-                    audio.pause();
-                    isPlaying = false;
-                    playPauseBtn.textContent = '▶';
-                    setVizPlaying(false);
-                } else {
-                    audio.play();
-                    isPlaying = true;
-                    playPauseBtn.textContent = '⏸';
-                    setVizPlaying(true);
-                }
+                if (playing) { audio.pause(); setPlaying(false); }
+                else { audio.play().catch(()=>{}); setPlaying(true); }
             };
-
             window.aaSkip = function(s) {
                 audio.currentTime = Math.max(0, Math.min(audio.duration || 233, audio.currentTime + s));
             };
 
-            function setVizPlaying(on) {
-                viz.querySelectorAll('.aa-bar').forEach(b => {
-                    b.style.animationPlayState = on ? 'running' : 'paused';
-                });
-                cover.style.filter = on ? 'none' : 'brightness(0.5)';
-            }
+            // ── Progress bar click to seek ──
+            progressWrap.addEventListener('click', (e) => {
+                if (!audio.duration) return;
+                const rect = progressWrap.getBoundingClientRect();
+                audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+            });
 
-            // Draggable
-            let startX, startY, origLeft, origTop;
-            function dragStart(e) {
-                isDragging = false;
-                const touch = e.touches ? e.touches[0] : e;
-                startX = touch.clientX;
-                startY = touch.clientY;
-                const rect = player.getBoundingClientRect();
-                const parent = player.offsetParent.getBoundingClientRect();
-                origLeft = rect.left - parent.left;
-                origTop = rect.top - parent.top;
+            // ── Drag ──
+            let dragOn = false, sx, sy, ox, oy;
+            function onDragStart(e) {
+                dragOn = false;
+                const t = e.touches ? e.touches[0] : e;
+                sx = t.clientX; sy = t.clientY;
+                // Calcular posición actual vs parent
+                const pr = player.offsetParent ? player.offsetParent.getBoundingClientRect() : {left:0,top:0};
+                const cr = player.getBoundingClientRect();
+                ox = cr.left - pr.left;
+                oy = cr.top  - pr.top;
                 player.style.transition = 'none';
-                player.style.left = origLeft + 'px';
-                player.style.top = origTop + 'px';
+                player.style.left      = ox + 'px';
+                player.style.top       = oy + 'px';
+                player.style.bottom    = 'auto';
                 player.style.transform = 'none';
-                player.style.bottom = 'auto';
+                player.classList.add('is-dragging');
             }
-            function dragMove(e) {
-                const touch = e.touches ? e.touches[0] : e;
-                const dx = touch.clientX - startX;
-                const dy = touch.clientY - startY;
-                if (Math.abs(dx) > 3 || Math.abs(dy) > 3) isDragging = true;
-                if (!isDragging) return;
-                player.style.left = (origLeft + dx) + 'px';
-                player.style.top = (origTop + dy) + 'px';
+            function onDragMove(e) {
+                const t = e.touches ? e.touches[0] : e;
+                const dx = t.clientX - sx, dy = t.clientY - sy;
+                if (Math.abs(dx) > 4 || Math.abs(dy) > 4) dragOn = true;
+                if (!dragOn) return;
+                player.style.left = (ox + dx) + 'px';
+                player.style.top  = (oy + dy) + 'px';
             }
-            function dragEnd() { player.style.transition = ''; }
+            function onDragEnd() {
+                player.classList.remove('is-dragging');
+                player.style.transition = '';
+                dragOn = false;
+            }
+            player.addEventListener('mousedown',  onDragStart);
+            document.addEventListener('mousemove', onDragMove);
+            document.addEventListener('mouseup',   onDragEnd);
+            player.addEventListener('touchstart',  onDragStart, {passive:true});
+            document.addEventListener('touchmove', onDragMove,  {passive:true});
+            document.addEventListener('touchend',  onDragEnd);
 
-            player.addEventListener('mousedown', dragStart);
-            document.addEventListener('mousemove', dragMove);
-            document.addEventListener('mouseup', dragEnd);
-            player.addEventListener('touchstart', dragStart, {passive:true});
-            document.addEventListener('touchmove', dragMove, {passive:true});
-            document.addEventListener('touchend', dragEnd);
-
-            tryAutoPlay();
+            // ── Autoplay ──
+            function tryPlay() {
+                audio.play().then(() => setPlaying(true)).catch(() => {
+                    const go = () => {
+                        audio.play().then(() => setPlaying(true)).catch(()=>{});
+                        document.removeEventListener('click', go);
+                        document.removeEventListener('touchend', go);
+                    };
+                    document.addEventListener('click',    go);
+                    document.addEventListener('touchend', go);
+                });
+            }
+            tryPlay();
         })();
 
         // PHONE & CALC
