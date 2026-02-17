@@ -606,18 +606,30 @@
         const greetings = ["Provechito", "hello", "hola", "bonjour", "ciao", "hallo", "olá", "你好", "こんにちは", "Provechito"];
         let greetIdx = 0;
         const welcomeText = document.getElementById('welcomeText');
+        let greetInterval;
 
-        const greetInterval = setInterval(() => {
-            welcomeText.style.opacity = 0;
-            setTimeout(() => {
-                greetIdx = (greetIdx + 1) % greetings.length;
-                welcomeText.innerText = greetings[greetIdx];
-                welcomeText.style.opacity = 1;
-            }, 500);
-        }, 2000);
+        // VERIFICAR SI YA VIO LA BIENVENIDA
+        const hasSeenWelcome = localStorage.getItem('wtc_liquid_welcome_seen');
+
+        if (hasSeenWelcome === 'true') {
+            // Ya visto: ocultar bienvenida y tutorial inmediatamente
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('notch').classList.remove('welcome-aura');
+            document.getElementById('tutorialOverlay').style.display = 'none';
+        } else {
+            // No visto: Iniciar ciclo de saludos
+            greetInterval = setInterval(() => {
+                welcomeText.style.opacity = 0;
+                setTimeout(() => {
+                    greetIdx = (greetIdx + 1) % greetings.length;
+                    welcomeText.innerText = greetings[greetIdx];
+                    welcomeText.style.opacity = 1;
+                }, 500);
+            }, 2000);
+        }
 
         function startSetup() {
-            clearInterval(greetInterval);
+            if (greetInterval) clearInterval(greetInterval);
             document.getElementById('notch').classList.remove('welcome-aura');
             document.getElementById('welcomeScreen').style.transform = "translateY(-100%)";
             document.getElementById('tutorialOverlay').style.display = "flex";
@@ -710,6 +722,8 @@
         }
         function closeTutorial() {
             document.getElementById('tutorialOverlay').style.display = "none";
+            // GUARDAR ESTADO: USUARIO HA TERMINADO EL TUTORIAL
+            localStorage.setItem('wtc_liquid_welcome_seen', 'true');
         }
 
         // SYSTEM
