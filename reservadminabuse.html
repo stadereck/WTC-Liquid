@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Admin Abuse WTC</title>
+    <title>Admin Abuse Día 3</title>
     <link rel="icon" href="https://www.svgrepo.com/show/503173/apple-logo.svg" type="image/svg+xml">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -602,19 +602,54 @@
 lucide.createIcons();
 
 // ══════════════════════════════════
-//  FONDO NEGRO CAÓTICO PARTÍCULAS
+//  FONDO NEGRO CAÓTICO PARTÍCULAS + TEXTOS CAYENDO + OBJETOS GLITCH
 // ══════════════════════════════════
 (function(){
   const cv=document.getElementById('bgCanvas'),ctx=cv.getContext('2d');
-  let W,H,pts=[],flashes=[];
+  let W,H,pts=[],flashes=[], fallingTexts=[], glitchBlocks=[];
   const C=['#ff3b30','#1db954','#007aff','#FFD700','#ff2d96','#57e389','#00c7f7','#ff6b00','#a855f7'];
+  
   function resize(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;}
   resize(); window.addEventListener('resize',resize);
+  
+  // Partículas y destellos
   for(let i=0;i<130;i++) pts.push({x:Math.random()*2000,y:Math.random()*1000,vx:(Math.random()-.5)*.7,vy:(Math.random()-.5)*.7,r:Math.random()*2.5+.5,color:C[Math.floor(Math.random()*C.length)],alpha:Math.random()*.7+.1,tw:Math.random()*Math.PI*2});
   setInterval(()=>{if(flashes.length<8) flashes.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*70+25,color:C[Math.floor(Math.random()*C.length)],life:1});},600);
+  
+  // Textos cayendo (Matrix style Admin Abuse)
+  const abuseWords = ["SUPER ADMIN ABUSE", "ADMIN ABUSE", "SYSTEM OVERRIDE", "HACKED", "WTC DOMINATION", "ERROR 404", "ROOT ACCESS", "SECURITY BREACH"];
+  for(let i=0; i<40; i++){
+      fallingTexts.push({
+          text: abuseWords[Math.floor(Math.random()*abuseWords.length)],
+          x: Math.random() * 2000,
+          y: Math.random() * 1000,
+          vy: Math.random() * 4 + 1,
+          size: Math.random() * 20 + 10,
+          color: C[Math.floor(Math.random()*C.length)],
+          alpha: Math.random() * 0.7 + 0.1
+      });
+  }
+
+  // Nuevos objetos "glitch" que cambian de color en el fondo
+  for(let i=0; i<15; i++) {
+     glitchBlocks.push({
+         x: Math.random() * 2000,
+         y: Math.random() * 1000,
+         size: Math.random() * 60 + 20,
+         vx: (Math.random() - 0.5) * 3,
+         vy: (Math.random() - 0.5) * 3,
+         color: C[Math.floor(Math.random()*C.length)],
+         alpha: Math.random() * 0.4 + 0.1,
+         angle: Math.random() * 360,
+         rotSpeed: (Math.random() - 0.5) * 0.1
+     });
+  }
+
   (function draw(){
     ctx.clearRect(0,0,W,H);
     ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
+    
+    // Destellos
     flashes.forEach((f,i)=>{
       f.life-=.035;if(f.life<=0){flashes.splice(i,1);return;}
       const g=ctx.createRadialGradient(f.x,f.y,0,f.x,f.y,f.r);
@@ -622,6 +657,8 @@ lucide.createIcons();
       g.addColorStop(1,'transparent');
       ctx.beginPath();ctx.arc(f.x,f.y,f.r,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
     });
+    
+    // Partículas unidas
     pts.forEach(p=>{
       p.x+=p.vx;p.y+=p.vy;p.tw+=.05;
       if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
@@ -632,23 +669,84 @@ lucide.createIcons();
       const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
       if(d<85){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=pts[i].color;ctx.globalAlpha=(1-d/85)*.15;ctx.lineWidth=.5;ctx.stroke();ctx.globalAlpha=1;}
     }
+
+    // Dibujar bloques Glitch
+    glitchBlocks.forEach(gb => {
+        gb.x += gb.vx; gb.y += gb.vy; gb.angle += gb.rotSpeed;
+        if(gb.x < -100) gb.x = W + 100; if(gb.x > W + 100) gb.x = -100;
+        if(gb.y < -100) gb.y = H + 100; if(gb.y > H + 100) gb.y = -100;
+        
+        ctx.save();
+        ctx.translate(gb.x, gb.y);
+        ctx.rotate(gb.angle);
+        ctx.fillStyle = gb.color;
+        ctx.globalAlpha = gb.alpha;
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = gb.color;
+        ctx.fillRect(-gb.size/2, -gb.size/2, gb.size, gb.size);
+        ctx.restore();
+    });
+
+    // Dibujar textos cayendo
+    fallingTexts.forEach(ft => {
+        ft.y += ft.vy;
+        if (ft.y > H + 50) {
+            ft.y = -50;
+            ft.x = Math.random() * W;
+            ft.text = abuseWords[Math.floor(Math.random()*abuseWords.length)];
+            ft.color = C[Math.floor(Math.random()*C.length)]; // Cambia de color al reiniciar ciclo
+        }
+        ctx.font = `bold ${ft.size}px 'Inter', sans-serif`;
+        ctx.fillStyle = ft.color;
+        ctx.globalAlpha = ft.alpha;
+        ctx.fillText(ft.text, ft.x, ft.y);
+    });
+    ctx.globalAlpha = 1;
+
     requestAnimationFrame(draw);
   })();
 })();
 
 // ══════════════════════════════════
-//  COLOR CHAOS
+//  COLOR CHAOS (CAMBIO PERMANENTE)
 // ══════════════════════════════════
 const chaosColors=['#ff3b30','#1db954','#007aff','#FFD700','#ff2d96','#a855f7','#00c7f7','#ff6b00'];
 function triggerColorChaos(){
+  // Hacer que las apps cambien de color y se QUEDEN así hasta el siguiente cambio
   document.querySelectorAll('.app-icon').forEach((ic,i)=>{
-    setTimeout(()=>{ic.classList.remove('flash-chaos');void ic.offsetWidth;ic.classList.add('flash-chaos');},i*55);
+    setTimeout(()=>{
+      const hue = Math.floor(Math.random() * 360);
+      ic.style.transition = 'filter 0.6s ease';
+      ic.style.filter = `hue-rotate(${hue}deg) saturate(1.8) brightness(1.1)`;
+    }, i * 55);
   });
+  
+  // Cambiar color de los nombres de las apps
+  document.querySelectorAll('.app-name').forEach((name,i)=>{
+    setTimeout(()=>{
+      name.style.transition = 'color 0.6s ease';
+      name.style.color = chaosColors[Math.floor(Math.random()*chaosColors.length)];
+    }, i * 55);
+  });
+
+  // Dock background permanente (hasta próximo caos)
   const dock=document.getElementById('dockBar');
   const rc=chaosColors[Math.floor(Math.random()*chaosColors.length)];
-  dock.style.background=rc+'55';
-  setTimeout(()=>dock.style.background='',1500);
+  dock.style.transition = 'background 0.6s ease';
+  dock.style.background = rc+'55'; // hex con opacidad
+  
+  // Isla Dinámica que cambie su borde y sombra
+  const notch = document.getElementById('notch');
+  notch.style.transition = 'box-shadow 0.6s ease, border-color 0.6s ease';
+  notch.style.borderColor = rc;
+  notch.style.boxShadow = `0 0 20px ${rc}88`;
+  
+  // Opcional: el color del reloj de la status bar
+  const statusBarClock = document.getElementById('statusBarClock');
+  statusBarClock.style.transition = 'color 0.6s ease';
+  statusBarClock.style.color = chaosColors[Math.floor(Math.random()*chaosColors.length)];
 }
+// Activar el cambio de color mas seguido (cada 3.5 segundos)
 setInterval(triggerColorChaos,3500);
 
 // ══════════════════════════════════
@@ -703,7 +801,7 @@ function triggerEgg(egg){
   document.getElementById('eggText').textContent=egg.text;
   document.getElementById('eggSub').textContent=egg.sub;
   document.getElementById('easterEgg').classList.add('show');
-  triggerColorChaos();
+  triggerColorChaos(); // Dispara el caos de color permanentemente al encontrar un egg
 }
 window.closeEgg=function(){document.getElementById('easterEgg').classList.remove('show');};
 
