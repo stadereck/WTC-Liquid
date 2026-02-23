@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WTC Liquid LITE </title>
+    <title>WTC Liquid LITE</title>
     <link rel="icon" href="https://www.svgrepo.com/show/503173/apple-logo.svg" type="image/svg+xml">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;600&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --glass-bg: rgba(255, 255, 255, 0.15);
@@ -188,6 +189,13 @@
         .settings-page.hidden { transform: translateX(100%); }
         .settings-page.main { z-index: 1; padding-top: 0; }
         .settings-page.sub { z-index: 2; }
+        .theme-picker { display: flex; flex-wrap: wrap; gap: 12px; padding: 15px 20px; }
+        .theme-btn { width: 44px; height: 44px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: transform 0.2s; }
+        .theme-btn.active { border-color: #007aff; transform: scale(1.1); }
+        .order-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid var(--border-color); }
+        .order-row:last-child { border-bottom: none; }
+        .order-btns { display: flex; gap: 8px; }
+        .order-btns button { width: 36px; height: 36px; border-radius: 8px; border: none; background: #e5e5ea; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
@@ -238,24 +246,24 @@
             <div class="wallpaper-layer" id="wallpaper"></div>
 
             <div class="home-screen">
-                <div class="app-grid">
-                    <div class="app-item" onclick="openApp('mail')">
+                <div class="app-grid" id="appGrid">
+                    <div class="app-item" data-app-id="mail" onclick="openApp('mail')">
                         <div class="app-icon"><img src="https://i.ibb.co/Rp6zxQc4/250.jpg" style="width:100%;height:100%;object-fit:cover;" loading="lazy"></div>
                         <span class="app-name" data-key="mail">Mail</span>
                     </div>
-                    <div class="app-item" onclick="openApp('calendar')"><div class="app-icon icon-cal">DOM<span>28</span></div><span class="app-name" data-key="calendar">Calendario</span></div>
-                    <div class="app-item" onclick="openApp('photos')"><div class="app-icon" style="background:white;"><i data-lucide="image" color="#ff2d55"></i></div><span class="app-name" data-key="photos">Fotos</span></div>
-                    <div class="app-item" onclick="openApp('camera')"><div class="app-icon" style="background:#ccc;"><i data-lucide="camera" color="#000"></i></div><span class="app-name" data-key="camera">C&aacute;mara</span></div>
-                    <div class="app-item" onclick="openApp('maps')"><div class="app-icon icon-maps"><i data-lucide="map-pinned"></i></div><span class="app-name" data-key="maps">Mapas</span></div>
-                    <div class="app-item" onclick="openApp('clock')"><div class="app-icon icon-clock"><i data-lucide="clock"></i></div><span class="app-name" data-key="clock">Reloj</span></div>
-                    <div class="app-item" onclick="openApp('weather')"><div class="app-icon icon-weather"><i data-lucide="cloud-sun"></i></div><span class="app-name" data-key="weather">Clima</span></div>
-                    <div class="app-item" onclick="openApp('wallet')"><div class="app-icon icon-wallet"><i data-lucide="wallet-cards"></i></div><span class="app-name" data-key="wallet">Cartera</span></div>
-                    <div class="app-item" onclick="openApp('notes')"><div class="app-icon" style="background:#ffd60a; color:white;"><i data-lucide="file-text"></i></div><span class="app-name" data-key="notes">Notas</span></div>
-                    <div class="app-item" onclick="openApp('calculator')">
+                    <div class="app-item" data-app-id="calendar" onclick="openApp('calendar')"><div class="app-icon icon-cal">DOM<span>28</span></div><span class="app-name" data-key="calendar">Calendario</span></div>
+                    <div class="app-item" data-app-id="photos" onclick="openApp('photos')"><div class="app-icon" style="background:white;"><i data-lucide="image" color="#ff2d55"></i></div><span class="app-name" data-key="photos">Fotos</span></div>
+                    <div class="app-item" data-app-id="camera" onclick="openApp('camera')"><div class="app-icon" style="background:#ccc;"><i data-lucide="camera" color="#000"></i></div><span class="app-name" data-key="camera">C&aacute;mara</span></div>
+                    <div class="app-item" data-app-id="maps" onclick="openApp('maps')"><div class="app-icon icon-maps"><i data-lucide="map-pinned"></i></div><span class="app-name" data-key="maps">Mapas</span></div>
+                    <div class="app-item" data-app-id="clock" onclick="openApp('clock')"><div class="app-icon icon-clock"><i data-lucide="clock"></i></div><span class="app-name" data-key="clock">Reloj</span></div>
+                    <div class="app-item" data-app-id="weather" onclick="openApp('weather')"><div class="app-icon icon-weather"><i data-lucide="cloud-sun"></i></div><span class="app-name" data-key="weather">Clima</span></div>
+                    <div class="app-item" data-app-id="wallet" onclick="openApp('wallet')"><div class="app-icon icon-wallet"><i data-lucide="wallet-cards"></i></div><span class="app-name" data-key="wallet">Cartera</span></div>
+                    <div class="app-item" data-app-id="notes" onclick="openApp('notes')"><div class="app-icon" style="background:#ffd60a; color:white;"><i data-lucide="file-text"></i></div><span class="app-name" data-key="notes">Notas</span></div>
+                    <div class="app-item" data-app-id="calculator" onclick="openApp('calculator')">
                         <div class="app-icon"><img src="https://i.ibb.co/JRPgZLNR/images-removebg-preview.png" style="width:100%;height:100%;object-fit:cover;" loading="lazy"></div>
                         <span class="app-name" data-key="calculator">Calculadora</span>
                     </div>
-                    <div class="app-item" onclick="openApp('settings')">
+                    <div class="app-item" data-app-id="settings" onclick="openApp('settings')">
                         <div class="app-icon"><img src="https://i.ibb.co/JS5p6Z7/Settings-29-dark-removebg-preview.png" onerror="this.style.display='none';this.parentNode.style.background='#8e8e93';this.parentNode.innerHTML='<i data-lucide=\'settings-2\'></i>'" style="width:100%;height:100%;object-fit:cover;" loading="lazy"></div>
                         <span class="app-name" data-key="settings">Ajustes</span>
                     </div>
@@ -301,6 +309,10 @@
                             <div class="list-item"><div style="display:flex; gap:10px;"><i data-lucide="user"></i> Usuario</div><div style="color:#888">Apple ID</div></div>
                         </div>
                         <div class="list-group">
+                            <div class="list-item" onclick="navSettings('personalize')">
+                                <div style="display:flex; gap:10px;"><i data-lucide="palette" style="color:#ff6b6b"></i> <span>Personalizaci&oacute;n</span></div>
+                                <div style="color:#34c759; font-weight:600;">Nuevo <i data-lucide="chevron-right" size="16"></i></div>
+                            </div>
                             <div class="list-item" onclick="navSettings('langs')">
                                 <div style="display:flex; gap:10px;"><i data-lucide="globe" style="color:#007aff"></i> <span data-key="lang_region">Idioma y Regi&oacute;n</span></div>
                                 <div style="color:#888; display:flex; align-items:center;" id="currentLangDisplay">Espa&ntilde;ol <i data-lucide="chevron-right" size="16"></i></div>
@@ -315,6 +327,31 @@
                                 <div style="display:flex; gap:10px;"><i data-lucide="flask-conical" style="color:#ff9f0a"></i> Ir a versi&oacute;n beta</div>
                                 <div style="color:#888; display:flex; align-items:center;">Beta <i data-lucide="chevron-right" size="16"></i></div>
                             </div>
+                        </div>
+                    </div>
+                    <div id="setPersonalize" class="settings-page hidden sub">
+                        <div class="list-group">
+                            <div style="padding:15px 20px; font-weight:600;">Tema de color</div>
+                            <div class="theme-picker">
+                                <div class="theme-btn active" data-theme="0" title="Azul" style="background:linear-gradient(135deg, #021B79, #0575E6, #00F260);" onclick="applyTheme(0)"></div>
+                                <div class="theme-btn" data-theme="1" title="Verde" style="background:linear-gradient(135deg, #0f5132, #198754, #20c997);" onclick="applyTheme(1)"></div>
+                                <div class="theme-btn" data-theme="2" title="Morado" style="background:linear-gradient(135deg, #2d1b69, #6f42c1, #e83e8c);" onclick="applyTheme(2)"></div>
+                                <div class="theme-btn" data-theme="3" title="Rosa" style="background:linear-gradient(135deg, #c2185b, #e91e63, #f48fb1);" onclick="applyTheme(3)"></div>
+                                <div class="theme-btn" data-theme="4" title="Naranja" style="background:linear-gradient(135deg, #e65100, #ff6f00, #ffab40);" onclick="applyTheme(4)"></div>
+                                <div class="theme-btn" data-theme="5" title="Oscuro" style="background:linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);" onclick="applyTheme(5)"></div>
+                            </div>
+                        </div>
+                        <div class="list-group">
+                            <div style="padding:15px 20px; font-weight:600;">Fuente</div>
+                            <div class="list-item font-opt" data-font="system" onclick="applyFont('system')"><div>Sistema</div><i data-lucide="check" class="font-check"></i></div>
+                            <div class="list-item font-opt" data-font="inter" onclick="applyFont('inter')"><div>Inter</div><i data-lucide="check" class="font-check" style="display:none;"></i></div>
+                            <div class="list-item font-opt" data-font="dancing" onclick="applyFont('dancing')"><div>Dancing Script</div><i data-lucide="check" class="font-check" style="display:none;"></i></div>
+                            <div class="list-item font-opt" data-font="roboto" onclick="applyFont('roboto')"><div>Roboto</div><i data-lucide="check" class="font-check" style="display:none;"></i></div>
+                        </div>
+                        <div class="list-group">
+                            <div style="padding:15px 20px; font-weight:600;">Orden de apps</div>
+                            <div id="orderListContainer"></div>
+                            <div style="padding:12px 20px;"><button onclick="saveAppOrder()" style="width:100%; padding:12px; background:#007aff; color:white; border:none; border-radius:10px; font-weight:600; cursor:pointer;">Guardar orden</button></div>
                         </div>
                     </div>
                     <div id="setLangs" class="settings-page hidden sub">
@@ -424,24 +461,84 @@
 
         function navSettings(target) {
             const main = document.getElementById('setMain');
-            const sub = document.getElementById('setLangs');
+            const langs = document.getElementById('setLangs');
+            const personalize = document.getElementById('setPersonalize');
             const backBtn = document.getElementById('setBackBtn');
             const title = document.getElementById('setTitle');
             if (target === 'langs') {
                 main.classList.add('hidden');
-                sub.classList.remove('hidden');
+                langs.classList.remove('hidden');
+                if (personalize) personalize.classList.add('hidden');
                 backBtn.style.visibility = 'visible';
                 backBtn.innerText = translations[currentLang]?.settings || "Ajustes";
                 backBtn.onclick = () => navSettings('back');
                 title.innerText = translations[currentLang]?.lang_region || "Idioma";
+            } else if (target === 'personalize') {
+                main.classList.add('hidden');
+                langs.classList.add('hidden');
+                if (personalize) { personalize.classList.remove('hidden'); renderOrderList(); }
+                backBtn.style.visibility = 'visible';
+                backBtn.innerText = translations[currentLang]?.settings || "Ajustes";
+                backBtn.onclick = () => navSettings('back');
+                title.innerText = "Personalización";
+                if (typeof lucide !== 'undefined') lucide.createIcons();
             } else {
                 main.classList.remove('hidden');
-                sub.classList.add('hidden');
+                langs.classList.add('hidden');
+                if (personalize) personalize.classList.add('hidden');
                 backBtn.innerText = "Atrás";
                 backBtn.onclick = () => closeApp('settings');
                 title.innerText = translations[currentLang]?.settings || "Ajustes";
             }
         }
+
+        const THEMES = ['linear-gradient(135deg, #021B79, #0575E6, #00F260)','linear-gradient(135deg, #0f5132, #198754, #20c997)','linear-gradient(135deg, #2d1b69, #6f42c1, #e83e8c)','linear-gradient(135deg, #c2185b, #e91e63, #f48fb1)','linear-gradient(135deg, #e65100, #ff6f00, #ffab40)','linear-gradient(135deg, #1a1a2e, #16213e, #0f3460)'];
+        const FONTS = { system: '-apple-system, BlinkMacSystemFont, sans-serif', inter: "'Inter', sans-serif", dancing: "'Dancing Script', cursive", roboto: "'Roboto', sans-serif" };
+        const DEFAULT_APP_ORDER = ['mail','calendar','photos','camera','maps','clock','weather','wallet','notes','calculator','settings'];
+        const APP_NAMES = { mail: 'Mail', calendar: 'Calendario', photos: 'Fotos', camera: 'Cámara', maps: 'Mapas', clock: 'Reloj', weather: 'Clima', wallet: 'Cartera', notes: 'Notas', calculator: 'Calculadora', settings: 'Ajustes' };
+        let appOrderEdit = [];
+
+        function applyTheme(idx) {
+            const bg = THEMES[idx];
+            document.getElementById('wallpaper').style.background = bg;
+            document.getElementById('wallpaper').style.backgroundSize = '100% 100%';
+            document.getElementById('lockScreen').style.background = bg;
+            document.getElementById('lockScreen').style.backgroundSize = '100% 100%';
+            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+            const tb = document.querySelector('.theme-btn[data-theme="'+idx+'"]');
+            if (tb) tb.classList.add('active');
+            localStorage.setItem('wtc_liquid_theme', String(idx));
+        }
+        function applyFont(id) {
+            document.body.style.fontFamily = FONTS[id] || FONTS.system;
+            document.querySelectorAll('.font-opt').forEach(el => { el.classList.remove('font-selected'); const c = el.querySelector('.font-check'); if(c) c.style.display = 'none'; });
+            const sel = document.querySelector('.font-opt[data-font="'+id+'"]');
+            if(sel) { sel.classList.add('font-selected'); const c = sel.querySelector('.font-check'); if(c) c.style.display = 'block'; }
+            localStorage.setItem('wtc_liquid_font', id);
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+        function loadAppOrder() { try { const s = localStorage.getItem('wtc_liquid_app_order'); return s ? JSON.parse(s) : [...DEFAULT_APP_ORDER]; } catch { return [...DEFAULT_APP_ORDER]; } }
+        function renderAppGrid() {
+            const order = loadAppOrder();
+            const grid = document.getElementById('appGrid');
+            if (!grid) return;
+            const items = Array.from(grid.querySelectorAll('.app-item[data-app-id]'));
+            const byId = {};
+            items.forEach(el => { byId[el.getAttribute('data-app-id')] = el; });
+            order.forEach(id => { if (byId[id]) grid.appendChild(byId[id]); });
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+        function renderOrderList() {
+            appOrderEdit = loadAppOrder();
+            const cont = document.getElementById('orderListContainer');
+            if (!cont) return;
+            const len = appOrderEdit.length;
+            cont.innerHTML = appOrderEdit.map((id, i) => '<div class="order-row"><span>'+(APP_NAMES[id]||id)+'</span><div class="order-btns"><button onclick="moveAppUp('+i+')"'+(i===0?' disabled':'')+'><i data-lucide="chevron-up" size="18"></i></button><button onclick="moveAppDown('+i+')"'+(i===len-1?' disabled':'')+'><i data-lucide="chevron-down" size="18"></i></button></div></div>').join('');
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+        function moveAppUp(i) { if (i <= 0) return; [appOrderEdit[i-1], appOrderEdit[i]] = [appOrderEdit[i], appOrderEdit[i-1]]; renderOrderList(); }
+        function moveAppDown(i) { if (i >= appOrderEdit.length - 1) return; [appOrderEdit[i], appOrderEdit[i+1]] = [appOrderEdit[i+1], appOrderEdit[i]]; renderOrderList(); }
+        function saveAppOrder() { localStorage.setItem('wtc_liquid_app_order', JSON.stringify(appOrderEdit)); renderAppGrid(); }
 
         function closeTutorial() {
             document.getElementById('tutorialOverlay').style.display = "none";
@@ -575,6 +672,13 @@
             else { if (cVal === "0") cVal = ""; cVal += v; }
             d.innerText = cVal;
         }
+
+        (function initPersonalization() {
+            const theme = localStorage.getItem('wtc_liquid_theme');
+            if (theme !== null) applyTheme(parseInt(theme, 10));
+            applyFont(localStorage.getItem('wtc_liquid_font') || 'system');
+            renderAppGrid();
+        })();
 
         resize();
         window.onload = function () {
