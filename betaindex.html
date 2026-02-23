@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WTC Liquid OS 26 Ultra - Love Edition</title>
+    <title>WTC Liquid OS 26 Ultra</title>
     <meta name="description" content="OS 26 Ultra - Final Release">
     <!-- Icono actualizado -->
     <link rel="icon" href="https://www.svgrepo.com/show/503173/apple-logo.svg" type="image/svg+xml">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;600;800&family=Roboto:wght@400;500;700&display=swap');
 
         :root {
             --glass-bg: rgba(255, 255, 255, 0.18);
@@ -255,6 +255,18 @@
         .home-indicator { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 140px; height: 5px; background: white; border-radius: 10px; z-index: 2000; cursor: pointer; transition: 0.3s; }
         .home-indicator.dark { background-color: #000; }
         .status-bar { position: absolute; top: 14px; width: 100%; padding: 0 28px; display: flex; justify-content: space-between; color: white; font-size: 15px; font-weight: 600; z-index: 2000; pointer-events: none; mix-blend-mode: difference; }
+
+        .settings-page { width: 100%; height: 100%; position: absolute; top: 0; left: 0; background: var(--app-bg); transition: transform 0.3s ease; padding-top: 100px; overflow-y: auto; }
+        .settings-page.hidden { transform: translateX(100%); }
+        .settings-page.main { z-index: 1; padding-top: 0; }
+        .settings-page.sub { z-index: 2; }
+        .theme-picker { display: flex; flex-wrap: wrap; gap: 12px; padding: 15px 20px; }
+        .theme-btn { width: 44px; height: 44px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: transform 0.2s; }
+        .theme-btn.active { border-color: #007aff; transform: scale(1.1); }
+        .order-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid var(--border-color); }
+        .order-row:last-child { border-bottom: none; }
+        .order-btns { display: flex; gap: 8px; }
+        .order-btns button { width: 36px; height: 36px; border-radius: 8px; border: none; background: #e5e5ea; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
@@ -363,20 +375,20 @@
 
             <!-- HOME SCREEN -->
             <div class="home-screen">
-                <div class="app-grid">
-                    <div class="app-item" onclick="openApp('photos')"><div class="app-icon" style="background:white;"><img src="https://cdn-icons-png.flaticon.com/512/2659/2659360.png" style="width:40px;"></div><span class="app-name">Fotos</span></div>
-                    <div class="app-item" onclick="openApp('calendar')"><div class="app-icon icon-cal">FEB<span>14</span></div><span class="app-name">Calendario</span></div>
-                    <div class="app-item" onclick="openApp('maps')"><div class="app-icon icon-maps"><i data-lucide="map-pinned"></i></div><span class="app-name">Mapas</span></div>
-                    <div class="app-item" onclick="openApp('clock')"><div class="app-icon" style="background:black; border:1px solid #333;"><i data-lucide="clock" class="globe-spin" style="animation-duration:10s;"></i></div><span class="app-name">Reloj</span></div>
+                <div class="app-grid" id="appGrid">
+                    <div class="app-item" data-app-id="photos" onclick="openApp('photos')"><div class="app-icon" style="background:white;"><img src="https://cdn-icons-png.flaticon.com/512/2659/2659360.png" style="width:40px;"></div><span class="app-name">Fotos</span></div>
+                    <div class="app-item" data-app-id="calendar" onclick="openApp('calendar')"><div class="app-icon icon-cal">FEB<span>14</span></div><span class="app-name">Calendario</span></div>
+                    <div class="app-item" data-app-id="maps" onclick="openApp('maps')"><div class="app-icon icon-maps"><i data-lucide="map-pinned"></i></div><span class="app-name">Mapas</span></div>
+                    <div class="app-item" data-app-id="clock" onclick="openApp('clock')"><div class="app-icon" style="background:black; border:1px solid #333;"><i data-lucide="clock" class="globe-spin" style="animation-duration:10s;"></i></div><span class="app-name">Reloj</span></div>
 
-                    <div class="app-item" onclick="openApp('weather')"><div class="app-icon icon-weather"><i data-lucide="cloud-sun"></i></div><span class="app-name">Clima</span></div>
-                    <div class="app-item" onclick="openApp('wallet')"><div class="app-icon icon-wallet"><i data-lucide="wallet-cards"></i></div><span class="app-name">Cartera</span></div>
-                    <div class="app-item" onclick="openApp('notes')"><div class="app-icon" style="background:#fff7cc; color:#f1c40f;"><i data-lucide="notebook-pen"></i></div><span class="app-name">Notas</span></div>
-                    <div class="app-item" onclick="openApp('settings')"><div class="app-icon" style="background:linear-gradient(135deg, #636e72, #2d3436);"><i data-lucide="settings-2" class="globe-spin" style="animation-duration:8s;"></i></div><span class="app-name">Ajustes</span></div>
+                    <div class="app-item" data-app-id="weather" onclick="openApp('weather')"><div class="app-icon icon-weather"><i data-lucide="cloud-sun"></i></div><span class="app-name">Clima</span></div>
+                    <div class="app-item" data-app-id="wallet" onclick="openApp('wallet')"><div class="app-icon icon-wallet"><i data-lucide="wallet-cards"></i></div><span class="app-name">Cartera</span></div>
+                    <div class="app-item" data-app-id="notes" onclick="openApp('notes')"><div class="app-icon" style="background:#fff7cc; color:#f1c40f;"><i data-lucide="notebook-pen"></i></div><span class="app-name">Notas</span></div>
+                    <div class="app-item" data-app-id="settings" onclick="openApp('settings')"><div class="app-icon" style="background:linear-gradient(135deg, #636e72, #2d3436);"><i data-lucide="settings-2" class="globe-spin" style="animation-duration:8s;"></i></div><span class="app-name">Ajustes</span></div>
 
-                    <div class="app-item" onclick="openApp('calculator')"><div class="app-icon" style="background:#333;"><i data-lucide="calculator"></i></div><span class="app-name">Calc</span></div>
-                    <div class="app-item" onclick="openApp('files')"><div class="app-icon" style="background:#0a84ff;"><i data-lucide="folder-open"></i></div><span class="app-name">Archivos</span></div>
-                    <div class="app-item" onclick="toggleFebMode()"><div class="app-icon" style="background:white;"><i data-lucide="heart-pulse" color="#ff2d55"></i></div><span class="app-name">Salud</span></div>
+                    <div class="app-item" data-app-id="calculator" onclick="openApp('calculator')"><div class="app-icon" style="background:#333;"><i data-lucide="calculator"></i></div><span class="app-name">Calc</span></div>
+                    <div class="app-item" data-app-id="files" onclick="openApp('files')"><div class="app-icon" style="background:#0a84ff;"><i data-lucide="folder-open"></i></div><span class="app-name">Archivos</span></div>
+                    <div class="app-item" data-app-id="salud" onclick="toggleFebMode()"><div class="app-icon" style="background:white;"><i data-lucide="heart-pulse" color="#ff2d55"></i></div><span class="app-name">Salud</span></div>
                 </div>
 
                 <div class="dock-bar">
@@ -390,11 +402,12 @@
             <!-- AJUSTES (Settings) -->
             <div id="app-settings" class="app-window">
                 <div class="nav-bar">
-                    <div style="color:var(--accent); cursor:pointer;" onclick="closeApp('settings')">Atrás</div>
-                    <div>Ajustes</div>
+                    <div id="setBackBtn" style="color:var(--accent); cursor:pointer;" onclick="closeApp('settings')">Atr&aacute;s</div>
+                    <div id="setTitle">Ajustes</div>
                     <div></div>
                 </div>
-                <div class="app-body">
+                <div class="app-body" style="position:relative;">
+                    <div id="setMain" class="settings-page main">
                     <h1 style="padding:20px 20px 0;">Ajustes</h1>
                     <div style="padding:0 20px; margin-bottom:20px;">
                     <div style="display:flex; gap:15px; align-items:center;">
@@ -403,6 +416,13 @@
                     </div>
                     </div>
                     <div class="list-group">
+                    <div class="list-item" onclick="navSettings('personalize')">
+                    <div style="display:flex; gap:10px; align-items:center;">
+                    <div style="background:#ff6b6b; padding:5px; border-radius:6px; color:white;"><i data-lucide="palette" size="16"></i></div>
+                    <span>Personalizaci&oacute;n</span>
+                    </div>
+                    <div style="color:#34c759; font-weight:600;">Nuevo <i data-lucide="chevron-right" size="16"></i></div>
+                    </div>
                     <div class="list-item" onclick="toggleFebMode()">
                     <div style="display:flex; gap:10px; align-items:center;">
                     <div style="background:#ff2d55; padding:5px; border-radius:6px; color:white;"><i data-lucide="heart" size="16"></i></div> 
@@ -417,6 +437,33 @@
                     </div>
                     <div class="toggle" id="darkToggle"><div class="toggle-handle"></div></div>
                     </div>
+                    </div>
+                    </div>
+                    <div id="setPersonalize" class="settings-page hidden sub">
+                        <h1 style="padding:20px 20px 0;">Personalizaci&oacute;n</h1>
+                        <div class="list-group">
+                            <div style="padding:15px 20px; font-weight:600;">Tema de color</div>
+                            <div class="theme-picker">
+                                <div class="theme-btn active" data-theme="0" title="Azul" style="background:linear-gradient(135deg, #021B79, #0575E6, #00F260);" onclick="applyTheme(0)"></div>
+                                <div class="theme-btn" data-theme="1" title="Verde" style="background:linear-gradient(135deg, #0f5132, #198754, #20c997);" onclick="applyTheme(1)"></div>
+                                <div class="theme-btn" data-theme="2" title="Morado" style="background:linear-gradient(135deg, #2d1b69, #6f42c1, #e83e8c);" onclick="applyTheme(2)"></div>
+                                <div class="theme-btn" data-theme="3" title="Rosa" style="background:linear-gradient(135deg, #c2185b, #e91e63, #f48fb1);" onclick="applyTheme(3)"></div>
+                                <div class="theme-btn" data-theme="4" title="Naranja" style="background:linear-gradient(135deg, #e65100, #ff6f00, #ffab40);" onclick="applyTheme(4)"></div>
+                                <div class="theme-btn" data-theme="5" title="Oscuro" style="background:linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);" onclick="applyTheme(5)"></div>
+                            </div>
+                        </div>
+                        <div class="list-group">
+                            <div style="padding:15px 20px; font-weight:600;">Fuente</div>
+                            <div class="list-item font-opt" data-font="system" onclick="applyFont('system')"><div>Sistema</div><i data-lucide="check" class="font-check"></i></div>
+                            <div class="list-item font-opt" data-font="inter" onclick="applyFont('inter')"><div>Inter</div><i data-lucide="check" class="font-check" style="display:none;"></i></div>
+                            <div class="list-item font-opt" data-font="dancing" onclick="applyFont('dancing')"><div>Dancing Script</div><i data-lucide="check" class="font-check" style="display:none;"></i></div>
+                            <div class="list-item font-opt" data-font="roboto" onclick="applyFont('roboto')"><div>Roboto</div><i data-lucide="check" class="font-check" style="display:none;"></i></div>
+                        </div>
+                        <div class="list-group">
+                            <div style="padding:15px 20px; font-weight:600;">Orden de apps</div>
+                            <div id="orderListContainer"></div>
+                            <div style="padding:12px 20px;"><button onclick="saveAppOrder()" style="width:100%; padding:12px; background:#007aff; color:white; border:none; border-radius:10px; font-weight:600; cursor:pointer;">Guardar orden</button></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -710,6 +757,81 @@
             document.getElementById('scaler').style.transform = `scale(${s})`;
         }
         window.onresize = resize; window.onload = resize;
+
+        function navSettings(target) {
+            const main = document.getElementById('setMain');
+            const personalize = document.getElementById('setPersonalize');
+            const backBtn = document.getElementById('setBackBtn');
+            const title = document.getElementById('setTitle');
+            if (target === 'personalize') {
+                main.classList.add('hidden');
+                personalize.classList.remove('hidden');
+                backBtn.onclick = () => navSettings('back');
+                if (title) title.innerText = "Personalización";
+                renderOrderList();
+                lucide.createIcons();
+            } else if (target === 'back') {
+                main.classList.remove('hidden');
+                personalize.classList.add('hidden');
+                backBtn.onclick = () => closeApp('settings');
+                if (title) title.innerText = "Ajustes";
+            }
+        }
+
+        const THEMES_BETA = ['linear-gradient(135deg, #021B79, #0575E6, #00F260)','linear-gradient(135deg, #0f5132, #198754, #20c997)','linear-gradient(135deg, #2d1b69, #6f42c1, #e83e8c)','linear-gradient(135deg, #c2185b, #e91e63, #f48fb1)','linear-gradient(135deg, #e65100, #ff6f00, #ffab40)','linear-gradient(135deg, #1a1a2e, #16213e, #0f3460)'];
+        const FONTS_BETA = { system: '-apple-system, BlinkMacSystemFont, sans-serif', inter: "'Inter', sans-serif", dancing: "'Dancing Script', cursive", roboto: "'Roboto', sans-serif" };
+        const DEFAULT_APP_ORDER_BETA = ['photos','calendar','maps','clock','weather','wallet','notes','settings','calculator','files','salud'];
+        const APP_NAMES_BETA = { photos: 'Fotos', calendar: 'Calendario', maps: 'Mapas', clock: 'Reloj', weather: 'Clima', wallet: 'Cartera', notes: 'Notas', settings: 'Ajustes', calculator: 'Calc', files: 'Archivos', salud: 'Salud' };
+        let appOrderEdit = [];
+
+        function applyTheme(idx) {
+            const bg = THEMES_BETA[idx];
+            const wall = document.getElementById('wallpaper');
+            const lock = document.getElementById('lockScreen');
+            if (wall) { wall.style.background = bg; wall.style.backgroundSize = '100% 100%'; }
+            if (lock) { lock.style.background = bg; lock.style.backgroundSize = '100% 100%'; }
+            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+            const tb = document.querySelector('.theme-btn[data-theme="'+idx+'"]');
+            if (tb) tb.classList.add('active');
+            localStorage.setItem('wtc_liquid_theme', String(idx));
+        }
+        function applyFont(id) {
+            document.body.style.fontFamily = FONTS_BETA[id] || FONTS_BETA.system;
+            document.querySelectorAll('.font-opt').forEach(el => { el.classList.remove('font-selected'); const c = el.querySelector('.font-check'); if(c) c.style.display = 'none'; });
+            const sel = document.querySelector('.font-opt[data-font="'+id+'"]');
+            if(sel) { sel.classList.add('font-selected'); const c = sel.querySelector('.font-check'); if(c) c.style.display = 'block'; }
+            localStorage.setItem('wtc_liquid_font', id);
+            lucide.createIcons();
+        }
+        function loadAppOrder() { try { const s = localStorage.getItem('wtc_liquid_app_order_beta'); return s ? JSON.parse(s) : [...DEFAULT_APP_ORDER_BETA]; } catch { return [...DEFAULT_APP_ORDER_BETA]; } }
+        function renderAppGrid() {
+            const order = loadAppOrder();
+            const grid = document.getElementById('appGrid');
+            if (!grid) return;
+            const items = Array.from(grid.querySelectorAll('.app-item[data-app-id]'));
+            const byId = {};
+            items.forEach(el => { byId[el.getAttribute('data-app-id')] = el; });
+            order.forEach(id => { if (byId[id]) grid.appendChild(byId[id]); });
+            lucide.createIcons();
+        }
+        function renderOrderList() {
+            appOrderEdit = loadAppOrder();
+            const cont = document.getElementById('orderListContainer');
+            if (!cont) return;
+            const len = appOrderEdit.length;
+            cont.innerHTML = appOrderEdit.map((id, i) => '<div class="order-row"><span>'+(APP_NAMES_BETA[id]||id)+'</span><div class="order-btns"><button onclick="moveAppUp('+i+')"'+(i===0?' disabled':'')+'><i data-lucide="chevron-up" size="18"></i></button><button onclick="moveAppDown('+i+')"'+(i===len-1?' disabled':'')+'><i data-lucide="chevron-down" size="18"></i></button></div></div>').join('');
+            lucide.createIcons();
+        }
+        function moveAppUp(i) { if (i <= 0) return; [appOrderEdit[i-1], appOrderEdit[i]] = [appOrderEdit[i], appOrderEdit[i-1]]; renderOrderList(); }
+        function moveAppDown(i) { if (i >= appOrderEdit.length - 1) return; [appOrderEdit[i], appOrderEdit[i+1]] = [appOrderEdit[i+1], appOrderEdit[i]]; renderOrderList(); }
+        function saveAppOrder() { localStorage.setItem('wtc_liquid_app_order_beta', JSON.stringify(appOrderEdit)); renderAppGrid(); }
+
+        (function initPersonalization() {
+            const theme = localStorage.getItem('wtc_liquid_theme');
+            if (theme !== null) applyTheme(parseInt(theme, 10));
+            applyFont(localStorage.getItem('wtc_liquid_font') || 'system');
+            renderAppGrid();
+        })();
 
         const wave = `@keyframes wave { 0%, 100% { height: 40%; } 50% { height: 100%; } }`;
         const styleSheet = document.createElement("style");
