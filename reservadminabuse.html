@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Admin Abuse Día 3</title>
+    <title>Admin Abuse Finalizo</title>
     <link rel="icon" href="https://www.svgrepo.com/show/503173/apple-logo.svg" type="image/svg+xml">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -47,7 +47,7 @@
         }
         @keyframes ripple { to { transform: scale(4); opacity: 0; } }
 
-        #scaler{transition:transform .1s;display:flex;gap:20px;align-items:center;position:relative;z-index:1}
+        #scaler{transition:transform .1s;display:flex;flex-direction:column;gap:20px;align-items:center;position:relative;z-index:1}
         
         .iphone-frame{
             width:380px;height:800px;background:#000;border-radius:55px;position:relative;
@@ -365,6 +365,82 @@
         .aa-btn{width:36px;height:36px;border:none;background:rgba(255,255,255,.08);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:white;transition:background .15s,transform .1s;font-size:15px;flex-shrink:0}
         .aa-btn:hover{background:rgba(255,255,255,.18)}.aa-btn:active{transform:scale(.88)}
         .aa-btn.play-pause{width:44px;height:44px;background:#fff;color:#000;font-size:19px;box-shadow:0 4px 16px rgba(255,255,255,.15)}
+
+        /* iPhone no disponible + Botón RGB */
+        .iphone-unavailable-banner {
+            text-align: center;
+            padding: 20px 25px;
+            margin-bottom: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+        }
+        .iphone-unavailable-banner p {
+            color: #fff;
+            font-size: 15px;
+            line-height: 1.5;
+            margin: 0 0 18px 0;
+            font-weight: 500;
+        }
+        .unlock-rgb-btn {
+            display: inline-block;
+            padding: 14px 35px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: transform 0.2s, box-shadow 0.3s;
+            animation: rgbBorderPulse 2s ease-in-out infinite;
+        }
+        .unlock-rgb-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, #ff0000, #ff8000, #ffff00, #00ff00, #00ffff, #0080ff, #8000ff, #ff0080, #ff0000);
+            background-size: 400% 100%;
+            border-radius: 25px;
+            z-index: -2;
+            animation: rgbGradient 3s linear infinite;
+        }
+        .unlock-rgb-btn::after {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 22px;
+            z-index: -1;
+        }
+        .unlock-rgb-btn span {
+            position: relative;
+            z-index: 1;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+        .unlock-rgb-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 35px rgba(255, 0, 255, 0.8), 0 0 70px rgba(0, 255, 255, 0.5), 0 0 100px rgba(255, 255, 0, 0.3);
+        }
+        .unlock-rgb-btn:active {
+            transform: scale(0.95);
+        }
+        @keyframes rgbGradient {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 400% 50%; }
+        }
+        @keyframes rgbBorderPulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(255, 0, 0, 0.6); }
+            25% { box-shadow: 0 0 20px rgba(0, 255, 0, 0.6); }
+            50% { box-shadow: 0 0 25px rgba(0, 100, 255, 0.6); }
+            75% { box-shadow: 0 0 20px rgba(255, 0, 255, 0.6); }
+        }
     </style>
 </head>
 <body>
@@ -372,6 +448,10 @@
 <canvas id="bgCanvas"></canvas>
 
 <div id="scaler">
+  <div class="iphone-unavailable-banner">
+    <p>iPhone no disponible. Vuelve para el próximo Admin Abuse para desbloquear. Presiona el botón:</p>
+    <a href="index.html" class="unlock-rgb-btn"><span>Desbloquear</span></a>
+  </div>
   <div class="iphone-frame" id="iphoneFrame" onclick="createRipple(event)">
     
     <!-- OVERLAYS DE CAOS -->
