@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WTC Liquid 28.1</title>
+    <title>WTC Liquid 28.2</title>
     <link rel="icon" href="https://www.svgrepo.com/show/503173/apple-logo.svg" type="image/svg+xml">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -377,6 +377,28 @@
         .font-check { display: none; }
         .list-item.font-selected .font-check { display: block; color: #007aff; }
 
+        /* --- ADMIN ABUSE GLITCH EFFECT --- */
+        .glitch-text {
+            animation: glitch-text-anim 0.4s infinite alternate;
+            display: inline-flex;
+            align-items: center;
+        }
+        @keyframes glitch-text-anim {
+            0% { font-family: 'Roboto', sans-serif; filter: invert(0); transform: none; letter-spacing: normal; color: #fff; text-shadow: none; }
+            20% { font-family: 'Dancing Script', cursive; filter: invert(1); transform: scaleX(-1); letter-spacing: 2px; color: #ff0000; text-shadow: 2px 2px 0 #00ff00; }
+            40% { font-family: monospace; transform: skewX(-15deg); color: #00ff00; text-shadow: -2px -2px 0 #ff00ff; }
+            60% { font-family: 'Inter', sans-serif; transform: scaleY(-1); letter-spacing: -2px; filter: hue-rotate(180deg); color: #fff; }
+            80% { font-family: 'Courier New', Courier, monospace; transform: translate(2px, -2px) rotate(2deg); filter: invert(1) contrast(200%); color: #ff00ff; }
+            100% { font-family: 'Roboto', sans-serif; filter: invert(0); transform: none; letter-spacing: normal; color: #ff0000; }
+        }
+        @keyframes bg-glitch {
+            0% { background-position: 0 0; opacity: 0.3; }
+            25% { opacity: 0.8; filter: invert(1); }
+            50% { background-position: 20px 20px; opacity: 0.5; }
+            75% { transform: scale(1.05); }
+            100% { background-position: -20px -20px; opacity: 0.3; }
+        }
+
     </style>
 </head>
 <body>
@@ -558,6 +580,20 @@
                     <div style="color:#FFD700; font-weight:600; display:flex; align-items:center;">ULTRA <i data-lucide="chevron-right" size="16"></i></div>
                     </div>
                     </div>
+
+                    <!-- NUEVO BOTÓN ADMIN ABUSE -->
+                    <div class="list-group">
+                        <div class="list-item" onclick="window.location.href='reservadminabuse.html'" style="position: relative; overflow: hidden; background: #111;">
+                            <div style="display:flex; gap:10px; z-index: 2; position: relative;" class="glitch-text">
+                                <i data-lucide="skull" style="color:#ff0000"></i> ir al admin abuse
+                            </div>
+                            <div style="color:#ff0000; font-weight:800; display:flex; align-items:center; z-index: 2; position: relative;" class="glitch-text">
+                                NUEVO <i data-lucide="chevron-right" size="16"></i>
+                            </div>
+                            <div class="glitch-bg" style="position: absolute; top:0; left:0; width:100%; height:100%; background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,0,0,0.2) 10px, rgba(255,0,0,0.2) 20px); z-index: 1; pointer-events: none; mix-blend-mode: overlay; animation: bg-glitch 0.5s infinite linear;"></div>
+                        </div>
+                    </div>
+
                     </div>
 
                     <!-- PERSONALIZE PAGE -->
