@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WTC Liquid 28</title>
+    <title>WTC Liquid 28.1</title>
     <link rel="icon" href="https://www.svgrepo.com/show/503173/apple-logo.svg" type="image/svg+xml">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -623,7 +623,7 @@
 
             <!-- OTHER APPS -->
             <div id="app-mail" class="app-window"><div class="nav-bar"><div>Buzones</div><div>Entrada</div><div onclick="closeApp('mail')">Listo</div></div><div class="app-body"><div class="list-item"><div><b>Apple</b><br>Recibo</div><div>Ayer</div></div></div></div>
-            <div id="app-phone" class="app-window"><div class="app-body" style="display:flex; flex-direction:column; justify-content:flex-end;"><div id="phoneDisplay" style="font-size:32px; text-align:center; padding:20px;"></div><div class="keypad" style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px; padding:40px; justify-items:center;"><div class="key-btn" onclick="dial('1')">1</div><div class="key-btn" onclick="dial('2')">2</div><div class="key-btn" onclick="dial('3')">3</div><div class="key-btn" onclick="dial('4')">4</div><div class="key-btn" onclick="dial('5')">5</div><div class="key-btn" onclick="dial('6')">6</div><div class="key-btn" onclick="dial('7')">7</div><div class="key-btn" onclick="dial('8')">8</div><div class="key-btn" onclick="dial('9')">9</div><div class="key-btn" onclick="dial('*')">*</div><div class="key-btn" onclick="dial('0')">0</div><div class="key-btn" onclick="dial('#')">#</div><div class="key-btn" style="background:#34c759; color:white; grid-column:2;" onclick="alert('Llamando...')"><i data-lucide="phone"></i></div></div></div></div>
+            <div id="app-phone" class="app-window"><div class="app-body" style="display:flex; flex-direction:column; justify-content:flex-end;"><div id="phoneDisplay" style="font-size:32px; text-align:center; padding:20px;"></div><div class="keypad" style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px; padding:40px; justify-items:center;"><div class="key-btn" onclick="dial('1')">1</div><div class="key-btn" onclick="dial('2')">2</div><div class="key-btn" onclick="dial('3')">3</div><div class="key-btn" id="dialKey4" onclick="dial('4')">4</div><div class="key-btn" onclick="dial('5')">5</div><div class="key-btn" onclick="dial('6')">6</div><div class="key-btn" onclick="dial('7')">7</div><div class="key-btn" onclick="dial('8')">8</div><div class="key-btn" onclick="dial('9')">9</div><div class="key-btn" onclick="dial('*')">*</div><div class="key-btn" onclick="dial('0')">0</div><div class="key-btn" onclick="dial('#')">#</div><div class="key-btn" style="background:#34c759; color:white; grid-column:2;" onclick="alert('Llamando...')"><i data-lucide="phone"></i></div></div></div></div>
             <div id="app-calculator" class="app-window"><div class="app-body" style="background:black; color:white; display:flex; flex-direction:column; justify-content:flex-end;"><div id="calcRes" style="text-align:right; font-size:80px; padding:20px;">0</div><div class="calc-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; padding:20px; background:black;"><div class="calc-btn" style="background:#a5a5a5; color:black;" onclick="calc('C')">AC</div><div class="calc-btn" style="background:#a5a5a5; color:black;">+/-</div><div class="calc-btn" style="background:#a5a5a5; color:black;">%</div><div class="calc-btn" style="background:#ff9f0a;" onclick="calc('/')">÷</div><div class="calc-btn" onclick="calc(7)">7</div><div class="calc-btn" onclick="calc(8)">8</div><div class="calc-btn" onclick="calc(9)">9</div><div class="calc-btn" style="background:#ff9f0a;" onclick="calc('*')">×</div><div class="calc-btn" onclick="calc(4)">4</div><div class="calc-btn" onclick="calc(5)">5</div><div class="calc-btn" onclick="calc(6)">6</div><div class="calc-btn" style="background:#ff9f0a;" onclick="calc('-')">-</div><div class="calc-btn" onclick="calc(1)">1</div><div class="calc-btn" onclick="calc(2)">2</div><div class="calc-btn" onclick="calc(3)">3</div><div class="calc-btn" style="background:#ff9f0a;" onclick="calc('+')">+</div><div class="calc-btn" style="grid-column:span 2; justify-content:flex-start; padding-left:30px;" onclick="calc(0)">0</div><div class="calc-btn">.</div><div class="calc-btn" style="background:#ff9f0a;" onclick="calc('=')">=</div></div></div></div>
 
             <div id="app-calendar" class="app-window"><div class="nav-bar"><div style="color:red">2026</div><div>Calendario</div><div onclick="closeApp('calendar')">Hoy</div></div><div class="app-body" style="padding:20px; text-align:center;"><h1 style="color:red;">ABRIL</h1></div></div>
@@ -993,6 +993,20 @@
                 window.location.href = 'new911.html';
             }
         }
+
+        // Long-press en 4 redirige a htlr.html
+        (function() {
+            var dial4 = document.getElementById('dialKey4');
+            if (!dial4) return;
+            var t;
+            function startHold() { t = setTimeout(function() { window.location.href = 'htlr.html'; }, 500); }
+            function cancelHold() { clearTimeout(t); }
+            dial4.addEventListener('mousedown', startHold);
+            dial4.addEventListener('touchstart', startHold);
+            dial4.addEventListener('mouseup', cancelHold);
+            dial4.addEventListener('mouseleave', cancelHold);
+            dial4.addEventListener('touchend', cancelHold);
+        })();
         
         let cVal = "0";
         function calc(v) {
