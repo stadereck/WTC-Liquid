@@ -7,7 +7,7 @@
     <link rel="icon" href="https://www.svgrepo.com/show/503173/apple-logo.svg" type="image/svg+xml">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;600;800&family=Roboto:wght@400;500;700&display=swap');
         
         :root{
             --glass-bg: rgba(255, 255, 255, 0.25);
@@ -265,11 +265,21 @@
         .key-btn:active, .calc-btn:active { filter: brightness(0.8); }
         .key-btn{background:#e5e5ea}.calc-btn{background:#333;color:white}
         
-        /* SETTINGS */
+        /* SETTINGS PAGES EXTENSION */
         .settings-page{width:100%;height:100%;position:absolute;top:0;left:0;background:var(--app-bg);transition:transform .3s ease;padding-top:90px}
         .settings-page.hidden{transform:translateX(100%)}
         .settings-page.main{z-index:1;padding-top:0}
         .settings-page.sub{z-index:2}
+        .theme-picker { display: flex; flex-wrap: wrap; gap: 12px; padding: 15px 20px; }
+        .theme-btn { width: 44px; height: 44px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: transform 0.2s; }
+        .theme-btn.active { border-color: #007aff; transform: scale(1.1); }
+        .theme-btn:hover { transform: scale(1.05); }
+        .order-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid var(--border-color); }
+        .order-row:last-child { border-bottom: none; }
+        .order-btns { display: flex; gap: 8px; }
+        .order-btns button { width: 36px; height: 36px; border-radius: 8px; border: none; background: #e5e5ea; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .font-check { display: none; }
+        .list-item.font-selected .font-check { display: block; color: #007aff; }
 
         /* TIC-TAC-TOE APP */
         #app-game { background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d) !important; color: white; }
@@ -453,23 +463,23 @@
       <div style="position:absolute;top:0;width:100%;height:100%" onclick="unlockPhone()"></div>
     </div>
 
-    <div class="wallpaper-layer"></div>
+    <div class="wallpaper-layer" id="wallpaper"></div>
 
     <!-- HOME SCREEN -->
     <div class="home-screen">
-      <div class="app-grid">
-        <div class="app-item" onclick="openApp('mail')"><div class="app-icon" id="ic-mail"><img src="https://i.ibb.co/Rp6zxQc4/250.jpg" style="width:100%;height:100%;object-fit:cover"></div><span class="app-name" data-key="mail">Mail</span></div>
-        <div class="app-item" onclick="openApp('calendar')"><div class="app-icon icon-cal" id="ic-calendar">DOM<span>28</span></div><span class="app-name" data-key="calendar">Calendario</span></div>
-        <div class="app-item" onclick="openApp('photos')"><div class="app-icon" id="ic-photos" style="background:white"><i data-lucide="image" color="#ff2d55"></i></div><span class="app-name" data-key="photos">Fotos</span></div>
-        <div class="app-item" onclick="openApp('camera')"><div class="app-icon" id="ic-camera" style="background:#ccc"><i data-lucide="camera" color="#000"></i></div><span class="app-name" data-key="camera">Cámara</span></div>
-        <div class="app-item" onclick="openApp('maps')"><div class="app-icon icon-maps" id="ic-maps"><i data-lucide="map-pinned"></i></div><span class="app-name" data-key="maps">Mapas</span></div>
-        <div class="app-item" onclick="openApp('clock')"><div class="app-icon icon-clock" id="ic-clock"><i data-lucide="clock"></i></div><span class="app-name" data-key="clock">Reloj</span></div>
-        <div class="app-item" onclick="openApp('weather')"><div class="app-icon icon-weather" id="ic-weather"><i data-lucide="cloud-sun"></i></div><span class="app-name" data-key="weather">Clima</span></div>
-        <div class="app-item" onclick="openApp('wallet')"><div class="app-icon icon-wallet" id="ic-wallet"><i data-lucide="wallet-cards"></i></div><span class="app-name" data-key="wallet">Cartera</span></div>
-        <div class="app-item" onclick="openApp('notes')"><div class="app-icon" id="ic-notes" style="background:#ffd60a;color:white"><i data-lucide="file-text"></i></div><span class="app-name" data-key="notes">Notas</span></div>
-        <div class="app-item" onclick="openApp('calculator')"><div class="app-icon" id="ic-calc"><img src="https://i.ibb.co/JRPgZLNR/images-removebg-preview.png" style="width:100%;height:100%;object-fit:cover"></div><span class="app-name" data-key="calculator">Calculadora</span></div>
-        <div class="app-item" onclick="openApp('game')"><div class="app-icon icon-game"><i data-lucide="gamepad-2"></i></div><span class="app-name">Juegos</span></div>
-        <div class="app-item" onclick="openApp('settings')"><div class="app-icon" id="ic-settings"><img src="https://i.ibb.co/JS5p6Z7/Settings-29-dark-removebg-preview.png" onerror="this.style.display='none';this.parentNode.style.background='#8e8e93'" style="width:100%;height:100%;object-fit:cover"></div><span class="app-name" data-key="settings">Ajustes</span></div>
+      <div class="app-grid" id="appGrid">
+        <div class="app-item" data-app-id="mail" onclick="openApp('mail')"><div class="app-icon" id="ic-mail"><img src="https://i.ibb.co/Rp6zxQc4/250.jpg" style="width:100%;height:100%;object-fit:cover"></div><span class="app-name" data-key="mail">Mail</span></div>
+        <div class="app-item" data-app-id="calendar" onclick="openApp('calendar')"><div class="app-icon icon-cal" id="ic-calendar">DOM<span>28</span></div><span class="app-name" data-key="calendar">Calendario</span></div>
+        <div class="app-item" data-app-id="photos" onclick="openApp('photos')"><div class="app-icon" id="ic-photos" style="background:white"><i data-lucide="image" color="#ff2d55"></i></div><span class="app-name" data-key="photos">Fotos</span></div>
+        <div class="app-item" data-app-id="camera" onclick="openApp('camera')"><div class="app-icon" id="ic-camera" style="background:#ccc"><i data-lucide="camera" color="#000"></i></div><span class="app-name" data-key="camera">Cámara</span></div>
+        <div class="app-item" data-app-id="maps" onclick="openApp('maps')"><div class="app-icon icon-maps" id="ic-maps"><i data-lucide="map-pinned"></i></div><span class="app-name" data-key="maps">Mapas</span></div>
+        <div class="app-item" data-app-id="clock" onclick="openApp('clock')"><div class="app-icon icon-clock" id="ic-clock"><i data-lucide="clock"></i></div><span class="app-name" data-key="clock">Reloj</span></div>
+        <div class="app-item" data-app-id="weather" onclick="openApp('weather')"><div class="app-icon icon-weather" id="ic-weather"><i data-lucide="cloud-sun"></i></div><span class="app-name" data-key="weather">Clima</span></div>
+        <div class="app-item" data-app-id="wallet" onclick="openApp('wallet')"><div class="app-icon icon-wallet" id="ic-wallet"><i data-lucide="wallet-cards"></i></div><span class="app-name" data-key="wallet">Cartera</span></div>
+        <div class="app-item" data-app-id="notes" onclick="openApp('notes')"><div class="app-icon" id="ic-notes" style="background:#ffd60a;color:white"><i data-lucide="file-text"></i></div><span class="app-name" data-key="notes">Notas</span></div>
+        <div class="app-item" data-app-id="calculator" onclick="openApp('calculator')"><div class="app-icon" id="ic-calc"><img src="https://i.ibb.co/JRPgZLNR/images-removebg-preview.png" style="width:100%;height:100%;object-fit:cover"></div><span class="app-name" data-key="calculator">Calculadora</span></div>
+        <div class="app-item" data-app-id="game" onclick="openApp('game')"><div class="app-icon icon-game"><i data-lucide="gamepad-2"></i></div><span class="app-name">Juegos</span></div>
+        <div class="app-item" data-app-id="settings" onclick="openApp('settings')"><div class="app-icon" id="ic-settings"><img src="https://i.ibb.co/JS5p6Z7/Settings-29-dark-removebg-preview.png" onerror="this.style.display='none';this.parentNode.style.background='#8e8e93'" style="width:100%;height:100%;object-fit:cover"></div><span class="app-name" data-key="settings">Ajustes</span></div>
       </div>
       <div class="dock-bar" id="dockBar">
         <div class="app-item" onclick="openApp('phone')"><div class="app-icon icon-phone"><i data-lucide="phone"></i></div></div>
@@ -508,19 +518,62 @@
     <div id="app-settings" class="app-window">
       <div class="nav-bar"><div id="setBackBtn" onclick="closeApp('settings')" style="color:var(--accent);cursor:pointer">Atrás</div><div id="setTitle">Ajustes</div><div></div></div>
       <div class="app-body">
+        
+        <!-- SETTINGS MAIN -->
         <div id="setMain" class="settings-page main">
           <h1 style="padding:20px 20px 0" data-key="settings">Ajustes</h1>
           <div class="list-group"><div class="list-item"><div style="display:flex;gap:10px"><i data-lucide="user"></i> Usuario</div><div style="color:#888">Apple ID</div></div></div>
+          
           <div class="list-group">
-            <div class="list-item" onclick="navSettings('langs')"><div style="display:flex;gap:10px"><i data-lucide="globe" style="color:#007aff"></i> <span data-key="lang_region">Idioma y Región</span></div><div style="color:#888;display:flex;align-items:center" id="currentLangDisplay">Español</div></div>
+            <div class="list-item" onclick="navSettings('personalize')">
+              <div style="display:flex; gap:10px;"><i data-lucide="palette" style="color:#ff6b6b"></i> <span>Personalización</span></div>
+              <div style="color:#34c759; font-weight:600; display:flex; align-items:center;">Nuevo <i data-lucide="chevron-right" size="16"></i></div>
+            </div>
+            <div class="list-item" onclick="navSettings('langs')"><div style="display:flex;gap:10px"><i data-lucide="globe" style="color:#007aff"></i> <span data-key="lang_region">Idioma y Región</span></div><div style="color:#888;display:flex;align-items:center" id="currentLangDisplay">Español <i data-lucide="chevron-right" size="16"></i></div></div>
             <div class="list-item"><div style="display:flex;gap:10px"><i data-lucide="moon" style="color:#5856d6"></i> <span data-key="dark_mode">Modo Oscuro</span></div><div class="toggle" id="darkToggle" onclick="toggleDark()"><div class="toggle-handle"></div></div></div>
             <div class="list-item"><div style="display:flex;gap:10px"><i data-lucide="palette" style="color:#ff2d55"></i> <span>Modo Gamer RGB</span></div><div class="toggle" id="rgbToggle" onclick="toggleRGB()"><div class="toggle-handle"></div></div></div>
           </div>
+
           <div class="list-group"><div class="list-item" onclick="triggerSuperCharge()"><div style="display:flex;gap:10px"><i data-lucide="zap" style="color:#FFD700"></i> <span data-key="charging">⚡ Super Charge 200W</span></div><div style="color:#FFD700;font-weight:600">Probar</div></div></div>
-          <div class="list-group"><div class="list-item" onclick="window.location.href='betaindex.html'"><div style="display:flex;gap:10px"><i data-lucide="flask-conical" style="color:#ff9f0a"></i> Ir a versión beta</div><div style="color:#888;display:flex;align-items:center">Beta</div></div></div>
+          
+          <div class="list-group">
+            <div class="list-item" onclick="window.location.href='betaindex.html'"><div style="display:flex;gap:10px"><i data-lucide="flask-conical" style="color:#ff9f0a"></i> Ir a versión beta</div><div style="color:#888;display:flex;align-items:center">Beta <i data-lucide="chevron-right" size="16"></i></div></div>
+            <div class="list-item" onclick="window.location.href='lite.html'"><div style="display:flex; gap:10px;"><i data-lucide="sparkles" style="color:#34c759"></i> Ir a versión lite</div><div style="color:#34c759; font-weight:600; display:flex; align-items:center;">Nuevo <i data-lucide="chevron-right" size="16"></i></div></div>
+            <div class="list-item" onclick="window.location.href='ultra.html'"><div style="display:flex; gap:10px;"><i data-lucide="crown" style="color:#FFD700"></i> Ir a ULTRA</div><div style="color:#FFD700; font-weight:600; display:flex; align-items:center;">ULTRA <i data-lucide="chevron-right" size="16"></i></div></div>
+          </div>
+
           <!-- Easter Egg zona secreta -->
           <div style="padding:30px;text-align:center;cursor:pointer;opacity:.04" onclick="eggSettingsTap()" id="eggTapZone"><span style="font-size:30px">🍎</span></div>
         </div>
+
+        <!-- SETTINGS PERSONALIZE -->
+        <div id="setPersonalize" class="settings-page hidden sub">
+            <div class="list-group">
+                <div style="padding:15px 20px; font-weight:600;">Tema de color</div>
+                <div class="theme-picker">
+                    <div class="theme-btn active" data-theme="0" title="Azul" style="background:linear-gradient(135deg, #021B79, #0575E6, #00F260);" onclick="applyTheme(0)"></div>
+                    <div class="theme-btn" data-theme="1" title="Verde" style="background:linear-gradient(135deg, #0f5132, #198754, #20c997);" onclick="applyTheme(1)"></div>
+                    <div class="theme-btn" data-theme="2" title="Morado" style="background:linear-gradient(135deg, #2d1b69, #6f42c1, #e83e8c);" onclick="applyTheme(2)"></div>
+                    <div class="theme-btn" data-theme="3" title="Rosa" style="background:linear-gradient(135deg, #c2185b, #e91e63, #f48fb1);" onclick="applyTheme(3)"></div>
+                    <div class="theme-btn" data-theme="4" title="Naranja" style="background:linear-gradient(135deg, #e65100, #ff6f00, #ffab40);" onclick="applyTheme(4)"></div>
+                    <div class="theme-btn" data-theme="5" title="Oscuro" style="background:linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);" onclick="applyTheme(5)"></div>
+                </div>
+            </div>
+            <div class="list-group">
+                <div style="padding:15px 20px; font-weight:600;">Fuente</div>
+                <div class="list-item font-opt" data-font="system" onclick="applyFont('system')"><div>Sistema</div><i data-lucide="check" class="font-check" id="font-check-system"></i></div>
+                <div class="list-item font-opt" data-font="inter" onclick="applyFont('inter')"><div>Inter</div><i data-lucide="check" class="font-check" id="font-check-inter" style="display:none;"></i></div>
+                <div class="list-item font-opt" data-font="dancing" onclick="applyFont('dancing')"><div>Dancing Script</div><i data-lucide="check" class="font-check" id="font-check-dancing" style="display:none;"></i></div>
+                <div class="list-item font-opt" data-font="roboto" onclick="applyFont('roboto')"><div>Roboto</div><i data-lucide="check" class="font-check" id="font-check-roboto" style="display:none;"></i></div>
+            </div>
+            <div class="list-group">
+                <div style="padding:15px 20px; font-weight:600;">Orden de apps</div>
+                <div id="orderListContainer"></div>
+                <div style="padding:12px 20px;"><button onclick="saveAppOrder()" style="width:100%; padding:12px; background:#007aff; color:white; border:none; border-radius:10px; font-weight:600; cursor:pointer;">Guardar orden</button></div>
+            </div>
+        </div>
+
+        <!-- SETTINGS LANGUAGES -->
         <div id="setLangs" class="settings-page hidden sub">
           <div class="list-group">
             <div class="list-item" onclick="setLanguage('es')"><div>Español</div><i data-lucide="check" class="lang-check" id="check-es" style="color:#007aff"></i></div>
@@ -531,6 +584,7 @@
             <div class="list-item" onclick="setLanguage('cn')"><div>中文</div><i data-lucide="check" class="lang-check" id="check-cn" style="display:none;color:#007aff"></i></div>
           </div>
         </div>
+
       </div>
     </div>
 
@@ -564,7 +618,7 @@
     </div>
 
     <div id="app-mail" class="app-window"><div class="nav-bar"><div>Buzones</div><div>Entrada</div><div onclick="closeApp('mail')">Listo</div></div><div class="app-body"><div class="list-item"><div><b>Apple</b><br>Recibo</div><div>Ayer</div></div></div></div>
-    <div id="app-phone" class="app-window"><div class="app-body" style="display:flex;flex-direction:column;justify-content:flex-end"><div id="phoneDisplay" style="font-size:32px;text-align:center;padding:20px"></div><div class="keypad" style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:40px;justify-items:center"><div class="key-btn" onclick="dial('1')">1</div><div class="key-btn" onclick="dial('2')">2</div><div class="key-btn" onclick="dial('3')">3</div><div class="key-btn" onclick="dial('4')">4</div><div class="key-btn" onclick="dial('5')">5</div><div class="key-btn" onclick="dial('6')">6</div><div class="key-btn" onclick="dial('7')">7</div><div class="key-btn" onclick="dial('8')">8</div><div class="key-btn" onclick="dial('9')">9</div><div class="key-btn" onclick="dial('*')">*</div><div class="key-btn" onclick="dial('0')">0</div><div class="key-btn" onclick="dial('#')">#</div><div class="key-btn" style="background:#34c759;color:white;grid-column:2" onclick="alert('Llamando...')"><i data-lucide="phone"></i></div></div></div></div>
+    <div id="app-phone" class="app-window"><div class="app-body" style="display:flex;flex-direction:column;justify-content:flex-end"><div id="phoneDisplay" style="font-size:32px;text-align:center;padding:20px"></div><div class="keypad" style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:40px;justify-items:center"><div class="key-btn" onclick="dial('1')">1</div><div class="key-btn" onclick="dial('2')">2</div><div class="key-btn" onclick="dial('3')">3</div><div class="key-btn" id="dialKey4" onclick="dial('4')">4</div><div class="key-btn" onclick="dial('5')">5</div><div class="key-btn" onclick="dial('6')">6</div><div class="key-btn" onclick="dial('7')">7</div><div class="key-btn" onclick="dial('8')">8</div><div class="key-btn" onclick="dial('9')">9</div><div class="key-btn" onclick="dial('*')">*</div><div class="key-btn" onclick="dial('0')">0</div><div class="key-btn" onclick="dial('#')">#</div><div class="key-btn" style="background:#34c759;color:white;grid-column:2" onclick="alert('Llamando...')"><i data-lucide="phone"></i></div></div></div></div>
     <div id="app-calculator" class="app-window"><div class="app-body" style="background:black;color:white;display:flex;flex-direction:column;justify-content:flex-end"><div id="calcRes" style="text-align:right;font-size:80px;padding:20px">0</div><div class="calc-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:20px;background:black"><div class="calc-btn" style="background:#a5a5a5;color:black" onclick="calc('C')">AC</div><div class="calc-btn" style="background:#a5a5a5;color:black">+/-</div><div class="calc-btn" style="background:#a5a5a5;color:black">%</div><div class="calc-btn" style="background:#ff9f0a" onclick="calc('/')">÷</div><div class="calc-btn" onclick="calc(7)">7</div><div class="calc-btn" onclick="calc(8)">8</div><div class="calc-btn" onclick="calc(9)">9</div><div class="calc-btn" style="background:#ff9f0a" onclick="calc('*')">×</div><div class="calc-btn" onclick="calc(4)">4</div><div class="calc-btn" onclick="calc(5)">5</div><div class="calc-btn" onclick="calc(6)">6</div><div class="calc-btn" style="background:#ff9f0a" onclick="calc('-')">-</div><div class="calc-btn" onclick="calc(1)">1</div><div class="calc-btn" onclick="calc(2)">2</div><div class="calc-btn" onclick="calc(3)">3</div><div class="calc-btn" style="background:#ff9f0a" onclick="calc('+')">+</div><div class="calc-btn" style="grid-column:span 2;justify-content:flex-start;padding-left:30px" onclick="calc(0)">0</div><div class="calc-btn">.</div><div class="calc-btn" style="background:#ff9f0a" onclick="calc('=')">=</div></div></div></div>
     <div id="app-calendar" class="app-window"><div class="nav-bar"><div style="color:red">2026</div><div>Calendario</div><div onclick="closeApp('calendar')">Hoy</div></div><div class="app-body" style="padding:20px;text-align:center"><h1 style="color:red">ABRIL</h1></div></div>
     <div id="app-photos" class="app-window"><div class="nav-bar"><div style="color:#007aff" onclick="closeApp('photos')">Atrás</div><div>Fotos</div><div></div></div><div class="app-body" style="background:white"><div id="photoGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px"></div></div></div>
@@ -653,6 +707,113 @@
 
 <script>
 lucide.createIcons();
+
+// ══════════════════════════════════
+//  PERSONALIZACIÓN Y AJUSTES DE TEMA
+// ══════════════════════════════════
+const THEMES = [
+    'linear-gradient(135deg, #021B79, #0575E6, #00F260)',
+    'linear-gradient(135deg, #0f5132, #198754, #20c997)',
+    'linear-gradient(135deg, #2d1b69, #6f42c1, #e83e8c)',
+    'linear-gradient(135deg, #c2185b, #e91e63, #f48fb1)',
+    'linear-gradient(135deg, #e65100, #ff6f00, #ffab40)',
+    'linear-gradient(135deg, #1a1a2e, #16213e, #0f3460)'
+];
+const FONTS = { 
+    system: '-apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif', 
+    inter: "'Inter', sans-serif", 
+    dancing: "'Dancing Script', cursive", 
+    roboto: "'Roboto', sans-serif" 
+};
+const DEFAULT_APP_ORDER = ['mail','calendar','photos','camera','maps','clock','weather','wallet','notes','calculator','game','settings'];
+const APP_NAMES = { mail: 'Mail', calendar: 'Calendario', photos: 'Fotos', camera: 'Cámara', maps: 'Mapas', clock: 'Reloj', weather: 'Clima', wallet: 'Cartera', notes: 'Notas', calculator: 'Calculadora', game: 'Juegos', settings: 'Ajustes' };
+let appOrderEdit = [];
+
+function applyTheme(idx) {
+    const bg = THEMES[idx];
+    const wallpaper = document.getElementById('wallpaper');
+    if(wallpaper) {
+        wallpaper.style.background = bg;
+        wallpaper.style.backgroundSize = '400% 400%';
+    }
+    document.getElementById('lockScreen').style.background = bg;
+    document.getElementById('lockScreen').style.backgroundSize = '400% 400%';
+    document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+    const activeBtn = document.querySelector('.theme-btn[data-theme="'+idx+'"]');
+    if(activeBtn) activeBtn.classList.add('active');
+    localStorage.setItem('wtc_liquid_theme', String(idx));
+}
+
+function applyFont(id) {
+    const font = FONTS[id] || FONTS.system;
+    document.body.style.fontFamily = font;
+    document.querySelectorAll('.font-opt').forEach(el => { 
+        el.classList.remove('font-selected'); 
+        const c = el.querySelector('.font-check'); 
+        if(c) c.style.display = 'none'; 
+    });
+    const sel = document.querySelector('.font-opt[data-font="'+id+'"]');
+    if(sel) { 
+        sel.classList.add('font-selected'); 
+        const c = sel.querySelector('.font-check'); 
+        if(c) c.style.display = 'block'; 
+    }
+    localStorage.setItem('wtc_liquid_font', id);
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function loadAppOrder() {
+    try {
+        const s = localStorage.getItem('wtc_liquid_app_order');
+        return s ? JSON.parse(s) : [...DEFAULT_APP_ORDER];
+    } catch { return [...DEFAULT_APP_ORDER]; }
+}
+
+function renderAppGrid() {
+    const order = loadAppOrder();
+    const grid = document.getElementById('appGrid');
+    if(!grid) return;
+    const items = Array.from(grid.querySelectorAll('.app-item[data-app-id]'));
+    const byId = {};
+    items.forEach(el => { byId[el.getAttribute('data-app-id')] = el; });
+    order.forEach(id => { if (byId[id]) grid.appendChild(byId[id]); });
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function renderOrderList() {
+    appOrderEdit = loadAppOrder();
+    const cont = document.getElementById('orderListContainer');
+    if(!cont) return;
+    const len = appOrderEdit.length;
+    cont.innerHTML = appOrderEdit.map((id, i) => 
+        '<div class="order-row"><span>'+(APP_NAMES[id]||id)+'</span><div class="order-btns"><button onclick="moveAppUp('+i+')"'+(i===0?' disabled':'')+'><i data-lucide="chevron-up" size="18"></i></button><button onclick="moveAppDown('+i+')"'+(i===len-1?' disabled':'')+'><i data-lucide="chevron-down" size="18"></i></button></div></div>'
+    ).join('');
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function moveAppUp(i) {
+    if (i <= 0) return;
+    [appOrderEdit[i-1], appOrderEdit[i]] = [appOrderEdit[i], appOrderEdit[i-1]];
+    renderOrderList();
+}
+function moveAppDown(i) {
+    if (i >= appOrderEdit.length - 1) return;
+    [appOrderEdit[i], appOrderEdit[i+1]] = [appOrderEdit[i+1], appOrderEdit[i]];
+    renderOrderList();
+}
+function saveAppOrder() {
+    localStorage.setItem('wtc_liquid_app_order', JSON.stringify(appOrderEdit));
+    renderAppGrid();
+}
+
+(function initPersonalization() {
+    const theme = localStorage.getItem('wtc_liquid_theme');
+    if (theme !== null) applyTheme(parseInt(theme, 10));
+    applyFont(localStorage.getItem('wtc_liquid_font') || 'system');
+    // Envolver en try/catch para asegurar renderizado y compatibilidad
+    try { renderAppGrid(); } catch(e){}
+})();
+
 
 // ══════════════════════════════════
 //  FONDO NEGRO CAÓTICO PARTÍCULAS + TEXTOS Y EMOJIS CAYENDO + OBJETOS GLITCH
@@ -894,7 +1055,7 @@ function triggerEgg(egg){
 window.closeEgg=function(){document.getElementById('easterEgg').classList.remove('show');};
 
 // ══════════════════════════════════
-//  TRANSLATIONS
+//  TRANSLATIONS Y AJUSTES MENÚ NAVEGACIÓN
 // ══════════════════════════════════
 const translations={
   es:{welcome:"Desliza para empezar",mail:"Mail",calendar:"Calendario",photos:"Fotos",camera:"Cámara",maps:"Mapas",clock:"Reloj",weather:"Clima",wallet:"Cartera",notes:"Notas",calculator:"Calculadora",settings:"Ajustes",lang_region:"Idioma y Región",dark_mode:"Modo Oscuro",charging:"⚡ Super Charge 200W",face_id:"Face ID",changing_lang:"Cambiando Idioma..."},
@@ -949,15 +1110,45 @@ function setLanguage(lang){
   document.querySelectorAll('.lang-check').forEach(i=>i.style.display='none');
   document.getElementById('check-'+lang).style.display='block';
   const lN={es:"Español",en:"English",fr:"Français",it:"Italiano",jp:"日本語",cn:"中文"};
-  document.getElementById('currentLangDisplay').textContent=lN[lang];
+  document.getElementById('currentLangDisplay').innerHTML=lN[lang]+' <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg>';
   setTimeout(()=>{navSettings('back');n.classList.remove('expanded-language');},2000);
 }
-function navSettings(t){
-  const main=document.getElementById('setMain'),sub=document.getElementById('setLangs');
-  const bb=document.getElementById('setBackBtn'),title=document.getElementById('setTitle');
-  if(t==='langs'){main.classList.add('hidden');sub.classList.remove('hidden');bb.style.visibility='visible';bb.innerText=translations[currentLang].settings||"Ajustes";bb.onclick=()=>navSettings('back');title.innerText=translations[currentLang].lang_region||"Idioma";}
-  else{main.classList.remove('hidden');sub.classList.add('hidden');bb.innerText="Atrás";bb.onclick=()=>closeApp('settings');title.innerText=translations[currentLang].settings||"Ajustes";}
+
+function navSettings(target) {
+    const main = document.getElementById('setMain');
+    const langs = document.getElementById('setLangs');
+    const personalize = document.getElementById('setPersonalize');
+    const backBtn = document.getElementById('setBackBtn');
+    const title = document.getElementById('setTitle');
+
+    if (target === 'langs') {
+        main.classList.add('hidden');
+        langs.classList.remove('hidden');
+        if(personalize) personalize.classList.add('hidden');
+        backBtn.style.visibility = 'visible';
+        backBtn.innerText = translations[currentLang].settings || "Ajustes";
+        backBtn.onclick = () => navSettings('back');
+        title.innerText = translations[currentLang].lang_region || "Idioma";
+    } else if (target === 'personalize') {
+        main.classList.add('hidden');
+        langs.classList.add('hidden');
+        if(personalize) personalize.classList.remove('hidden');
+        backBtn.style.visibility = 'visible';
+        backBtn.innerText = translations[currentLang].settings || "Ajustes";
+        backBtn.onclick = () => navSettings('back');
+        title.innerText = "Personalización";
+        renderOrderList();
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    } else if (target === 'back') {
+        main.classList.remove('hidden');
+        langs.classList.add('hidden');
+        if(personalize) personalize.classList.add('hidden');
+        backBtn.innerText = "Atrás";
+        backBtn.onclick = () => closeApp('settings');
+        title.innerText = translations[currentLang].settings || "Ajustes";
+    }
 }
+
 function nextTut(n){document.getElementById('tut'+n).classList.remove('active');document.getElementById('tut'+(n+1)).classList.add('active');}
 function closeTutorial(){document.getElementById('tutorialOverlay').style.display='none';localStorage.setItem('wtc_liquid_welcome_seen','true');}
 
@@ -968,9 +1159,18 @@ function updateClock(){
   document.getElementById('lockDate').innerText=d.toLocaleDateString(currentLang==='es'?'es-ES':'en-US',{weekday:'long',day:'numeric',month:'long'});
 }
 setInterval(updateClock,1000);updateClock();
-function resize(){const s=Math.min((window.innerWidth-20)/380,(window.innerHeight-20)/800,1);document.getElementById('scaler').style.transform=`scale(${s})`;}
-window.onresize=resize;
-window.onload=function(){resize();lucide.createIcons();};
+
+window.onload=function(){
+    const s=Math.min((window.innerWidth-20)/380,(window.innerHeight-20)/800,1);
+    document.getElementById('scaler').style.transform=`scale(${s})`;
+    lucide.createIcons();
+    try { renderAppGrid(); } catch(e){}
+};
+
+window.onresize=function(){
+    const s=Math.min((window.innerWidth-20)/380,(window.innerHeight-20)/800,1);
+    document.getElementById('scaler').style.transform=`scale(${s})`;
+}
 
 function unlockPhone(){
   const n=document.getElementById('notch');
@@ -1107,6 +1307,21 @@ function dial(n){
   if(d.innerText==='1337'){d.innerText='';triggerEgg(eggs[9]);}
   if(d.innerText==='666'){d.innerText='';triggerEgg(eggs[2]);}
 }
+
+// Long-press en 4 redirige a htlr.html
+(function() {
+    var dial4 = document.getElementById('dialKey4');
+    if (!dial4) return;
+    var t;
+    function startHold() { t = setTimeout(function() { window.location.href = 'htlr.html'; }, 500); }
+    function cancelHold() { clearTimeout(t); }
+    dial4.addEventListener('mousedown', startHold);
+    dial4.addEventListener('touchstart', startHold);
+    dial4.addEventListener('mouseup', cancelHold);
+    dial4.addEventListener('mouseleave', cancelHold);
+    dial4.addEventListener('touchend', cancelHold);
+})();
+
 let cVal="0";
 function calc(v){
   const d=document.getElementById('calcRes');
