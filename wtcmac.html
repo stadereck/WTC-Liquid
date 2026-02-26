@@ -3,248 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WTC Mac 1.1</title>
+    <title>WTC Mac OS 1.1</title>
     <link rel="icon" href="https://www.svgrepo.com/show/503173/apple-logo.svg" type="image/svg+xml">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;600&family=Roboto:wght@400;500;700&display=swap');
 
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.15);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --app-bg: #f2f2f7;
-            --app-text: #000;
+            --glass-bg: rgba(255, 255, 255, 0.2);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --app-bg: #f5f5f7;
+            --app-text: #1d1d1f;
             --accent: #007aff;
-            --list-bg: #fff;
-            --border-color: #e5e5ea;
+            --list-bg: #ffffff;
+            --border-color: #d2d2d7;
+            --menu-bar-bg: rgba(255, 255, 255, 0.3);
+            --menu-bar-text: #000;
         }
 
-        .iphone-frame.dark-mode {
-            --app-bg: #000;
-            --app-text: #fff;
+        body.dark-mode {
+            --app-bg: #1e1e1e;
+            --app-text: #f5f5f7;
             --glass-bg: rgba(30, 30, 30, 0.6);
-            --list-bg: #1c1c1e;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --list-bg: #2c2c2e;
             --border-color: #38383a;
+            --menu-bar-bg: rgba(0, 0, 0, 0.3);
+            --menu-bar-text: #fff;
         }
 
         * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif; background: #111; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif; background: #000; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
 
-        #scaler { transition: transform 0.1s; display: flex; gap: 20px; align-items: center; }
-
-        .iphone-frame {
-            width: 380px; height: 800px; background: #000; border-radius: 55px;
-            position: relative; box-shadow: 0 0 0 12px #1a1a1a, 0 0 0 14px #4a4a4a, 0 20px 50px rgba(0,0,0,0.5);
-            overflow: hidden; z-index: 10; transition: background 0.3s;
-        }
-
-        /* --- PANTALLA DE BIENVENIDA (HELLO) --- */
-        #welcomeScreen {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: white; z-index: 5000; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; text-align: center;
-            transition: transform 0.8s cubic-bezier(0.6, -0.28, 0.735, 0.045);
-        }
-        #welcomeText {
-            font-family: 'Dancing Script', cursive; font-size: 60px; font-weight: 700;
-            opacity: 0; transition: opacity 1s; color: black;
-        }
-        .swipe-hint-text {
-            position: absolute; bottom: 50px; font-family: -apple-system, sans-serif;
-            font-weight: 500; font-size: 16px; opacity: 0; animation: fadeUp 2s infinite; color: #888;
-        }
-        @keyframes fadeUp { 0% { opacity: 0; transform: translateY(10px); } 50% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-10px); } }
-
-        /* --- ISLA DINÁMICA --- */
-        .notch {
-            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
-            width: 120px; height: 35px; background: #000; border-radius: 20px; 
-            z-index: 6000;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            color: white; overflow: visible; display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
-            cursor: pointer; box-shadow: 0 0 0 0px transparent;
-        }
-
-        /* Animación Aura Boreal para Bienvenida */
-        .notch.welcome-aura {
-            animation: islandBreathe 3s infinite alternate;
-            box-shadow: 0 0 20px 2px rgba(0, 122, 255, 0.6), 0 0 40px 5px rgba(50, 255, 100, 0.3);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        @keyframes islandBreathe {
-            0% { box-shadow: 0 0 15px 1px rgba(0, 122, 255, 0.5), 0 0 30px 2px rgba(200, 50, 255, 0.2); }
-            100% { box-shadow: 0 0 25px 4px rgba(50, 200, 255, 0.8), 0 0 50px 8px rgba(50, 255, 100, 0.4); }
-        }
-
-        /* Estados de la Isla - SUPER CHARGE 200W */
-        .notch.expanded-charge { 
-            width: 320px; 
-            height: 120px; 
-            border-radius: 35px; 
-            justify-content: center; 
-            background: linear-gradient(135deg, #000, #1a1a2e, #000);
-            border: 2px solid #FFD700;
-            flex-direction: column;
-            animation: superChargeGlow 2s infinite alternate;
-        }
-
-        @keyframes superChargeGlow {
-            0% { 
-                box-shadow: 0 0 20px 2px rgba(255, 215, 0, 0.6), 
-                            0 0 40px 4px rgba(255, 255, 0, 0.4),
-                            inset 0 0 20px rgba(255, 215, 0, 0.2); 
-            }
-            100% { 
-                box-shadow: 0 0 30px 4px rgba(255, 215, 0, 0.9), 
-                            0 0 60px 8px rgba(255, 215, 0, 0.6),
-                            inset 0 0 30px rgba(255, 215, 0, 0.3); 
-            }
-        }
-
-        /* Rayos eléctricos */
-        .lightning {
-            position: absolute;
-            width: 3px;
-            height: 30px;
-            background: linear-gradient(to bottom, #FFD700, transparent);
-            opacity: 0;
-            animation: lightning 1.5s infinite;
-        }
-
-        .lightning:nth-child(1) { left: 10%; animation-delay: 0s; }
-        .lightning:nth-child(2) { left: 30%; animation-delay: 0.3s; }
-        .lightning:nth-child(3) { right: 30%; animation-delay: 0.6s; }
-        .lightning:nth-child(4) { right: 10%; animation-delay: 0.9s; }
-
-        @keyframes lightning {
-            0%, 100% { opacity: 0; transform: translateY(-10px) scaleY(0); }
-            10% { opacity: 1; transform: translateY(0) scaleY(1); }
-            20% { opacity: 0; transform: translateY(10px) scaleY(0.5); }
-        }
-
-        /* Partículas de energía */
-        .energy-particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: #FFD700;
-            border-radius: 50%;
-            opacity: 0;
-            animation: particleFloat 2s infinite;
-        }
-
-        @keyframes particleFloat {
-            0% { opacity: 0; transform: translateY(20px) scale(0); }
-            50% { opacity: 1; transform: translateY(-20px) scale(1); }
-            100% { opacity: 0; transform: translateY(-40px) scale(0); }
-        }
-
-        .notch.expanded-faceid { width: 160px; height: 160px; border-radius: 40px; justify-content: center; flex-direction: column; }
-
-        .notch.expanded-language {
-            width: 280px; height: 60px; border-radius: 30px; justify-content: center;
-            background: linear-gradient(45deg, #000, #1a1a1a);
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 0 30px rgba(0,122,255,0.5);
-        }
-
-        .notch-content { display: none; width: 100%; opacity: 0; transition: opacity 0.2s; }
-        .notch.expanded-charge .charge-ui, 
-        .notch.expanded-faceid .faceid-ui,
-        .notch.expanded-language .lang-ui { display: flex; opacity: 1; align-items: center; justify-content: center; gap: 10px; }
-
-        .charge-ui {
-            flex-direction: column;
-            gap: 8px !important;
-            position: relative;
-        }
-
-        .super-charge-badge {
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: 800;
-            color: #000;
-            letter-spacing: 1px;
-            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.5);
-        }
-
-        .charge-percentage {
-            font-size: 48px;
-            font-weight: 700;
-            color: #FFD700;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
-            line-height: 1;
-        }
-
-        .charge-watts {
-            font-size: 14px;
-            font-weight: 600;
-            color: #fff;
-            opacity: 0.9;
-        }
-
-        .globe-spin { animation: spin 2s linear infinite; color: #007aff; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        .scan-line { width: 50px; height: 50px; border: 2px solid #007aff; border-radius: 10px; position: relative; }
-        .scan-line::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: #007aff; animation: scan 1.5s infinite; }
-        @keyframes scan { 0% { top: 0; opacity: 0; } 50% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
-
-        /* TUTORIAL MEJORADO */
-        #tutorialOverlay {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            backdrop-filter: blur(20px);
-            z-index: 4000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .tut-card {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(30px);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 30px;
-            padding: 40px;
-            text-align: center;
-            color: white;
-            display: none;
-            max-width: 300px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-        }
-
-        .tut-card.active { display: block; animation: fadeIn 0.5s; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .tut-btn {
-            background: linear-gradient(135deg, #007aff, #0051d5);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 20px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 20px;
-            box-shadow: 0 4px 15px rgba(0, 122, 255, 0.4);
-            transition: all 0.3s;
-        }
-
-        .tut-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 122, 255, 0.6);
-        }
-
-        /* FONDOS */
+        /* --- FONDOS --- */
         .wallpaper-layer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
             background: linear-gradient(135deg, #021B79, #0575E6, #00F260);
@@ -252,134 +43,237 @@
         }
         @keyframes gradientAnim { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        /* LOCK SCREEN */
-        .lock-screen {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;
-            background: linear-gradient(135deg, #021B79, #0575E6, #00F260);
-            background-size: 400% 400%; animation: gradientAnim 15s ease infinite;
-            display: flex; flex-direction: column; align-items: center;
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        /* --- PANTALLA DE INICIO (LOGIN) --- */
+        #loginScreen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: inherit; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            z-index: 9000; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+            transition: opacity 0.8s ease, visibility 0.8s;
+            color: white;
         }
-        .lock-screen.unlocked { transform: translateY(-100%); }
-        .clock-container { margin-top: 80px; text-align: center; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        .lock-time { font-size: 90px; font-weight: 700; letter-spacing: -3px; line-height: 1; }
-        .lock-date { font-size: 20px; font-weight: 500; text-transform: capitalize; margin-top: 5px; }
-        .lock-shortcuts { margin-top: auto; margin-bottom: 50px; width: 100%; display: flex; justify-content: space-between; padding: 0 40px; }
-        .glass-btn { width: 50px; height: 50px; border-radius: 50%; background: rgba(0,0,0,0.4); backdrop-filter: blur(20px); display: flex; justify-content: center; align-items: center; color: white; cursor: pointer; }
+        .login-avatar { width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 60px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid rgba(255,255,255,0.4); }
+        .login-name { font-size: 24px; font-weight: 600; margin-bottom: 30px; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        .login-input { padding: 10px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.5); background: rgba(0,0,0,0.2); color: white; outline: none; text-align: center; font-size: 16px; backdrop-filter: blur(10px); width: 200px; cursor: pointer; transition: all 0.3s; }
+        .login-input:hover { background: rgba(255,255,255,0.1); }
+        .login-time { position: absolute; top: 40px; right: 40px; font-size: 18px; font-weight: 500; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
 
-        /* HOME SCREEN */
-        .home-screen { 
-            position: relative; z-index: 1; 
-            padding: 55px 20px 20px 20px;
-            height: 100%; display: flex; flex-direction: column; 
-            gap: 15px;
+        /* --- BARRA DE MENÚ (TOP) --- */
+        #menu-bar {
+            position: absolute; top: 0; left: 0; width: 100%; height: 30px;
+            background: var(--menu-bar-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            z-index: 5000; display: flex; justify-content: space-between; align-items: center;
+            padding: 0 15px; font-size: 13px; font-weight: 500; color: var(--menu-bar-text);
+            box-shadow: 0 1px 5px rgba(0,0,0,0.1);
         }
-        .app-grid { 
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px 8px;
-            padding: 0;
-            overflow-y: auto; scrollbar-width: none; 
+        .menu-left, .menu-right { display: flex; align-items: center; gap: 15px; }
+        .menu-item { cursor: default; padding: 0 8px; height: 30px; display: flex; align-items: center; border-radius: 4px; transition: background 0.2s; }
+        .menu-item:hover { background: rgba(255,255,255,0.2); }
+        .menu-app-name { font-weight: 700; }
+        
+        /* --- MACBOOK NOTCH --- */
+        .notch {
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 160px; height: 32px; background: #000; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;
+            z-index: 6000; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: white; overflow: visible; display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+            cursor: pointer; box-shadow: 0 0 0 0px transparent;
         }
-        .app-grid::-webkit-scrollbar { display: none; }
-        .app-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
+        .notch::before { content: ''; position: absolute; left: -10px; top: 0; width: 10px; height: 10px; background: radial-gradient(circle at 0 100%, transparent 10px, #000 10px); }
+        .notch::after { content: ''; position: absolute; right: -10px; top: 0; width: 10px; height: 10px; background: radial-gradient(circle at 100% 100%, transparent 10px, #000 10px); }
 
-        .app-icon { width: 62px; height: 62px; border-radius: 14px; display: flex; justify-content: center; align-items: center; background: var(--glass-bg); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 4px 10px rgba(0,0,0,0.2); color: white; font-size: 28px; position: relative; overflow: hidden; }
+        /* Estados del Notch - Mantenidos de WTC Mac 1.1 */
+        .notch.expanded-charge { width: 320px; height: 140px; border-radius: 25px; border-top-left-radius: 0; border-top-right-radius: 0; justify-content: center; background: linear-gradient(135deg, #000, #1a1a2e, #000); border: 2px solid #FFD700; border-top: none; flex-direction: column; animation: superChargeGlow 2s infinite alternate; }
+        @keyframes superChargeGlow { 0% { box-shadow: 0 10px 20px 2px rgba(255, 215, 0, 0.6), inset 0 0 20px rgba(255, 215, 0, 0.2); } 100% { box-shadow: 0 20px 40px 4px rgba(255, 215, 0, 0.9), inset 0 0 30px rgba(255, 215, 0, 0.3); } }
+        .lightning { position: absolute; width: 3px; height: 30px; background: linear-gradient(to bottom, #FFD700, transparent); opacity: 0; animation: lightning 1.5s infinite; }
+        .lightning:nth-child(1) { left: 10%; animation-delay: 0s; } .lightning:nth-child(2) { left: 30%; animation-delay: 0.3s; }
+        .lightning:nth-child(3) { right: 30%; animation-delay: 0.6s; } .lightning:nth-child(4) { right: 10%; animation-delay: 0.9s; }
+        @keyframes lightning { 0%, 100% { opacity: 0; transform: translateY(-10px) scaleY(0); } 10% { opacity: 1; transform: translateY(0) scaleY(1); } 20% { opacity: 0; transform: translateY(10px) scaleY(0.5); } }
+        .notch.expanded-faceid { width: 180px; height: 180px; border-radius: 25px; border-top-left-radius: 0; border-top-right-radius: 0; justify-content: center; flex-direction: column; }
+        .notch.expanded-language { width: 280px; height: 80px; border-radius: 25px; border-top-left-radius: 0; border-top-right-radius: 0; justify-content: center; background: linear-gradient(45deg, #000, #1a1a1a); box-shadow: 0 10px 30px rgba(0,122,255,0.5); }
+        .notch-content { display: none; width: 100%; opacity: 0; transition: opacity 0.2s; }
+        .notch.expanded-charge .charge-ui, .notch.expanded-faceid .faceid-ui, .notch.expanded-language .lang-ui { display: flex; opacity: 1; align-items: center; justify-content: center; gap: 10px; }
+        .charge-ui { flex-direction: column; gap: 8px !important; position: relative; }
+        .super-charge-badge { background: linear-gradient(135deg, #FFD700, #FFA500); padding: 4px 12px; border-radius: 12px; font-size: 10px; font-weight: 800; color: #000; letter-spacing: 1px; box-shadow: 0 2px 8px rgba(255, 215, 0, 0.5); }
+        .charge-percentage { font-size: 48px; font-weight: 700; color: #FFD700; text-shadow: 0 0 20px rgba(255, 215, 0, 0.8); line-height: 1; }
+        .charge-watts { font-size: 14px; font-weight: 600; color: #fff; opacity: 0.9; }
+        .globe-spin { animation: spin 2s linear infinite; color: #007aff; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .scan-line { width: 60px; height: 60px; border: 2px solid #007aff; border-radius: 10px; position: relative; }
+        .scan-line::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: #007aff; animation: scan 1.5s infinite; }
+        @keyframes scan { 0% { top: 0; opacity: 0; } 50% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+
+        /* --- DESKTOP ICONS --- */
+        #desktop-area { position: absolute; top: 30px; left: 0; right: 0; bottom: 80px; z-index: 10; padding: 20px; display: flex; flex-direction: column; flex-wrap: wrap; align-content: flex-start; gap: 20px; }
+        .desktop-icon { width: 80px; display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; border-radius: 8px; padding: 10px 5px; transition: background 0.2s; }
+        .desktop-icon:hover { background: rgba(255,255,255,0.2); }
+        .desktop-icon img { width: 50px; height: 50px; border-radius: 12px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .desktop-icon .icon-placeholder { width: 50px; height: 50px; border-radius: 12px; display: flex; justify-content: center; align-items: center; color: white; font-size: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .desktop-icon span { color: white; font-size: 12px; text-align: center; text-shadow: 0 1px 3px rgba(0,0,0,0.8); font-weight: 500; }
+
+        /* --- LAUNCHPAD --- */
+        #launchpad {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            z-index: 4000; display: flex; flex-direction: column;
+            opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
+            padding: 50px;
+        }
+        #launchpad.active { opacity: 1; visibility: visible; }
+        .launchpad-search { margin: 20px auto 50px; width: 300px; padding: 10px 20px; border-radius: 20px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; outline: none; text-align: center; font-size: 16px; transition: width 0.3s; }
+        .launchpad-search:focus { width: 400px; background: rgba(255,255,255,0.3); }
+        .launchpad-search::placeholder { color: rgba(255,255,255,0.7); }
+        .launchpad-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 30px 20px; justify-items: center; max-width: 1000px; margin: 0 auto; width: 100%; }
+        
+        /* App Icons Styles */
+        .app-icon { width: 60px; height: 60px; border-radius: 14px; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); color: white; font-size: 28px; position: relative; overflow: hidden; background: var(--glass-bg); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2); }
         .icon-cal { background: #fff; color: #ff3b30; flex-direction: column; font-size: 10px; font-weight: 800; gap: 2px; }
-        .icon-cal span { font-size: 28px; color: #000; }
+        .icon-cal span { font-size: 26px; color: #000; }
         .icon-maps { background: #4cd964; }
         .icon-clock { background: #000; color: #fff; border: 1px solid #333; }
         .icon-weather { background: #5ac8fa; }
         .icon-phone { background: #34c759; }
         .icon-messages { background: #34c759; }
         .icon-wallet { background: #000; border: 1px solid #333; }
-        .app-name { font-size: 11px; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
-        .dock-bar { margin-top: auto; width: 100%; height: 95px; border-radius: 35px; background: rgba(255,255,255,0.2); backdrop-filter: blur(30px); display: flex; justify-content: space-evenly; align-items: center; border: 1px solid rgba(255,255,255,0.2); }
+        .icon-safari { background: white; color: #007aff; }
+        .icon-music { background: #ff2d55; }
+        .icon-notes { background: #ffd60a; color: white; }
 
-        .cam-modes { display: flex; justify-content: center; gap: 20px; padding: 15px; background: rgba(0,0,0,0.5); font-size: 13px; color: #aaa; }
-        .cam-modes span.active { color: #fff; font-weight: 600; }
-        .cam-filter-btn { width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; }
+        /* --- DOCK --- */
+        #dock-container { position: absolute; bottom: 10px; left: 0; width: 100%; display: flex; justify-content: center; z-index: 5000; pointer-events: none; }
+        #dock {
+            background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.3); border-radius: 24px; padding: 10px;
+            display: flex; gap: 10px; align-items: flex-end; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            pointer-events: auto;
+        }
+        body.dark-mode #dock { background: rgba(0, 0, 0, 0.4); border-color: rgba(255,255,255,0.1); }
+        .dock-item { position: relative; cursor: pointer; transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1); display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .dock-item:hover { transform: scale(1.2) translateY(-10px); z-index: 10; }
+        .dock-item .app-icon { width: 50px; height: 50px; font-size: 24px; }
+        .dock-indicator { width: 4px; height: 4px; background: rgba(0,0,0,0.5); border-radius: 50%; display: none; margin-top: 2px; }
+        body.dark-mode .dock-indicator { background: rgba(255,255,255,0.8); }
+        .dock-item.running .dock-indicator { display: block; }
+        .dock-separator { width: 1px; height: 40px; background: rgba(255,255,255,0.3); margin: 5px; }
 
-        /* WINDOWS */
-        .app-window { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--app-bg); color: var(--app-text); z-index: 1100; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1); border-radius: 55px; overflow: hidden; }
-        .app-window.open { transform: translateY(0); }
-        .nav-bar { height: 90px; padding: 45px 20px 10px 20px; display: flex; align-items: center; justify-content: space-between; background: rgba(245,245,245,0.9); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0,0,0,0.1); font-weight: 600; z-index: 20; }
-        .iphone-frame.dark-mode .nav-bar { background: #1c1c1e; border-bottom: 1px solid #333; color: white; }
-        .app-body { flex: 1; overflow-y: auto; }
+        /* --- WINDOW SYSTEM --- */
+        #window-manager { position: absolute; top: 30px; left: 0; right: 0; bottom: 0; z-index: 20; pointer-events: none; }
+        .mac-window {
+            position: absolute; top: 50px; left: 50px; width: 600px; height: 400px;
+            background: var(--app-bg); color: var(--app-text); border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,0,0,0.1);
+            display: flex; flex-direction: column; overflow: hidden;
+            pointer-events: auto; opacity: 0; transform: scale(0.95); transition: opacity 0.2s, transform 0.2s;
+            visibility: hidden;
+        }
+        .mac-window.active { opacity: 1; transform: scale(1); visibility: visible; }
+        
+        /* Traffic Lights & Title Bar */
+        .title-bar {
+            height: 38px; display: flex; align-items: center; justify-content: center;
+            background: var(--menu-bar-bg); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color);
+            position: relative; cursor: default;
+        }
+        .traffic-lights { position: absolute; left: 15px; display: flex; gap: 8px; }
+        .tl-btn { width: 12px; height: 12px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); cursor: pointer; display: flex; justify-content: center; align-items: center; }
+        .tl-btn svg { width: 8px; height: 8px; opacity: 0; transition: opacity 0.2s; stroke: #000; stroke-width: 3;}
+        .traffic-lights:hover .tl-btn svg { opacity: 0.5; }
+        .tl-close { background: #ff5f56; }
+        .tl-min { background: #ffbd2e; }
+        .tl-max { background: #27c93f; }
+        .window-title { font-weight: 600; font-size: 13px; color: var(--app-text); pointer-events: none; }
+        
+        .window-content { flex: 1; overflow: auto; position: relative; background: var(--app-bg); }
 
-        /* CAMERA */
-        .camera-app { background: black !important; color: white; display: flex; flex-direction: column; }
-        .cam-controls { padding: 20px; background: black; display: flex; justify-content: space-around; align-items: center; height: 150px; }
-        .shutter { width: 70px; height: 70px; border-radius: 50%; border: 4px solid white; position: relative; }
-        .shutter::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 56px; height: 56px; background: white; border-radius: 50%; transition: 0.1s; }
-        .shutter:active::after { transform: translate(-50%,-50%) scale(0.9); }
-
-        /* LISTAS & SETTINGS */
-        .list-group { background: var(--list-bg); margin: 20px; border-radius: 12px; overflow: hidden; }
-        .list-item { padding: 15px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: var(--app-text); }
+        /* --- CONTENIDO DE LAS APLICACIONES --- */
+        
+        /* Settings */
+        .settings-layout { display: flex; height: 100%; }
+        .settings-sidebar { width: 220px; border-right: 1px solid var(--border-color); background: rgba(0,0,0,0.03); overflow-y: auto; }
+        .settings-main { flex: 1; padding: 20px; overflow-y: auto; }
+        .set-nav-item { padding: 10px 15px; margin: 5px 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--app-text); }
+        .set-nav-item:hover { background: rgba(0,0,0,0.05); }
+        body.dark-mode .set-nav-item:hover { background: rgba(255,255,255,0.1); }
+        .set-nav-item.active { background: var(--accent); color: white; }
+        .settings-panel { display: none; }
+        .settings-panel.active { display: block; }
+        
+        /* Elementos UI comunes */
+        .list-group { background: var(--list-bg); border-radius: 12px; overflow: hidden; margin-bottom: 20px; border: 1px solid var(--border-color); }
+        .list-item { padding: 12px 15px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 14px; }
         .list-item:last-child { border-bottom: none; }
-        .toggle { width: 50px; height: 30px; background: #e9e9ea; border-radius: 15px; position: relative; transition: 0.3s; }
+        .toggle { width: 44px; height: 24px; background: #e9e9ea; border-radius: 12px; position: relative; transition: 0.3s; cursor: pointer; }
+        body.dark-mode .toggle { background: #39393d; }
         .toggle.active { background: #34c759; }
-        .toggle-handle { width: 26px; height: 26px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .toggle-handle { width: 20px; height: 20px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         .toggle.active .toggle-handle { transform: translateX(20px); }
 
-        /* ESTILOS COMUNES APPS */
-        .chat-history { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; background: var(--app-bg); }
-        .chat-bubble { padding: 10px 14px; border-radius: 18px; max-width: 80%; font-size: 15px; line-height: 1.4; }
-        .chat-bubble.received { align-self: flex-start; background: #e5e5ea; color: #000; border-bottom-left-radius: 4px; }
-        .chat-bubble.sent { align-self: flex-end; background: #007aff; color: #fff; border-bottom-right-radius: 4px; }
-        .chat-input-area { display: flex; padding: 10px 15px 25px 15px; border-top: 1px solid var(--border-color); background: var(--list-bg); gap: 10px; align-items: center; }
-        .chat-input { flex: 1; border-radius: 20px; border: 1px solid var(--border-color); padding: 10px 15px; outline: none; background: var(--app-bg); color: var(--app-text); font-size: 15px; }
-        .chat-send { background: #007aff; color: white; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        
-        .mail-list { flex: 1; overflow-y: auto; background: var(--app-bg); }
-        .mail-detail { display: none; flex: 1; flex-direction: column; background: var(--app-bg); }
-        .mail-header { padding: 15px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 10px; cursor: pointer; color: #007aff; font-weight: 500; background: var(--list-bg); }
-        .mail-content { padding: 20px; flex: 1; overflow-y: auto; color: var(--app-text); }
+        /* Temas y Fuentes */
+        .theme-picker { display: flex; flex-wrap: wrap; gap: 12px; padding: 15px; }
+        .theme-btn { width: 40px; height: 40px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: transform 0.2s; }
+        .theme-btn.active { border-color: var(--accent); transform: scale(1.1); }
+        .theme-btn:hover { transform: scale(1.05); }
+        .font-check { display: none; color: var(--accent); }
+        .list-item.font-selected .font-check { display: block; }
 
-        /* WALLET */
-        .credit-card { background: linear-gradient(135deg, #1a1a1a, #444); border-radius: 15px; height: 200px; color: white; padding: 25px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.3); margin: 20px; }
+        /* Calculator (Tamaño Fijo) */
+        #window-calculator { width: 320px; height: 450px; background: #2c2c2e; border-radius: 12px; }
+        #window-calculator .title-bar { background: transparent; border: none; position: absolute; width: 100%; z-index: 10; }
+        .calc-body { background: #2c2c2e; color: white; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; padding-top: 30px; }
+        #calcRes { text-align: right; font-size: 60px; padding: 20px; font-weight: 300; }
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: #000; padding: 1px; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; overflow: hidden; }
+        .calc-btn { background: #505050; color: white; height: 60px; display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; transition: background 0.1s; }
+        .calc-btn:active { background: #707070; }
+        .calc-btn.op { background: #ff9f0a; }
+        .calc-btn.op:active { background: #c27600; }
+        .calc-btn.top { background: #d4d4d2; color: black; }
+        .calc-btn.top:active { background: #a5a5a5; }
+
+        /* Camera */
+        .camera-app { background: black !important; color: white; display: flex; flex-direction: column; height: 100%; }
+        .cam-controls { padding: 15px; background: rgba(0,0,0,0.8); display: flex; justify-content: space-around; align-items: center; height: 100px; }
+        .shutter { width: 60px; height: 60px; border-radius: 50%; border: 4px solid white; position: relative; cursor: pointer; }
+        .shutter::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 48px; height: 48px; background: white; border-radius: 50%; transition: 0.1s; }
+        .shutter:active::after { transform: translate(-50%,-50%) scale(0.9); }
+        .cam-filter-btn { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; }
+
+        /* Wallet */
+        .credit-card { background: linear-gradient(135deg, #1a1a1a, #444); border-radius: 15px; height: 200px; color: white; padding: 25px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.3); margin: 20px auto; max-width: 400px; }
         .card-chip { width: 50px; height: 40px; background: linear-gradient(135deg, #FFD700, #FFA500); border-radius: 8px; }
         .card-cvc-timer { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
         .cvc-bar { width: 60px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; overflow: hidden; margin-top: 4px; }
         .cvc-progress { width: 100%; height: 100%; background: #34c759; transition: width 1s linear; }
         .card-number { font-size: 22px; font-weight: 600; letter-spacing: 3px; margin: 30px 0 20px; }
-        .card-container { padding-top: 20px; }
-        .balance-section { padding: 30px; text-align: center; }
+        .balance-section { padding: 30px; text-align: center; color: var(--app-text); }
 
-        .home-indicator { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 130px; height: 5px; background: white; border-radius: 10px; z-index: 2000; cursor: pointer; transition: background-color 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
-        .home-indicator.dark { background-color: #000; }
-        .status-bar { position: absolute; top: 15px; width: 100%; padding: 0 25px; display: flex; justify-content: space-between; color: white; font-size: 14px; font-weight: 600; z-index: 2000; transition: color 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
-        .status-bar.dark { color: #000; }
+        /* Phone (Facetime-like Dialer) */
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 20px; justify-items: center; max-width: 300px; margin: 0 auto; }
+        .key-btn { width: 65px; height: 65px; border-radius: 50%; background: rgba(128,128,128,0.2); display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; color: var(--app-text); }
+        .key-btn:hover { background: rgba(128,128,128,0.3); }
+        
+        /* Chat / Messages */
+        .chat-layout { display: flex; height: 100%; }
+        .chat-list { width: 250px; border-right: 1px solid var(--border-color); background: rgba(0,0,0,0.02); overflow-y: auto; }
+        .chat-main { flex: 1; display: flex; flex-direction: column; background: var(--app-bg); }
+        .chat-history { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+        .chat-bubble { padding: 10px 14px; border-radius: 18px; max-width: 70%; font-size: 15px; line-height: 1.4; }
+        .chat-bubble.received { align-self: flex-start; background: #e5e5ea; color: #000; border-bottom-left-radius: 4px; }
+        body.dark-mode .chat-bubble.received { background: #3a3a3c; color: #fff; }
+        .chat-bubble.sent { align-self: flex-end; background: #007aff; color: #fff; border-bottom-right-radius: 4px; }
+        .chat-input-area { display: flex; padding: 15px; border-top: 1px solid var(--border-color); background: var(--app-bg); gap: 10px; align-items: center; }
+        .chat-input { flex: 1; border-radius: 20px; border: 1px solid var(--border-color); padding: 10px 15px; outline: none; background: var(--list-bg); color: var(--app-text); font-size: 14px; }
+        .chat-send { background: #007aff; color: white; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
-        /* PHONE & CALC */
-        .keypad, .calc-grid { display: grid; gap: 12px; padding: 20px; justify-items: center; }
-        .key-btn, .calc-btn { width: 70px; height: 70px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; }
-        .key-btn { background: #e5e5ea; color: #000; }
-        .calc-btn { background: #333; color: white; }
-        .calc-btn.orange, .call-btn { background: #ff9f0a; color: white; } .call-btn { background: #34c759; }
+        /* Mail */
+        .mail-layout { display: flex; height: 100%; }
+        .mail-list { width: 300px; border-right: 1px solid var(--border-color); overflow-y: auto; background: var(--list-bg); }
+        .mail-detail { flex: 1; display: flex; flex-direction: column; background: var(--app-bg); padding: 30px; }
+        .mail-item { padding: 15px; border-bottom: 1px solid var(--border-color); cursor: pointer; }
+        .mail-item:hover { background: rgba(0,0,0,0.05); }
+        body.dark-mode .mail-item:hover { background: rgba(255,255,255,0.05); }
 
-        /* SETTINGS PAGES */
-        .settings-page { width: 100%; height: 100%; position: absolute; top: 0; left: 0; background: var(--app-bg); transition: transform 0.3s ease; padding-top: 90px; }
-        .settings-page.hidden { transform: translateX(100%); }
-        .settings-page.main { z-index: 1; padding-top: 0; }
-        .settings-page.sub { z-index: 2; }
-
-        .theme-picker { display: flex; flex-wrap: wrap; gap: 12px; padding: 15px 20px; }
-        .theme-btn { width: 44px; height: 44px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: transform 0.2s; }
-        .theme-btn.active { border-color: #007aff; transform: scale(1.1); }
-        .theme-btn:hover { transform: scale(1.05); }
-        .order-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid var(--border-color); color: var(--app-text); }
-        .order-row:last-child { border-bottom: none; }
-        .order-btns { display: flex; gap: 8px; }
-        .order-btns button { width: 36px; height: 36px; border-radius: 8px; border: none; background: #e5e5ea; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #000; }
-        .font-check { display: none; }
-        .list-item.font-selected .font-check { display: block; color: #007aff; }
-
-        /* --- ADMIN ABUSE GLITCH EFFECT --- */
-        .glitch-text {
-            animation: glitch-text-anim 0.4s infinite alternate;
-            display: inline-flex;
-            align-items: center;
-        }
+        /* Admin Abuse Glitch */
+        .glitch-text { animation: glitch-text-anim 0.4s infinite alternate; display: inline-flex; align-items: center; }
         @keyframes glitch-text-anim {
             0% { font-family: 'Roboto', sans-serif; filter: invert(0); transform: none; letter-spacing: normal; color: #fff; text-shadow: none; }
             20% { font-family: 'Dancing Script', cursive; filter: invert(1); transform: scaleX(-1); letter-spacing: 2px; color: #ff0000; text-shadow: 2px 2px 0 #00ff00; }
@@ -388,503 +282,556 @@
             80% { font-family: 'Courier New', Courier, monospace; transform: translate(2px, -2px) rotate(2deg); filter: invert(1) contrast(200%); color: #ff00ff; }
             100% { font-family: 'Roboto', sans-serif; filter: invert(0); transform: none; letter-spacing: normal; color: #ff0000; }
         }
-        @keyframes bg-glitch {
-            0% { background-position: 0 0; opacity: 0.3; }
-            25% { opacity: 0.8; filter: invert(1); }
-            50% { background-position: 20px 20px; opacity: 0.5; }
-            75% { transform: scale(1.05); }
-            100% { background-position: -20px -20px; opacity: 0.3; }
-        }
+        @keyframes bg-glitch { 0% { background-position: 0 0; opacity: 0.3; } 25% { opacity: 0.8; filter: invert(1); } 50% { background-position: 20px 20px; opacity: 0.5; } 75% { transform: scale(1.05); } 100% { background-position: -20px -20px; opacity: 0.3; } }
 
     </style>
 </head>
 <body>
 
-    <div id="scaler">
-        <div class="iphone-frame" id="iphoneFrame">
+    <!-- FONDOS -->
+    <div class="wallpaper-layer" id="wallpaper"></div>
 
-            <!-- BIENVENIDA / HELLO SCREEN -->
-            <div id="welcomeScreen" onclick="startSetup()">
-                <div id="welcomeText">hello</div>
-                <div class="swipe-hint-text" id="swipeText">Desliza para empezar</div>
+    <!-- PANTALLA DE INICIO (LOGIN) -->
+    <div id="loginScreen" onclick="focusPassword()">
+        <div class="login-time" id="loginTime">--:--</div>
+        <div class="login-avatar"><i data-lucide="user"></i></div>
+        <div class="login-name">Usuario</div>
+        <input type="password" id="loginInput" class="login-input" placeholder="Haz clic para iniciar" readonly onclick="unlockMac()">
+    </div>
+
+    <!-- MACBOOK NOTCH (Top Center) -->
+    <div class="notch" id="notch">
+        <!-- Rayos y partículas para Super Charge -->
+        <div class="lightning" style="top: -10px;"></div><div class="lightning" style="top: -10px;"></div>
+        <div class="lightning" style="top: -10px;"></div><div class="lightning" style="top: -10px;"></div>
+        
+        <div class="notch-content charge-ui">
+            <div class="super-charge-badge">⚡ SUPER CHARGE 200W</div>
+            <div class="charge-percentage" id="chargePercent">100%</div>
+            <div class="charge-watts" id="chargeSpeed">Carga Completa</div>
+        </div>
+        <div class="notch-content faceid-ui">
+            <div class="scan-line"></div>
+            <span style="font-size:12px; margin-top:5px;" id="notchFaceIdText">Face ID</span>
+        </div>
+        <div class="notch-content lang-ui">
+            <i data-lucide="globe" class="globe-spin"></i> <span style="font-weight:600;" id="langNotchText">Cambiando Idioma...</span>
+        </div>
+    </div>
+
+    <!-- BARRA DE MENÚ SUPERIOR -->
+    <div id="menu-bar">
+        <div class="menu-left">
+            <div class="menu-item" style="font-size: 16px;"><i data-lucide="apple" size="16" fill="currentColor"></i></div>
+            <div class="menu-item menu-app-name" id="top-app-name">Finder</div>
+            <div class="menu-item">Archivo</div>
+            <div class="menu-item">Edición</div>
+            <div class="menu-item">Visualización</div>
+            <div class="menu-item">Ir</div>
+            <div class="menu-item">Ventana</div>
+            <div class="menu-item">Ayuda</div>
+        </div>
+        <div class="menu-right">
+            <div class="menu-item"><i data-lucide="wifi" size="14"></i></div>
+            <div class="menu-item"><i data-lucide="battery-full" size="16"></i></div>
+            <div class="menu-item"><i data-lucide="search" size="14"></i></div>
+            <div class="menu-item"><i data-lucide="sliders-horizontal" size="14"></i></div>
+            <div class="menu-item" id="top-time" style="font-variant-numeric: tabular-nums;">--:--</div>
+        </div>
+    </div>
+
+    <!-- ESCRITORIO (Iconos directos) -->
+    <div id="desktop-area">
+        <div class="desktop-icon" onclick="openWindow('settings')">
+            <div class="icon-placeholder" style="background: #8e8e93;"><i data-lucide="settings-2"></i></div>
+            <span data-key="settings">Ajustes del Sistema</span>
+        </div>
+        <div class="desktop-icon" onclick="openWindow('notes')">
+            <div class="icon-placeholder icon-notes"><i data-lucide="file-text"></i></div>
+            <span data-key="notes">Notas</span>
+        </div>
+    </div>
+
+    <!-- CONTENEDOR DE VENTANAS -->
+    <div id="window-manager">
+        
+        <!-- SETTINGS -->
+        <div id="window-settings" class="mac-window" style="width: 700px; height: 500px;">
+            <div class="title-bar">
+                <div class="traffic-lights">
+                    <div class="tl-btn tl-close" onclick="closeWindow('settings')"><svg viewBox="0 0 14 14"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg></div>
+                    <div class="tl-btn tl-min"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="7"/></svg></div>
+                    <div class="tl-btn tl-max"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="3"/><line x1="11" y1="3" x2="7" y2="11"/><line x1="7" y1="11" x2="3" y2="7"/></svg></div>
+                </div>
+                <div class="window-title" data-key="settings">Ajustes del Sistema</div>
             </div>
-
-            <!-- ISLA DINÁMICA (Aura Welcome) -->
-            <div class="notch welcome-aura" id="notch">
-                <!-- RAYOS ELÉCTRICOS -->
-                <div class="lightning" style="top: -30px;"></div>
-                <div class="lightning" style="top: -30px;"></div>
-                <div class="lightning" style="top: -30px;"></div>
-                <div class="lightning" style="top: -30px;"></div>
-
-                <!-- PARTÍCULAS DE ENERGÍA -->
-                <div class="energy-particle" style="left: 20%; animation-delay: 0s;"></div>
-                <div class="energy-particle" style="left: 40%; animation-delay: 0.5s;"></div>
-                <div class="energy-particle" style="left: 60%; animation-delay: 1s;"></div>
-                <div class="energy-particle" style="right: 20%; animation-delay: 1.5s;"></div>
-
-                <div class="notch-content charge-ui">
-                    <div class="super-charge-badge">⚡ SUPER CHARGE 200W</div>
-                    <div class="charge-percentage" id="chargePercent">100%</div>
-                    <div class="charge-watts" id="chargeSpeed">Carga Completa</div>
+            <div class="window-content settings-layout">
+                <div class="settings-sidebar">
+                    <div style="padding: 15px; font-weight: 600; font-size: 12px; color: gray;">GENERAL</div>
+                    <div class="set-nav-item active" onclick="switchSettingsPanel('general', this)"><i data-lucide="settings"></i> General</div>
+                    <div class="set-nav-item" onclick="switchSettingsPanel('personalize', this)"><i data-lucide="palette" style="color:#ff6b6b"></i> Personalización</div>
+                    <div class="set-nav-item" onclick="switchSettingsPanel('langs', this)"><i data-lucide="globe" style="color:#007aff"></i> <span data-key="lang_region">Idioma</span></div>
+                    <div style="padding: 15px; font-weight: 600; font-size: 12px; color: gray;">AVANZADO</div>
+                    <div class="set-nav-item" onclick="triggerSuperCharge()"><i data-lucide="zap" style="color:#FFD700"></i> Super Charge</div>
                 </div>
-                <div class="notch-content faceid-ui">
-                    <div class="scan-line"></div>
-                    <span style="font-size:12px; margin-top:5px;" id="notchFaceIdText">Face ID</span>
-                </div>
-                <div class="notch-content lang-ui">
-                    <i data-lucide="globe" class="globe-spin"></i> <span style="font-weight:600;" id="langNotchText">Cambiando Idioma...</span>
-                </div>
-            </div>
-
-            <!-- TUTORIAL -->
-            <div id="tutorialOverlay">
-                <div class="tut-card active" id="tut1">
-                    <h2>⚡ Bienvenido a iOS 26</h2>
-                    <p style="margin:20px 0; opacity:0.8;">Liquid Glass UI con Super Charge 200W</p>
-                    <button class="tut-btn" onclick="nextTut(1)">Siguiente</button>
-                </div>
-                <div class="tut-card" id="tut2">
-                    <h2>🔋 Super Charge 200W</h2>
-                    <p style="margin:20px 0; opacity:0.8;">Carga ultrarrápida con efectos visuales</p>
-                    <button class="tut-btn" onclick="nextTut(2)">Siguiente</button>
-                </div>
-                <div class="tut-card" id="tut3">
-                    <h2>✨ Gestos</h2>
-                    <p style="margin:20px 0; opacity:0.8;">Navegación Fluida y Animada</p>
-                    <button class="tut-btn" onclick="closeTutorial()">Empezar</button>
-                </div>
-            </div>
-
-            <!-- PANTALLA BLOQUEO -->
-            <div class="lock-screen" id="lockScreen">
-                <div class="clock-container">
-                    <div style="font-size:16px; margin-bottom:5px;"><i data-lucide="lock" size="14"></i></div>
-                    <div class="lock-time" id="lockTime">--:--</div>
-                    <div class="lock-date" id="lockDate">...</div>
-                </div>
-                <div class="lock-shortcuts">
-                    <div class="glass-btn"><i data-lucide="flashlight"></i></div>
-                    <div class="glass-btn" onclick="openApp('camera')"><i data-lucide="camera"></i></div>
-                </div>
-                <div style="position:absolute; top:0; width:100%; height:100%;" onclick="unlockPhone()"></div>
-            </div>
-
-            <div class="wallpaper-layer" id="wallpaper"></div>
-
-            <!-- HOME SCREEN -->
-            <div class="home-screen">
-                <div class="app-grid" id="appGrid">
-                    <div class="app-item" data-app-id="mail" onclick="openApp('mail')">
-                    <div class="app-icon"><img src="https://i.ibb.co/Rp6zxQc4/250.jpg" style="width:100%;height:100%;object-fit:cover;"></div>
-                    <span class="app-name" data-key="mail">Mail</span>
-                    </div>
-                    <div class="app-item" data-app-id="calendar" onclick="openApp('calendar')"><div class="app-icon icon-cal">DOM<span>28</span></div><span class="app-name" data-key="calendar">Calendario</span></div>
-                    <div class="app-item" data-app-id="photos" onclick="openApp('photos')"><div class="app-icon" style="background:white;"><i data-lucide="image" color="#ff2d55"></i></div><span class="app-name" data-key="photos">Fotos</span></div>
-                    <div class="app-item" data-app-id="camera" onclick="openApp('camera')"><div class="app-icon" style="background:#ccc;"><i data-lucide="camera" color="#000"></i></div><span class="app-name" data-key="camera">Cámara</span></div>
-
-                    <div class="app-item" data-app-id="maps" onclick="openApp('maps')"><div class="app-icon icon-maps"><i data-lucide="map-pinned"></i></div><span class="app-name" data-key="maps">Mapas</span></div>
-                    <div class="app-item" data-app-id="clock" onclick="openApp('clock')"><div class="app-icon icon-clock"><i data-lucide="clock"></i></div><span class="app-name" data-key="clock">Reloj</span></div>
-                    <div class="app-item" data-app-id="weather" onclick="openApp('weather')"><div class="app-icon icon-weather"><i data-lucide="cloud-sun"></i></div><span class="app-name" data-key="weather">Clima</span></div>
-                    <div class="app-item" data-app-id="wallet" onclick="openApp('wallet')"><div class="app-icon icon-wallet"><i data-lucide="wallet-cards"></i></div><span class="app-name" data-key="wallet">Cartera</span></div>
-
-                    <div class="app-item" data-app-id="notes" onclick="openApp('notes')"><div class="app-icon" style="background:#ffd60a; color:white;"><i data-lucide="file-text"></i></div><span class="app-name" data-key="notes">Notas</span></div>
-                    <div class="app-item" data-app-id="calculator" onclick="openApp('calculator')">
-                    <div class="app-icon"><img src="https://i.ibb.co/JRPgZLNR/images-removebg-preview.png" style="width:100%;height:100%;object-fit:cover;"></div>
-                    <span class="app-name" data-key="calculator">Calculadora</span>
-                    </div>
-
-                    <div class="app-item" data-app-id="settings" onclick="openApp('settings')">
-                    <div class="app-icon"><img src="https://i.ibb.co/JS5p6Z7/Settings-29-dark-removebg-preview.png" onerror="this.style.display='none';this.parentNode.style.background='#8e8e93';this.parentNode.innerHTML='<i data-lucide=\'settings-2\'></i>'" style="width:100%;height:100%;object-fit:cover;"></div>
-                    <span class="app-name" data-key="settings">Ajustes</span>
-                    </div>
-                </div>
-
-                <div class="dock-bar">
-                    <div class="app-item" onclick="openApp('phone')"><div class="app-icon icon-phone"><i data-lucide="phone"></i></div></div>
-                    <div class="app-item" onclick="openApp('safari')"><div class="app-icon" style="background:white; color:#007aff;"><i data-lucide="compass"></i></div></div>
-                    <div class="app-item" onclick="openApp('messages')"><div class="app-icon icon-messages"><i data-lucide="message-circle"></i></div></div>
-                    <div class="app-item" onclick="openApp('music')"><div class="app-icon" style="background:#ff2d55;"><i data-lucide="music"></i></div></div>
-                </div>
-            </div>
-
-            <!-- WINDOWS -->
-
-            <!-- CAMERA (PRO) -->
-            <div id="app-camera" class="app-window" style="z-index: 1200;">
-                <div class="camera-app" style="height:100%;">
-                    <div style="flex:1; position:relative; overflow:hidden;">
-                    <video id="camFeed" autoplay playsinline style="width:100%; height:100%; object-fit:cover; transform:scaleX(-1);"></video>
-                    <div style="position:absolute; top:20px; width:100%; display:flex; justify-content:space-between; padding:0 20px;">
-                    <i data-lucide="zap-off"></i>
-                    <i data-lucide="chevron-up"></i>
-                    <i data-lucide="aperture"></i>
-                    </div>
-                    </div>
-                    <div class="cam-modes">
-                    <span>Cine</span><span>Video</span><span class="active">Foto</span><span>Retrato</span><span>Pano</span>
-                    </div>
-                    <div class="cam-controls">
-                    <div style="width:50px; height:50px; background:#333; border-radius:5px; overflow:hidden;" onclick="openApp('photos')">
-                    <img id="lastPhoto" style="width:100%; height:100%; object-fit:cover; display:none;">
-                    </div>
-                    <div class="shutter" onclick="takePhoto()"></div>
-                    <div class="cam-filter-btn" onclick="toggleFilter()"><i data-lucide="filter" size="20"></i></div>
-                    </div>
-                </div>
-                <canvas id="photoCanvas" style="display:none;"></canvas>
-            </div>
-
-            <!-- SETTINGS -->
-            <div id="app-settings" class="app-window">
-                <div class="nav-bar"><div id="setBackBtn" onclick="closeApp('settings')" style="color:var(--accent); cursor:pointer;">Atrás</div><div id="setTitle">Ajustes</div><div></div></div>
-                <div class="app-body">
-                    <!-- MAIN PAGE -->
-                    <div id="setMain" class="settings-page main">
-                    <h1 style="padding:20px 20px 0;" data-key="settings">Ajustes</h1>
-                    <div class="list-group">
-                    <div class="list-item"><div style="display:flex; gap:10px;"><i data-lucide="user"></i> Usuario</div><div style="color:#888">Apple ID</div></div>
-                    </div>
-                    <div class="list-group">
-                    <div class="list-item" onclick="navSettings('personalize')">
-                    <div style="display:flex; gap:10px;"><i data-lucide="palette" style="color:#ff6b6b"></i> <span>Personalización</span></div>
-                    <div style="color:#34c759; font-weight:600; display:flex; align-items:center;">Nuevo <i data-lucide="chevron-right" size="16"></i></div>
-                    </div>
-                    <div class="list-item" onclick="navSettings('langs')">
-                    <div style="display:flex; gap:10px;"><i data-lucide="globe" style="color:#007aff"></i> <span data-key="lang_region">Idioma y Región</span></div>
-                    <div style="color:#888; display:flex; align-items:center;" id="currentLangDisplay">Español <i data-lucide="chevron-right" size="16"></i></div>
-                    </div>
-                    <div class="list-item"><div style="display:flex; gap:10px;"><i data-lucide="moon" style="color:#5856d6"></i> <span data-key="dark_mode">Modo Oscuro</span></div><div class="toggle" id="darkToggle" onclick="toggleDark()"><div class="toggle-handle"></div></div></div>
-                    </div>
-                    <div class="list-group">
-                    <div class="list-item" onclick="triggerSuperCharge()"><div style="display:flex; gap:10px;"><i data-lucide="zap" style="color:#FFD700"></i> <span data-key="charging">⚡ Super Charge 200W</span></div><div style="color:#FFD700; font-weight:600;">Probar</div></div>
-                    </div>
-                    <div class="list-group">
-                    <div class="list-item" onclick="window.location.href='betaindex.html'">
-                    <div style="display:flex; gap:10px;"><i data-lucide="flask-conical" style="color:#ff9f0a"></i> Ir a versión beta</div>
-                    <div style="color:#888; display:flex; align-items:center;">Beta <i data-lucide="chevron-right" size="16"></i></div>
-                    </div>
-                    </div>
-                    <div class="list-group">
-                    <div class="list-item" onclick="window.location.href='lite.html'">
-                    <div style="display:flex; gap:10px;"><i data-lucide="sparkles" style="color:#34c759"></i> Ir a versión lite</div>
-                    <div style="color:#34c759; font-weight:600; display:flex; align-items:center;">Nuevo <i data-lucide="chevron-right" size="16"></i></div>
-                    </div>
-                    </div>
-                    <div class="list-group">
-                    <div class="list-item" onclick="window.location.href='ultra.html'">
-                    <div style="display:flex; gap:10px;"><i data-lucide="crown" style="color:#FFD700"></i> Ir a ULTRA</div>
-                    <div style="color:#FFD700; font-weight:600; display:flex; align-items:center;">ULTRA <i data-lucide="chevron-right" size="16"></i></div>
-                    </div>
-                    </div>
-
-                    <!-- NUEVO BOTÓN ADMIN ABUSE -->
-                    <div class="list-group">
-                        <div class="list-item" onclick="window.location.href='reservadminabuse.html'" style="position: relative; overflow: hidden; background: #111;">
-                            <div style="display:flex; gap:10px; z-index: 2; position: relative;" class="glitch-text">
-                                <i data-lucide="skull" style="color:#ff0000"></i> ir al admin abuse
+                <div class="settings-main">
+                    <!-- General Panel -->
+                    <div id="set-panel-general" class="settings-panel active">
+                        <h2>General</h2>
+                        <div class="list-group">
+                            <div class="list-item"><div style="display:flex; gap:10px;"><i data-lucide="user"></i> Usuario</div><div style="color:#888">Apple ID</div></div>
+                        </div>
+                        <div class="list-group">
+                            <div class="list-item"><div style="display:flex; gap:10px;"><i data-lucide="moon" style="color:#5856d6"></i> <span data-key="dark_mode">Modo Oscuro</span></div><div class="toggle" id="darkToggle" onclick="toggleDark()"><div class="toggle-handle"></div></div></div>
+                        </div>
+                        
+                        <!-- Botón Admin Abuse -->
+                        <div class="list-group" style="margin-top: 30px;">
+                            <div class="list-item" onclick="alert('Iniciando entorno Admin Abuse...')" style="position: relative; overflow: hidden; background: #111; border: 1px solid #ff0000;">
+                                <div style="display:flex; gap:10px; z-index: 2; position: relative;" class="glitch-text">
+                                    <i data-lucide="skull" style="color:#ff0000"></i> Ir al Admin Abuse
+                                </div>
+                                <div style="color:#ff0000; font-weight:800; display:flex; align-items:center; z-index: 2; position: relative;" class="glitch-text">
+                                    NUEVO <i data-lucide="chevron-right" size="16"></i>
+                                </div>
+                                <div class="glitch-bg" style="position: absolute; top:0; left:0; width:100%; height:100%; background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,0,0,0.2) 10px, rgba(255,0,0,0.2) 20px); z-index: 1; pointer-events: none; mix-blend-mode: overlay; animation: bg-glitch 0.5s infinite linear;"></div>
                             </div>
-                            <div style="color:#ff0000; font-weight:800; display:flex; align-items:center; z-index: 2; position: relative;" class="glitch-text">
-                                NUEVO <i data-lucide="chevron-right" size="16"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Personalize Panel -->
+                    <div id="set-panel-personalize" class="settings-panel">
+                        <h2>Personalización</h2>
+                        <div class="list-group">
+                            <div style="padding:15px 20px; font-weight:600; border-bottom: 1px solid var(--border-color);">Fondo de Pantalla</div>
+                            <div class="theme-picker">
+                                <div class="theme-btn active" data-theme="0" style="background:linear-gradient(135deg, #021B79, #0575E6, #00F260);" onclick="applyTheme(0)"></div>
+                                <div class="theme-btn" data-theme="1" style="background:linear-gradient(135deg, #0f5132, #198754, #20c997);" onclick="applyTheme(1)"></div>
+                                <div class="theme-btn" data-theme="2" style="background:linear-gradient(135deg, #2d1b69, #6f42c1, #e83e8c);" onclick="applyTheme(2)"></div>
+                                <div class="theme-btn" data-theme="3" style="background:linear-gradient(135deg, #c2185b, #e91e63, #f48fb1);" onclick="applyTheme(3)"></div>
+                                <div class="theme-btn" data-theme="4" style="background:linear-gradient(135deg, #e65100, #ff6f00, #ffab40);" onclick="applyTheme(4)"></div>
+                                <div class="theme-btn" data-theme="5" style="background:linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);" onclick="applyTheme(5)"></div>
                             </div>
-                            <div class="glitch-bg" style="position: absolute; top:0; left:0; width:100%; height:100%; background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,0,0,0.2) 10px, rgba(255,0,0,0.2) 20px); z-index: 1; pointer-events: none; mix-blend-mode: overlay; animation: bg-glitch 0.5s infinite linear;"></div>
+                        </div>
+                        <div class="list-group">
+                            <div style="padding:15px 20px; font-weight:600; border-bottom: 1px solid var(--border-color);">Fuente del Sistema</div>
+                            <div class="list-item font-opt" data-font="system" onclick="applyFont('system')"><div>Sistema (San Francisco)</div><i data-lucide="check" class="font-check" id="font-check-system"></i></div>
+                            <div class="list-item font-opt" data-font="inter" onclick="applyFont('inter')"><div>Inter</div><i data-lucide="check" class="font-check" id="font-check-inter" style="display:none;"></i></div>
+                            <div class="list-item font-opt" data-font="dancing" onclick="applyFont('dancing')"><div>Dancing Script</div><i data-lucide="check" class="font-check" id="font-check-dancing" style="display:none;"></i></div>
+                            <div class="list-item font-opt" data-font="roboto" onclick="applyFont('roboto')"><div>Roboto</div><i data-lucide="check" class="font-check" id="font-check-roboto" style="display:none;"></i></div>
                         </div>
                     </div>
 
-                    </div>
-
-                    <!-- PERSONALIZE PAGE -->
-                    <div id="setPersonalize" class="settings-page hidden sub">
-                    <div class="list-group">
-                    <div style="padding:15px 20px; font-weight:600; color:var(--app-text);">Tema de color</div>
-                    <div class="theme-picker">
-                    <div class="theme-btn active" data-theme="0" title="Azul" style="background:linear-gradient(135deg, #021B79, #0575E6, #00F260);" onclick="applyTheme(0)"></div>
-                    <div class="theme-btn" data-theme="1" title="Verde" style="background:linear-gradient(135deg, #0f5132, #198754, #20c997);" onclick="applyTheme(1)"></div>
-                    <div class="theme-btn" data-theme="2" title="Morado" style="background:linear-gradient(135deg, #2d1b69, #6f42c1, #e83e8c);" onclick="applyTheme(2)"></div>
-                    <div class="theme-btn" data-theme="3" title="Rosa" style="background:linear-gradient(135deg, #c2185b, #e91e63, #f48fb1);" onclick="applyTheme(3)"></div>
-                    <div class="theme-btn" data-theme="4" title="Naranja" style="background:linear-gradient(135deg, #e65100, #ff6f00, #ffab40);" onclick="applyTheme(4)"></div>
-                    <div class="theme-btn" data-theme="5" title="Oscuro" style="background:linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);" onclick="applyTheme(5)"></div>
-                    </div>
-                    </div>
-                    <div class="list-group">
-                    <div style="padding:15px 20px; font-weight:600; color:var(--app-text);">Fuente</div>
-                    <div class="list-item font-opt" data-font="system" onclick="applyFont('system')"><div>Sistema</div><i data-lucide="check" class="font-check" id="font-check-system"></i></div>
-                    <div class="list-item font-opt" data-font="inter" onclick="applyFont('inter')"><div>Inter</div><i data-lucide="check" class="font-check" id="font-check-inter" style="display:none;"></i></div>
-                    <div class="list-item font-opt" data-font="dancing" onclick="applyFont('dancing')"><div>Dancing Script</div><i data-lucide="check" class="font-check" id="font-check-dancing" style="display:none;"></i></div>
-                    <div class="list-item font-opt" data-font="roboto" onclick="applyFont('roboto')"><div>Roboto</div><i data-lucide="check" class="font-check" id="font-check-roboto" style="display:none;"></i></div>
-                    </div>
-                    <div class="list-group">
-                    <div style="padding:15px 20px; font-weight:600; color:var(--app-text);">Orden de apps</div>
-                    <div id="orderListContainer"></div>
-                    <div style="padding:12px 20px;"><button onclick="saveAppOrder()" style="width:100%; padding:12px; background:#007aff; color:white; border:none; border-radius:10px; font-weight:600; cursor:pointer;">Guardar orden</button></div>
-                    </div>
-                    </div>
-
-                    <!-- LANGUAGES PAGE -->
-                    <div id="setLangs" class="settings-page hidden sub">
-                    <div class="list-group">
-                    <div class="list-item" onclick="setLanguage('es')"><div>Español</div><i data-lucide="check" class="lang-check" id="check-es" style="color:#007aff"></i></div>
-                    <div class="list-item" onclick="setLanguage('en')"><div>English</div><i data-lucide="check" class="lang-check" id="check-en" style="display:none; color:#007aff"></i></div>
-                    <div class="list-item" onclick="setLanguage('fr')"><div>Français</div><i data-lucide="check" class="lang-check" id="check-fr" style="display:none; color:#007aff"></i></div>
-                    <div class="list-item" onclick="setLanguage('it')"><div>Italiano</div><i data-lucide="check" class="lang-check" id="check-it" style="display:none; color:#007aff"></i></div>
-                    <div class="list-item" onclick="setLanguage('jp')"><div>日本語</div><i data-lucide="check" class="lang-check" id="check-jp" style="display:none; color:#007aff"></i></div>
-                    <div class="list-item" onclick="setLanguage('cn')"><div>中文</div><i data-lucide="check" class="lang-check" id="check-cn" style="display:none; color:#007aff"></i></div>
-                    </div>
+                    <!-- Languages Panel -->
+                    <div id="set-panel-langs" class="settings-panel">
+                        <h2>Idioma y Región</h2>
+                        <div class="list-group">
+                            <div class="list-item" onclick="setLanguage('es')"><div>Español</div><i data-lucide="check" class="lang-check" id="check-es" style="color:var(--accent)"></i></div>
+                            <div class="list-item" onclick="setLanguage('en')"><div>English</div><i data-lucide="check" class="lang-check" id="check-en" style="display:none; color:var(--accent)"></i></div>
+                            <div class="list-item" onclick="setLanguage('fr')"><div>Français</div><i data-lucide="check" class="lang-check" id="check-fr" style="display:none; color:var(--accent)"></i></div>
+                            <div class="list-item" onclick="setLanguage('it')"><div>Italiano</div><i data-lucide="check" class="lang-check" id="check-it" style="display:none; color:var(--accent)"></i></div>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- WALLET -->
-            <div id="app-wallet" class="app-window">
-                <div class="nav-bar" style="background:black; color:white; border:none;"><div></div><div>Cartera</div><div onclick="closeApp('wallet')">Listo</div></div>
-                <div class="app-body" style="background:black; color:white;">
-                    <div class="card-container">
-                    <div class="credit-card">
+        <!-- CALCULATOR -->
+        <div id="window-calculator" class="mac-window">
+            <div class="title-bar">
+                <div class="traffic-lights">
+                    <div class="tl-btn tl-close" onclick="closeWindow('calculator')"><svg viewBox="0 0 14 14"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg></div>
+                    <div class="tl-btn tl-min"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="7"/></svg></div>
+                    <div class="tl-btn tl-max"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="3"/><line x1="11" y1="3" x2="7" y2="11"/><line x1="7" y1="11" x2="3" y2="7"/></svg></div>
+                </div>
+            </div>
+            <div class="window-content calc-body">
+                <div id="calcRes">0</div>
+                <div class="calc-grid">
+                    <div class="calc-btn top" onclick="calc('C')">AC</div><div class="calc-btn top">+/-</div><div class="calc-btn top">%</div><div class="calc-btn op" onclick="calc('/')">÷</div>
+                    <div class="calc-btn" onclick="calc(7)">7</div><div class="calc-btn" onclick="calc(8)">8</div><div class="calc-btn" onclick="calc(9)">9</div><div class="calc-btn op" onclick="calc('*')">×</div>
+                    <div class="calc-btn" onclick="calc(4)">4</div><div class="calc-btn" onclick="calc(5)">5</div><div class="calc-btn" onclick="calc(6)">6</div><div class="calc-btn op" onclick="calc('-')">-</div>
+                    <div class="calc-btn" onclick="calc(1)">1</div><div class="calc-btn" onclick="calc(2)">2</div><div class="calc-btn" onclick="calc(3)">3</div><div class="calc-btn op" onclick="calc('+')">+</div>
+                    <div class="calc-btn" style="grid-column:span 2; border-bottom-left-radius: 12px;" onclick="calc(0)">0</div><div class="calc-btn">.</div><div class="calc-btn op" style="border-bottom-right-radius: 12px;" onclick="calc('=')">=</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NOTES -->
+        <div id="window-notes" class="mac-window">
+            <div class="title-bar">
+                <div class="traffic-lights">
+                    <div class="tl-btn tl-close" onclick="closeWindow('notes')"><svg viewBox="0 0 14 14"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg></div>
+                    <div class="tl-btn tl-min"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="7"/></svg></div>
+                    <div class="tl-btn tl-max"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="3"/><line x1="11" y1="3" x2="7" y2="11"/><line x1="7" y1="11" x2="3" y2="7"/></svg></div>
+                </div>
+                <div class="window-title" data-key="notes">Notas</div>
+            </div>
+            <div class="window-content" style="display: flex;">
+                <div style="width: 200px; border-right: 1px solid var(--border-color); background: rgba(0,0,0,0.03); padding: 10px;">
+                    <div style="padding: 10px; background: rgba(0,0,0,0.05); border-radius: 6px; font-weight: 600; font-size: 14px;">Mi Nota Rápida</div>
+                </div>
+                <textarea id="macNotesArea" style="flex: 1; border: none; padding: 20px; font-size: 16px; outline: none; background: var(--app-bg); color: var(--app-text); resize: none; font-family: inherit;">Nueva nota de escritorio...</textarea>
+            </div>
+        </div>
+
+        <!-- SAFARI -->
+        <div id="window-safari" class="mac-window" style="width: 800px; height: 500px;">
+            <div class="title-bar">
+                <div class="traffic-lights">
+                    <div class="tl-btn tl-close" onclick="closeWindow('safari')"><svg viewBox="0 0 14 14"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg></div>
+                    <div class="tl-btn tl-min"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="7"/></svg></div>
+                    <div class="tl-btn tl-max"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="3"/><line x1="11" y1="3" x2="7" y2="11"/><line x1="7" y1="11" x2="3" y2="7"/></svg></div>
+                </div>
+                <div style="display:flex; justify-content:center; width:100%; pointer-events:none;">
+                    <div style="background: rgba(0,0,0,0.1); padding: 4px 150px; border-radius: 6px; font-size: 12px; color: var(--app-text); pointer-events:auto;">🔒 bing.com</div>
+                </div>
+            </div>
+            <div class="window-content" style="display: flex;">
+                <iframe src="https://www.bing.com" style="width:100%; height:100%; border:none; background:white;"></iframe>
+            </div>
+        </div>
+
+        <!-- CAMERA -->
+        <div id="window-camera" class="mac-window">
+            <div class="title-bar" style="background: #222; border-bottom: 1px solid #111;">
+                <div class="traffic-lights">
+                    <div class="tl-btn tl-close" onclick="closeWindow('camera')"><svg viewBox="0 0 14 14"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg></div>
+                    <div class="tl-btn tl-min"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="7"/></svg></div>
+                    <div class="tl-btn tl-max"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="3"/><line x1="11" y1="3" x2="7" y2="11"/><line x1="7" y1="11" x2="3" y2="7"/></svg></div>
+                </div>
+                <div class="window-title" style="color: white;" data-key="camera">Photo Booth</div>
+            </div>
+            <div class="window-content camera-app">
+                <div style="flex:1; position:relative; overflow:hidden;">
+                    <video id="camFeed" autoplay playsinline style="width:100%; height:100%; object-fit:cover; transform:scaleX(-1);"></video>
+                </div>
+                <div class="cam-controls">
+                    <div style="width:50px; height:50px; background:#333; border-radius:5px; overflow:hidden;">
+                        <img id="lastPhoto" style="width:100%; height:100%; object-fit:cover; display:none;">
+                    </div>
+                    <div class="shutter" onclick="takePhoto()"></div>
+                    <div class="cam-filter-btn" onclick="toggleFilter()"><i data-lucide="filter" size="20"></i></div>
+                </div>
+                <canvas id="photoCanvas" style="display:none;"></canvas>
+            </div>
+        </div>
+
+        <!-- MESSAGES -->
+        <div id="window-messages" class="mac-window">
+            <div class="title-bar">
+                <div class="traffic-lights">
+                    <div class="tl-btn tl-close" onclick="closeWindow('messages')"><svg viewBox="0 0 14 14"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg></div>
+                    <div class="tl-btn tl-min"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="7"/></svg></div>
+                    <div class="tl-btn tl-max"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="3"/><line x1="11" y1="3" x2="7" y2="11"/><line x1="7" y1="11" x2="3" y2="7"/></svg></div>
+                </div>
+                <div class="window-title">Mensajes</div>
+            </div>
+            <div class="window-content chat-layout">
+                <div class="chat-list">
+                    <div class="list-item" style="background: rgba(0,122,255,0.1); border-left: 3px solid #007aff;">
+                        <div><b>Soporte Apple</b><br><span style="font-size:12px; color:gray;">Interesante...</span></div>
+                    </div>
+                </div>
+                <div class="chat-main">
+                    <div id="mac-msg-hist" class="chat-history">
+                        <div style="text-align: center; font-size: 11px; color: gray; margin-bottom: 10px;">Hoy 9:41 AM</div>
+                        <div class="chat-bubble received">¡Hola! ¿Cómo estás disfrutando de WTC Mac OS?</div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="mac-msg-input" class="chat-input" placeholder="iMessage..." onkeypress="if(event.key === 'Enter') sendMsgMac()">
+                        <button onclick="sendMsgMac()" class="chat-send"><i data-lucide="arrow-up" size="18"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WALLET -->
+        <div id="window-wallet" class="mac-window" style="background: #111; color: white;">
+            <div class="title-bar" style="background: #222; border-bottom: 1px solid #333;">
+                <div class="traffic-lights">
+                    <div class="tl-btn tl-close" onclick="closeWindow('wallet')"><svg viewBox="0 0 14 14"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg></div>
+                    <div class="tl-btn tl-min"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="7"/></svg></div>
+                    <div class="tl-btn tl-max"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="3"/><line x1="11" y1="3" x2="7" y2="11"/><line x1="7" y1="11" x2="3" y2="7"/></svg></div>
+                </div>
+                <div class="window-title" style="color: white;" data-key="wallet">Cartera</div>
+            </div>
+            <div class="window-content">
+                <div class="credit-card">
                     <div style="display:flex; justify-content:space-between;">
-                    <div class="card-chip"></div>
-                    <div class="card-cvc-timer"><div style="font-size:10px; color:#aaa;">CVC</div><div style="font-weight:bold; color:#fff;" id="walletCVC">---</div><div class="cvc-bar"><div class="cvc-progress" id="cvcProgress"></div></div></div>
+                        <div class="card-chip"></div>
+                        <div class="card-cvc-timer"><div style="font-size:10px; color:#aaa;">CVC Dinámico</div><div style="font-weight:bold; color:#fff;" id="walletCVC">---</div><div class="cvc-bar"><div class="cvc-progress" id="cvcProgress"></div></div></div>
                     </div>
                     <div class="card-number" id="walletNum">**** **** **** ****</div>
-                    <div style="display:flex; justify-content:space-between;"><div style="font-weight:600;">JUAN PEREZ</div><div style="font-weight:600;">12/28</div></div>
-                    </div>
-                    </div>
-                    <div class="balance-section">
-                    <div style="color:#aaa; font-size:14px;">Saldo Total</div><div style="font-size:40px; font-weight:700;">$5,000.00</div>
-                    </div>
+                    <div style="display:flex; justify-content:space-between;"><div style="font-weight:600;">USUARIO MAC</div><div style="font-weight:600;">12/28</div></div>
+                </div>
+                <div class="balance-section">
+                    <div style="color:#aaa; font-size:14px;">Saldo Total Disponible</div><div style="font-size:48px; font-weight:700; margin-top: 10px;">$5,000.00</div>
                 </div>
             </div>
+        </div>
 
-            <!-- OTHER APPS FUNCIONALES -->
-            
-            <div id="app-mail" class="app-window">
-                <div class="nav-bar"><div>Buzones</div><div>Entrada</div><div onclick="closeApp('mail')">Listo</div></div>
-                <div class="app-body" id="mobileMailBody" style="display:flex; flex-direction:column; padding:0; overflow:hidden;"></div>
-            </div>
-
-            <div id="app-phone" class="app-window">
-                <div class="app-body" style="display:flex; flex-direction:column; justify-content:flex-end;">
-                    <div id="phoneDisplay" style="font-size:32px; text-align:center; padding:20px; color:var(--app-text);"></div>
-                    <div class="keypad" style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px; padding:40px; justify-items:center;">
-                        <div class="key-btn" onclick="dial('1')">1</div><div class="key-btn" onclick="dial('2')">2</div><div class="key-btn" onclick="dial('3')">3</div>
-                        <div class="key-btn" id="dialKey4" onclick="dial('4')">4</div><div class="key-btn" onclick="dial('5')">5</div><div class="key-btn" onclick="dial('6')">6</div>
-                        <div class="key-btn" onclick="dial('7')">7</div><div class="key-btn" onclick="dial('8')">8</div><div class="key-btn" onclick="dial('9')">9</div>
-                        <div class="key-btn" onclick="dial('*')">*</div><div class="key-btn" onclick="dial('0')">0</div><div class="key-btn" onclick="dial('#')">#</div>
-                        <div class="key-btn" style="background:#34c759; color:white; grid-column:2;" onclick="callPhone()"><i data-lucide="phone"></i></div>
-                    </div>
+        <!-- PHONE / FACETIME AUDIO -->
+        <div id="window-phone" class="mac-window" style="width: 350px; height: 550px;">
+            <div class="title-bar">
+                <div class="traffic-lights">
+                    <div class="tl-btn tl-close" onclick="closeWindow('phone')"><svg viewBox="0 0 14 14"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg></div>
+                    <div class="tl-btn tl-min"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="7"/></svg></div>
+                    <div class="tl-btn tl-max"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="3"/><line x1="11" y1="3" x2="7" y2="11"/><line x1="7" y1="11" x2="3" y2="7"/></svg></div>
                 </div>
+                <div class="window-title">FaceTime Audio</div>
             </div>
-
-            <div id="app-calculator" class="app-window">
-                <div class="app-body" style="background:black; color:white; display:flex; flex-direction:column; justify-content:flex-end;">
-                    <div id="calcRes" style="text-align:right; font-size:80px; padding:20px;">0</div>
-                    <div class="calc-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; padding:20px; background:black;">
-                        <div class="calc-btn" style="background:#a5a5a5; color:black;" onclick="calc('C')">AC</div><div class="calc-btn" style="background:#a5a5a5; color:black;">+/-</div><div class="calc-btn" style="background:#a5a5a5; color:black;">%</div><div class="calc-btn" style="background:#ff9f0a;" onclick="calc('/')">÷</div>
-                        <div class="calc-btn" onclick="calc(7)">7</div><div class="calc-btn" onclick="calc(8)">8</div><div class="calc-btn" onclick="calc(9)">9</div><div class="calc-btn" style="background:#ff9f0a;" onclick="calc('*')">×</div>
-                        <div class="calc-btn" onclick="calc(4)">4</div><div class="calc-btn" onclick="calc(5)">5</div><div class="calc-btn" onclick="calc(6)">6</div><div class="calc-btn" style="background:#ff9f0a;" onclick="calc('-')">-</div>
-                        <div class="calc-btn" onclick="calc(1)">1</div><div class="calc-btn" onclick="calc(2)">2</div><div class="calc-btn" onclick="calc(3)">3</div><div class="calc-btn" style="background:#ff9f0a;" onclick="calc('+')">+</div>
-                        <div class="calc-btn" style="grid-column:span 2; justify-content:flex-start; padding-left:30px;" onclick="calc(0)">0</div><div class="calc-btn">.</div><div class="calc-btn" style="background:#ff9f0a;" onclick="calc('=')">=</div>
+            <div class="window-content" style="display:flex; flex-direction:column; justify-content:center;">
+                <div id="phoneDisplay" style="font-size:36px; text-align:center; padding:20px; color:var(--app-text); height: 80px;"></div>
+                <div class="keypad">
+                    <div class="key-btn" onclick="dial('1')">1</div><div class="key-btn" onclick="dial('2')">2</div><div class="key-btn" onclick="dial('3')">3</div>
+                    <div class="key-btn" onclick="dial('4')">4</div><div class="key-btn" onclick="dial('5')">5</div><div class="key-btn" onclick="dial('6')">6</div>
+                    <div class="key-btn" onclick="dial('7')">7</div><div class="key-btn" onclick="dial('8')">8</div><div class="key-btn" onclick="dial('9')">9</div>
+                    <div class="key-btn" onclick="dial('*')">*</div><div class="key-btn" onclick="dial('0')">0</div><div class="key-btn" onclick="dial('#')">#</div>
+                    <div style="grid-column: 1 / span 3; display: flex; justify-content: center; margin-top: 10px;">
+                        <div class="key-btn" style="background:#34c759; color:white; width: 75px; height: 75px;" onclick="callPhone()"><i data-lucide="phone" fill="currentColor"></i></div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div id="app-calendar" class="app-window">
-                <div class="nav-bar"><div style="color:red">2026</div><div>Calendario</div><div onclick="closeApp('calendar')">Hoy</div></div>
-                <div class="app-body" id="mobileCalendarBody" style="padding:20px; background:var(--app-bg);"></div>
+    </div>
+
+    <!-- LAUNCHPAD OVERLAY -->
+    <div id="launchpad">
+        <input type="text" class="launchpad-search" placeholder="Buscar">
+        <div class="launchpad-grid" id="launchpadGrid">
+            <!-- Iconos generados por JS -->
+        </div>
+    </div>
+
+    <!-- DOCK INFERIOR -->
+    <div id="dock-container">
+        <div id="dock">
+            <div class="dock-item" onclick="openWindow('settings')" data-app="settings">
+                <div class="app-icon" style="background: #8e8e93;"><i data-lucide="settings-2"></i></div>
+                <div class="dock-indicator"></div>
             </div>
-
-            <div id="app-photos" class="app-window">
-                <div class="nav-bar"><div style="color:#007aff" onclick="closeApp('photos')">Atrás</div><div>Fotos</div><div></div></div>
-                <div class="app-body" style="background:var(--app-bg);"><div id="mobilePhotoGrid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:2px;"></div></div>
+            <div class="dock-item" onclick="toggleLaunchpad()" data-app="launchpad">
+                <div class="app-icon" style="background: rgba(255,255,255,0.4); border: 2px solid white;"><i data-lucide="layout-grid"></i></div>
+                <div class="dock-indicator"></div>
             </div>
-
-            <div id="app-maps" class="app-window"><div class="app-body"><iframe width="100%" height="100%" frameborder="0" src="https://www.openstreetmap.org/export/embed.html"></iframe></div></div>
-            
-            <div id="app-clock" class="app-window">
-                <div class="app-body" style="background:black; color:white; padding:20px; padding-top:60px; text-align:center;">
-                    <h1 id="mobileClockAppTime" style="font-size:70px; margin-bottom:10px;">--:--</h1>
-                    <div style="font-size:20px; color:#aaa;">Ciudad de México</div>
-                </div>
+            <div class="dock-separator"></div>
+            <div class="dock-item" onclick="openWindow('safari')" data-app="safari">
+                <div class="app-icon icon-safari"><i data-lucide="compass"></i></div>
+                <div class="dock-indicator"></div>
             </div>
-
-            <div id="app-weather" class="app-window">
-                <div class="app-body" style="background:linear-gradient(#1e3c72, #2a5298); color:white; text-align:center; padding-top:60px; display:flex; flex-direction:column; align-items:center;">
-                    <h1 id="mobileWeatherTemp" style="font-size:90px; margin:20px 0;">--°</h1>
-                    <div id="mobileWeatherDesc" style="font-size:22px;">---</div>
-                </div>
+            <div class="dock-item" onclick="openWindow('messages')" data-app="messages">
+                <div class="app-icon icon-messages"><i data-lucide="message-circle" fill="white"></i></div>
+                <div class="dock-indicator"></div>
             </div>
-
-            <div id="app-notes" class="app-window">
-                <div class="nav-bar"><div style="color:#ffd60a">Atrás</div><div>Notas</div><div onclick="closeApp('notes')">Listo</div></div>
-                <div class="app-body" style="padding:0;">
-                    <textarea id="mobileNotesArea" style="width:100%; height:100%; border:none; padding:20px; font-size:18px; outline:none; background:var(--app-bg); color:var(--app-text); resize:none;">Nueva nota...</textarea>
-                </div>
+            <div class="dock-item" onclick="openWindow('phone')" data-app="phone">
+                <div class="app-icon icon-phone"><i data-lucide="video" fill="white"></i></div>
+                <div class="dock-indicator"></div>
             </div>
-
-            <div id="app-safari" class="app-window">
-                <div class="app-body" style="display:flex; flex-direction:column;">
-                    <div style="padding:15px; background:var(--list-bg); text-align:center; border-bottom:1px solid var(--border-color); color:var(--app-text); border-radius:15px; margin:10px;">🔒 bing.com</div>
-                    <iframe src="https://www.bing.com" style="width:100%; flex:1; border:none; background:white;"></iframe>
-                </div>
+            <div class="dock-item" onclick="openWindow('camera')" data-app="camera">
+                <div class="app-icon" style="background:#ccc;"><i data-lucide="camera" color="#000" fill="currentColor"></i></div>
+                <div class="dock-indicator"></div>
             </div>
-
-            <div id="app-messages" class="app-window">
-                <div class="nav-bar"><div>Editar</div><div>Mensajes</div><div onclick="closeApp('messages')">Listo</div></div>
-                <div class="app-body" id="mobileMessagesBody" style="display:flex; flex-direction:column; padding:0;"></div>
+            <div class="dock-item" onclick="openWindow('calculator')" data-app="calculator">
+                <div class="app-icon"><img src="https://i.ibb.co/JRPgZLNR/images-removebg-preview.png" style="width:100%;height:100%;object-fit:cover;"></div>
+                <div class="dock-indicator"></div>
             </div>
-
-            <div id="app-music" class="app-window"><div class="app-body" style="background:#111;"><iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator&theme=0" width="100%" height="100%" frameBorder="0" allowfullscreen="" loading="lazy"></iframe></div></div>
-
-            <div class="home-indicator" id="homeIndicator" onclick="goHome()"></div>
-            <div class="status-bar" id="statusBar"><span id="statusBarClock">9:41</span><div style="display:flex; gap:5px;"><i data-lucide="signal" size="14"></i><i data-lucide="wifi" size="14"></i><i data-lucide="battery-full" size="18"></i></div></div>
-
+            <div class="dock-item" onclick="openWindow('wallet')" data-app="wallet">
+                <div class="app-icon icon-wallet"><i data-lucide="wallet-cards"></i></div>
+                <div class="dock-indicator"></div>
+            </div>
+            <div class="dock-item" onclick="openWindow('notes')" data-app="notes">
+                <div class="app-icon icon-notes"><i data-lucide="file-text" fill="white"></i></div>
+                <div class="dock-indicator"></div>
+            </div>
         </div>
     </div>
 
     <script>
         lucide.createIcons();
 
-        // --- TRANSLATIONS CONFIG ---
+        // --- TRADUCCIONES ---
         const translations = {
-            es: { welcome: "Desliza para empezar", mail: "Mail", calendar: "Calendario", photos: "Fotos", camera: "Cámara", maps: "Mapas", clock: "Reloj", weather: "Clima", wallet: "Cartera", notes: "Notas", calculator: "Calculadora", settings: "Ajustes", lang_region: "Idioma y Región", dark_mode: "Modo Oscuro", charging: "⚡ Super Charge 200W", face_id: "Face ID", changing_lang: "Cambiando Idioma..." },
-            en: { welcome: "Swipe to start", mail: "Mail", calendar: "Calendar", photos: "Photos", camera: "Camera", maps: "Maps", clock: "Clock", weather: "Weather", wallet: "Wallet", notes: "Notes", calculator: "Calculator", settings: "Settings", lang_region: "Language & Region", dark_mode: "Dark Mode", charging: "⚡ Super Charge 200W", face_id: "Face ID", changing_lang: "Changing Language..." },
-            fr: { welcome: "Balayez pour commencer", mail: "Mail", calendar: "Calendrier", photos: "Photos", camera: "Appareil photo", maps: "Plans", clock: "Horloge", weather: "Météo", wallet: "Cartes", notes: "Notes", calculator: "Calculatrice", settings: "Réglages", lang_region: "Langue et région", dark_mode: "Mode sombre", charging: "⚡ Super Charge 200W", face_id: "Face ID", changing_lang: "Changement de langue..." },
-            it: { welcome: "Scorri per iniziare", mail: "Mail", calendar: "Calendario", photos: "Foto", camera: "Fotocamera", maps: "Mappe", clock: "Orologio", weather: "Meteo", wallet: "Wallet", notes: "Note", calculator: "Calcolatrice", settings: "Impostazioni", lang_region: "Lingua e zona", dark_mode: "Modalità scura", charging: "⚡ Super Charge 200W", face_id: "Face ID", changing_lang: "Cambio lingua..." },
-            jp: { welcome: "スワイプして始める", mail: "メール", calendar: "カレンダー", photos: "写真", camera: "カメラ", maps: "マップ", clock: "時計", weather: "天気", wallet: "ウォレット", notes: "メモ", calculator: "電卓", settings: "設定", lang_region: "言語と地域", dark_mode: "ダークモード", charging: "⚡ Super Charge 200W", face_id: "Face ID", changing_lang: "言語を変更中..." },
-            cn: { welcome: "向上轻扫以开始", mail: "邮件", calendar: "日历", photos: "照片", camera: "相机", maps: "地图", clock: "时钟", weather: "天气", wallet: "钱包", notes: "备忘录", calculator: "计算器", settings: "设置", lang_region: "语言与地区", dark_mode: "深色模式", charging: "⚡ Super Charge 200W", face_id: "Face ID", changing_lang: "正在更改语言..." }
+            es: { lang_region: "Idioma", dark_mode: "Modo Oscuro", settings: "Ajustes del Sistema", notes: "Notas", camera: "Cámara", wallet: "Cartera", changing_lang: "Cambiando Idioma..." },
+            en: { lang_region: "Language", dark_mode: "Dark Mode", settings: "System Settings", notes: "Notes", camera: "Camera", wallet: "Wallet", changing_lang: "Changing Language..." },
+            fr: { lang_region: "Langue", dark_mode: "Mode Sombre", settings: "Réglages Système", notes: "Notes", camera: "Appareil Photo", wallet: "Cartes", changing_lang: "Changement de langue..." },
+            it: { lang_region: "Lingua", dark_mode: "Modalità Scura", settings: "Impostazioni di Sistema", notes: "Note", camera: "Fotocamera", wallet: "Wallet", changing_lang: "Cambio lingua..." }
         };
         let currentLang = 'es';
 
-        // --- HELLO SEQUENCE ---
-        const greetings = ["Provechito", "hello", "hola", "bonjour", "ciao", "hallo", "olá", "你好", "こんにちは", "Provechito"];
-        let greetIdx = 0;
-        const welcomeText = document.getElementById('welcomeText');
-        let greetInterval;
+        // --- SISTEMA DE VENTANAS (DESKTOP) ---
+        let zIndexCounter = 100;
+        const openApps = new Set();
 
-        const hasSeenWelcome = localStorage.getItem('wtc_liquid_welcome_seen');
+        function makeDraggable(windowEl) {
+            const titleBar = windowEl.querySelector('.title-bar');
+            if (!titleBar) return;
+            
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            
+            titleBar.onmousedown = dragMouseDown;
 
-        if (hasSeenWelcome === 'true') {
-            document.getElementById('welcomeScreen').style.display = 'none';
-            document.getElementById('notch').classList.remove('welcome-aura');
-            document.getElementById('tutorialOverlay').style.display = 'none';
-        } else {
-            greetInterval = setInterval(() => {
-                welcomeText.style.opacity = 0;
-                setTimeout(() => {
-                    greetIdx = (greetIdx + 1) % greetings.length;
-                    welcomeText.innerText = greetings[greetIdx];
-                    welcomeText.style.opacity = 1;
-                }, 500);
-            }, 2000);
-        }
-
-        function startSetup() {
-            if (greetInterval) clearInterval(greetInterval);
-            document.getElementById('notch').classList.remove('welcome-aura');
-            document.getElementById('welcomeScreen').style.transform = "translateY(-100%)";
-            document.getElementById('tutorialOverlay').style.display = "flex";
-        }
-
-        // --- LOGICA DE APPS FUNCIONALES ---
-
-        function initAppFunctions() {
-            // Calendar
-            const d = new Date();
-            const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-            let calHtml = `<h2 style="color:red; margin-bottom:15px; font-weight:700;">${monthNames[d.getMonth()].toUpperCase()} ${d.getFullYear()}</h2>`;
-            calHtml += `<div style="display:grid; grid-template-columns:repeat(7,1fr); gap:8px; text-align:center; font-size:14px;">`;
-            const days = ['D','L','M','M','J','V','S'];
-            days.forEach(day => calHtml += `<div style="font-weight:bold;color:gray;">${day}</div>`);
-            const firstDay = new Date(d.getFullYear(), d.getMonth(), 1).getDay();
-            const daysInMonth = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
-            for(let i=0; i<firstDay; i++) calHtml += `<div></div>`;
-            for(let i=1; i<=daysInMonth; i++) {
-                const isToday = i === d.getDate() ? 'background:red;color:white;border-radius:50%;' : 'color:var(--app-text)';
-                calHtml += `<div style="padding:8px;${isToday}">${i}</div>`;
+            function dragMouseDown(e) {
+                if (e.target.closest('.traffic-lights')) return; // No arrastrar si hace clic en botones
+                e.preventDefault();
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                document.onmousemove = elementDrag;
+                bringToFront(windowEl);
             }
-            calHtml += `</div>`;
-            document.getElementById('mobileCalendarBody').innerHTML = calHtml;
 
-            // Photos
-            let photoHtml = '';
-            for(let i=1; i<=18; i++) photoHtml += `<div style="aspect-ratio:1; background:url('https://picsum.photos/seed/${i+100}/200') center/cover;"></div>`;
-            document.getElementById('mobilePhotoGrid').innerHTML = photoHtml;
+            function elementDrag(e) {
+                e.preventDefault();
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                windowEl.style.top = (windowEl.offsetTop - pos2) + "px";
+                windowEl.style.left = (windowEl.offsetLeft - pos1) + "px";
+            }
 
-            // Weather
-            const temps = [18, 22, 25, 14, 30, 20];
-            const descs = ['Soleado', 'Nublado', 'Lluvioso', 'Parcialmente Nublado', 'Despejado'];
-            document.getElementById('mobileWeatherTemp').innerText = temps[Math.floor(Math.random()*temps.length)] + '°';
-            document.getElementById('mobileWeatherDesc').innerText = descs[Math.floor(Math.random()*descs.length)];
+            function closeDragElement() {
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
 
-            // Notes
-            const ta = document.getElementById('mobileNotesArea');
-            ta.value = localStorage.getItem('wtc_notes_mobile') || 'Nueva nota...';
-            ta.addEventListener('input', () => localStorage.setItem('wtc_notes_mobile', ta.value));
+        function bringToFront(windowEl) {
+            zIndexCounter++;
+            windowEl.style.zIndex = zIndexCounter;
+            const appName = windowEl.querySelector('.window-title')?.innerText || "Finder";
+            document.getElementById('top-app-name').innerText = appName;
+        }
 
-            // Messages
-            const msgBody = document.getElementById('mobileMessagesBody');
-            msgBody.innerHTML = `
-                <div id="mob-msg-hist" class="chat-history">
-                    <div class="chat-bubble received">¡Hola! ¿Cómo estás?</div>
-                </div>
-                <div class="chat-input-area">
-                    <input type="text" id="mob-msg-input" class="chat-input" placeholder="Mensaje...">
-                    <button onclick="sendMsgMobile()" class="chat-send">↑</button>
-                </div>
-            `;
+        function initWindows() {
+            document.querySelectorAll('.mac-window').forEach(win => {
+                makeDraggable(win);
+                win.addEventListener('mousedown', () => bringToFront(win));
+            });
+        }
 
-            // Mail
-            const mailBody = document.getElementById('mobileMailBody');
-            mailBody.innerHTML = `
-                <div id="mob-mail-list" class="mail-list">
-                    <div class="list-item" onclick="openMailMobile('Apple', 'Recibo de compra', 'Gracias por su compra reciente en la App Store. Su recibo está adjunto.')">
-                        <div><b>Apple</b><br><span style="font-size:13px;opacity:0.7">Recibo de compra</span></div>
-                        <div style="font-size:12px;opacity:0.5">Ayer</div>
+        function openWindow(appId) {
+            const win = document.getElementById('window-' + appId);
+            if (win) {
+                win.classList.add('active');
+                bringToFront(win);
+                openApps.add(appId);
+                updateDockIndicators();
+                
+                // Casos especiales al abrir
+                if (appId === 'camera') startCamera();
+                if (appId === 'wallet') startWallet();
+            }
+            const launchpad = document.getElementById('launchpad');
+            if (launchpad.classList.contains('active')) {
+                toggleLaunchpad();
+            }
+        }
+
+        function closeWindow(appId) {
+            const win = document.getElementById('window-' + appId);
+            if (win) {
+                win.classList.remove('active');
+                openApps.delete(appId);
+                updateDockIndicators();
+                document.getElementById('top-app-name').innerText = "Finder";
+                
+                // Casos especiales al cerrar
+                if (appId === 'camera') stopCamera();
+                if (appId === 'wallet') clearInterval(cvcInterval);
+            }
+        }
+
+        function updateDockIndicators() {
+            document.querySelectorAll('.dock-item').forEach(item => {
+                const app = item.getAttribute('data-app');
+                if (openApps.has(app)) {
+                    item.classList.add('running');
+                } else {
+                    item.classList.remove('running');
+                }
+            });
+        }
+
+        // --- RELOJ Y LOGIN ---
+        function updateClock() {
+            const d = new Date(); 
+            const t = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+            document.getElementById('top-time').innerText = t;
+            document.getElementById('loginTime').innerText = t;
+        }
+        setInterval(updateClock, 1000); updateClock();
+
+        function unlockMac() {
+            document.getElementById('loginScreen').style.opacity = '0';
+            document.getElementById('loginScreen').style.visibility = 'hidden';
+            
+            // Animación de bienvenida (FaceID simulado en desktop)
+            const n = document.getElementById('notch'); 
+            n.classList.add('expanded-faceid');
+            setTimeout(() => { n.classList.remove('expanded-faceid'); }, 1200);
+        }
+
+        function focusPassword() {
+            const input = document.getElementById('loginInput');
+            input.placeholder = "Ingresando...";
+            setTimeout(unlockMac, 500);
+        }
+
+        // --- LAUNCHPAD ---
+        function toggleLaunchpad() {
+            const lp = document.getElementById('launchpad');
+            lp.classList.toggle('active');
+            if(lp.classList.contains('active')) {
+                document.getElementById('top-app-name').innerText = "Launchpad";
+            } else {
+                document.getElementById('top-app-name').innerText = "Finder";
+            }
+        }
+
+        const allApps = [
+            { id: 'settings', name: 'Ajustes', icon: '<div class="app-icon" style="background:#8e8e93;"><i data-lucide="settings-2"></i></div>' },
+            { id: 'safari', name: 'Safari', icon: '<div class="app-icon icon-safari"><i data-lucide="compass"></i></div>' },
+            { id: 'messages', name: 'Mensajes', icon: '<div class="app-icon icon-messages"><i data-lucide="message-circle" fill="white"></i></div>' },
+            { id: 'phone', name: 'FaceTime', icon: '<div class="app-icon icon-phone"><i data-lucide="video" fill="white"></i></div>' },
+            { id: 'camera', name: 'Photo Booth', icon: '<div class="app-icon" style="background:#ccc;"><i data-lucide="camera" color="#000" fill="currentColor"></i></div>' },
+            { id: 'calculator', name: 'Calculadora', icon: '<div class="app-icon"><img src="https://i.ibb.co/JRPgZLNR/images-removebg-preview.png" style="width:100%;height:100%;object-fit:cover;"></div>' },
+            { id: 'wallet', name: 'Cartera', icon: '<div class="app-icon icon-wallet"><i data-lucide="wallet-cards"></i></div>' },
+            { id: 'notes', name: 'Notas', icon: '<div class="app-icon icon-notes"><i data-lucide="file-text" fill="white"></i></div>' },
+            { id: 'music', name: 'Música', icon: '<div class="app-icon icon-music"><i data-lucide="music" fill="white"></i></div>' },
+            { id: 'weather', name: 'Clima', icon: '<div class="app-icon icon-weather"><i data-lucide="cloud-sun"></i></div>' },
+            { id: 'maps', name: 'Mapas', icon: '<div class="app-icon icon-maps"><i data-lucide="map-pinned"></i></div>' }
+        ];
+
+        function initLaunchpad() {
+            const grid = document.getElementById('launchpadGrid');
+            allApps.forEach(app => {
+                grid.innerHTML += `
+                    <div class="desktop-icon" onclick="openWindow('${app.id}')">
+                        ${app.icon}
+                        <span>${app.name}</span>
                     </div>
-                    <div class="list-item" onclick="openMailMobile('Equipo WTC', 'Actualización Disponible', 'La nueva versión Liquid 28.2 ya está instalada. ¡Disfruta!')">
-                        <div><b>Equipo WTC</b><br><span style="font-size:13px;opacity:0.7">Actualización Disponible</span></div>
-                        <div style="font-size:12px;opacity:0.5">Hace 2h</div>
-                    </div>
-                </div>
-                <div id="mob-mail-detail" class="mail-detail">
-                    <div class="mail-header" onclick="closeMailMobile()">‹ Volver</div>
-                    <div class="mail-content">
-                        <h2 id="mob-mail-title" style="margin-top:0;">Asunto</h2>
-                        <h4 id="mob-mail-sender" style="color:gray;">De</h4>
-                        <p id="mob-mail-body" style="margin-top:20px; line-height:1.5;">Cuerpo</p>
-                    </div>
-                </div>
-            `;
+                `;
+            });
+            lucide.createIcons();
         }
 
-        // --- FUNCIONES APPS ---
-
-        function sendMsgMobile() {
-            const input = document.getElementById('mob-msg-input');
-            const hist = document.getElementById('mob-msg-hist');
-            if(!input.value.trim()) return;
-            hist.innerHTML += `<div class="chat-bubble sent">${input.value}</div>`;
-            input.value = '';
-            hist.scrollTop = hist.scrollHeight;
-            setTimeout(() => {
-                hist.innerHTML += `<div class="chat-bubble received">Interesante... Cuéntame más.</div>`;
-                hist.scrollTop = hist.scrollHeight;
-            }, 1000);
+        // --- FUNCIONES ESPECÍFICAS DE APPS ---
+        
+        // Ajustes
+        function switchSettingsPanel(panelId, element) {
+            document.querySelectorAll('.set-nav-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+            document.querySelectorAll('.settings-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById('set-panel-' + panelId).classList.add('active');
         }
 
-        function openMailMobile(sender, title, body) {
-            document.getElementById('mob-mail-list').style.display = 'none';
-            document.getElementById('mob-mail-detail').style.display = 'flex';
-            document.getElementById('mob-mail-title').innerText = title;
-            document.getElementById('mob-mail-sender').innerText = "De: " + sender;
-            document.getElementById('mob-mail-body').innerText = body;
+        function toggleDark() { 
+            document.body.classList.toggle('dark-mode'); 
+            document.getElementById('darkToggle').classList.toggle('active'); 
         }
-
-        function closeMailMobile() {
-            document.getElementById('mob-mail-detail').style.display = 'none';
-            document.getElementById('mob-mail-list').style.display = 'block';
-        }
-
-        // --- FIN LOGICA APPS ---
 
         function triggerSuperCharge() {
             const n = document.getElementById('notch');
@@ -910,135 +857,54 @@
             const t = translations[lang];
             const n = document.getElementById('notch');
             n.classList.add('expanded-language');
-            document.getElementById('langNotchText').textContent = t.changing_lang;
+            document.getElementById('langNotchText').textContent = t.changing_lang || "Cambiando Idioma...";
             document.querySelectorAll('[data-key]').forEach(el => {
                 const key = el.getAttribute('data-key');
                 if(t[key]) el.textContent = t[key];
             });
-            document.getElementById('swipeText').textContent = t.welcome;
             document.querySelectorAll('.lang-check').forEach(i => i.style.display = 'none');
             document.getElementById('check-'+lang).style.display = 'block';
-            const langNames = {es:"Español", en:"English", fr:"Français", it:"Italiano", jp:"日本語", cn:"中文"};
-            document.getElementById('currentLangDisplay').innerHTML = langNames[lang] + ' <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg>';
-            setTimeout(() => { navSettings('back'); n.classList.remove('expanded-language'); }, 2000);
-        }
-
-        function navSettings(target) {
-            const main = document.getElementById('setMain'), langs = document.getElementById('setLangs'), personalize = document.getElementById('setPersonalize'), backBtn = document.getElementById('setBackBtn'), title = document.getElementById('setTitle');
-            if (target === 'langs') {
-                main.classList.add('hidden'); langs.classList.remove('hidden'); personalize.classList.add('hidden');
-                backBtn.style.visibility = 'visible'; backBtn.innerText = translations[currentLang].settings || "Ajustes";
-                backBtn.onclick = () => navSettings('back'); title.innerText = translations[currentLang].lang_region || "Idioma";
-            } else if (target === 'personalize') {
-                main.classList.add('hidden'); langs.classList.add('hidden'); personalize.classList.remove('hidden');
-                backBtn.style.visibility = 'visible'; backBtn.innerText = translations[currentLang].settings || "Ajustes";
-                backBtn.onclick = () => navSettings('back'); title.innerText = "Personalización";
-                renderOrderList(); if (typeof lucide !== 'undefined') lucide.createIcons();
-            } else if (target === 'back') {
-                main.classList.remove('hidden'); langs.classList.add('hidden'); personalize.classList.add('hidden');
-                backBtn.innerText = "Atrás"; backBtn.onclick = () => closeApp('settings');
-                title.innerText = translations[currentLang].settings || "Ajustes";
-            }
+            setTimeout(() => { n.classList.remove('expanded-language'); }, 2000);
         }
 
         const THEMES = ['linear-gradient(135deg, #021B79, #0575E6, #00F260)', 'linear-gradient(135deg, #0f5132, #198754, #20c997)', 'linear-gradient(135deg, #2d1b69, #6f42c1, #e83e8c)', 'linear-gradient(135deg, #c2185b, #e91e63, #f48fb1)', 'linear-gradient(135deg, #e65100, #ff6f00, #ffab40)', 'linear-gradient(135deg, #1a1a2e, #16213e, #0f3460)'];
-        const FONTS = { system: '-apple-system, BlinkMacSystemFont, sans-serif', inter: "'Inter', sans-serif", dancing: "'Dancing Script', cursive", roboto: "'Roboto', sans-serif" };
-        const DEFAULT_APP_ORDER = ['mail','calendar','photos','camera','maps','clock','weather','wallet','notes','calculator','settings'];
-        const APP_NAMES = { mail: 'Mail', calendar: 'Calendario', photos: 'Fotos', camera: 'Cámara', maps: 'Mapas', clock: 'Reloj', weather: 'Clima', wallet: 'Cartera', notes: 'Notas', calculator: 'Calculadora', settings: 'Ajustes' };
-        let appOrderEdit = [];
+        const FONTS = { system: '-apple-system, BlinkMacSystemFont, "Inter", sans-serif', inter: "'Inter', sans-serif", dancing: "'Dancing Script', cursive", roboto: "'Roboto', sans-serif" };
 
         function applyTheme(idx) {
             const bg = THEMES[idx];
             document.getElementById('wallpaper').style.background = bg;
             document.getElementById('wallpaper').style.backgroundSize = '100% 100%';
             document.getElementById('wallpaper').style.animation = 'none';
-            document.getElementById('lockScreen').style.background = bg;
-            document.getElementById('lockScreen').style.backgroundSize = '100% 100%';
-            document.getElementById('lockScreen').style.animation = 'none';
             document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
             document.querySelector('.theme-btn[data-theme="'+idx+'"]').classList.add('active');
-            localStorage.setItem('wtc_liquid_theme', String(idx));
         }
+
         function applyFont(id) {
             const font = FONTS[id] || FONTS.system;
             document.body.style.fontFamily = font;
             document.querySelectorAll('.font-opt').forEach(el => { el.classList.remove('font-selected'); const c = el.querySelector('.font-check'); if(c) c.style.display = 'none'; });
             const sel = document.querySelector('.font-opt[data-font="'+id+'"]');
             if(sel) { sel.classList.add('font-selected'); const c = sel.querySelector('.font-check'); if(c) c.style.display = 'block'; }
-            localStorage.setItem('wtc_liquid_font', id);
-            if (typeof lucide !== 'undefined') lucide.createIcons();
-        }
-        function loadAppOrder() { try { const s = localStorage.getItem('wtc_liquid_app_order'); return s ? JSON.parse(s) : [...DEFAULT_APP_ORDER]; } catch { return [...DEFAULT_APP_ORDER]; } }
-        function renderAppGrid() {
-            const order = loadAppOrder(); const grid = document.getElementById('appGrid');
-            const items = Array.from(grid.querySelectorAll('.app-item[data-app-id]')); const byId = {};
-            items.forEach(el => { byId[el.getAttribute('data-app-id')] = el; });
-            order.forEach(id => { if (byId[id]) grid.appendChild(byId[id]); });
-            if (typeof lucide !== 'undefined') lucide.createIcons();
-        }
-        function renderOrderList() {
-            appOrderEdit = loadAppOrder(); const cont = document.getElementById('orderListContainer'); const len = appOrderEdit.length;
-            cont.innerHTML = appOrderEdit.map((id, i) => '<div class="order-row"><span>'+(APP_NAMES[id]||id)+'</span><div class="order-btns"><button onclick="moveAppUp('+i+')"'+(i===0?' disabled':'')+'><i data-lucide="chevron-up" size="18"></i></button><button onclick="moveAppDown('+i+')"'+(i===len-1?' disabled':'')+'><i data-lucide="chevron-down" size="18"></i></button></div></div>').join('');
-            if (typeof lucide !== 'undefined') lucide.createIcons();
-        }
-        function moveAppUp(i) { if (i <= 0) return; [appOrderEdit[i-1], appOrderEdit[i]] = [appOrderEdit[i], appOrderEdit[i-1]]; renderOrderList(); }
-        function moveAppDown(i) { if (i >= appOrderEdit.length - 1) return; [appOrderEdit[i], appOrderEdit[i+1]] = [appOrderEdit[i+1], appOrderEdit[i]]; renderOrderList(); }
-        function saveAppOrder() { localStorage.setItem('wtc_liquid_app_order', JSON.stringify(appOrderEdit)); renderAppGrid(); }
-
-        function nextTut(n) { document.getElementById('tut'+n).classList.remove('active'); document.getElementById('tut'+(n+1)).classList.add('active'); }
-        function closeTutorial() { document.getElementById('tutorialOverlay').style.display = "none"; localStorage.setItem('wtc_liquid_welcome_seen', 'true'); }
-
-        function updateClock() {
-            const d = new Date(); const t = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-            document.getElementById('lockTime').innerText = t;
-            document.getElementById('statusBarClock').innerText = t;
-            if(document.getElementById('mobileClockAppTime')) document.getElementById('mobileClockAppTime').innerText = t;
-            const o = {weekday:'long', day:'numeric', month:'long'};
-            document.getElementById('lockDate').innerText = d.toLocaleDateString(currentLang === 'es' ? 'es-ES' : 'en-US', o);
-        }
-        setInterval(updateClock, 1000); updateClock();
-
-        function resize() {
-            const s = Math.min((window.innerWidth-20)/380, (window.innerHeight-20)/800, 1);
-            document.getElementById('scaler').style.transform = `scale(${s})`;
-        }
-        window.onresize = resize; 
-
-        (function initPersonalization() {
-            const theme = localStorage.getItem('wtc_liquid_theme');
-            if (theme !== null) applyTheme(parseInt(theme, 10));
-            applyFont(localStorage.getItem('wtc_liquid_font') || 'system');
-            renderAppGrid();
-        })();
-
-        window.onload = function() { resize(); initAppFunctions(); lucide.createIcons(); };
-
-        function unlockPhone() {
-            const n = document.getElementById('notch'); n.classList.add('expanded-faceid');
-            setTimeout(() => { n.classList.remove('expanded-faceid'); document.getElementById('lockScreen').classList.add('unlocked'); }, 1000);
         }
 
-        function goHome() {
-            document.querySelectorAll('.app-window').forEach(w => w.classList.remove('open'));
-            clearInterval(cvcInterval); document.getElementById('homeIndicator').classList.remove('dark'); document.getElementById('statusBar').classList.remove('dark');
+        // Notas
+        const ta = document.getElementById('macNotesArea');
+        ta.value = localStorage.getItem('wtc_notes_mac') || 'Nueva nota de escritorio...';
+        ta.addEventListener('input', () => localStorage.setItem('wtc_notes_mac', ta.value));
+
+        // Calculadora
+        let cVal = "0";
+        function calc(v) {
+            const d = document.getElementById('calcRes');
+            if(v==='C') cVal="0"; 
+            else if(v==='=') { try{cVal=eval(cVal)}catch{cVal="Error"} } 
+            else { if(cVal==="0") cVal=""; cVal+=v; }
+            d.innerText = cVal;
         }
 
-        const lightApps = ['mail', 'calendar', 'photos', 'maps', 'notes', 'settings', 'phone', 'safari', 'messages'];
-
-        function openApp(id) {
-            if(id === 'wallet') startWallet(); if(id === 'camera') startCamera();
-            const app = document.getElementById('app-' + id);
-            if(app) {
-                app.classList.add('open');
-                if(lightApps.includes(id)) { document.getElementById('homeIndicator').classList.add('dark'); document.getElementById('statusBar').classList.add('dark'); }
-            }
-        }
-        function closeApp(id) { document.getElementById('app-' + id).classList.remove('open'); if(id === 'wallet') clearInterval(cvcInterval); if(id === 'camera') stopCamera(); goHome(); }
-
-        function toggleDark() { document.getElementById('iphoneFrame').classList.toggle('dark-mode'); document.getElementById('darkToggle').classList.toggle('active'); }
-
+        // Cámara (Photo Booth)
         let videoStream; let filterIdx = 0; const filters = ['none', 'grayscale(1)', 'sepia(1)', 'saturate(2)'];
-        async function startCamera() { try { videoStream = await navigator.mediaDevices.getUserMedia({ video: true }); document.getElementById('camFeed').srcObject = videoStream; } catch(e) {} }
+        async function startCamera() { try { videoStream = await navigator.mediaDevices.getUserMedia({ video: true }); document.getElementById('camFeed').srcObject = videoStream; } catch(e) { console.warn("Camara no disponible"); } }
         function stopCamera() { if(videoStream) videoStream.getTracks().forEach(t => t.stop()); }
         function toggleFilter() { filterIdx = (filterIdx + 1) % filters.length; document.getElementById('camFeed').style.filter = filters[filterIdx]; }
         function takePhoto() {
@@ -1047,6 +913,7 @@
             document.getElementById('lastPhoto').src = c.toDataURL('image/jpeg'); document.getElementById('lastPhoto').style.display = 'block';
         }
 
+        // Cartera
         let cvcInterval;
         function startWallet() {
             let num = ""; for(let i=0; i<4; i++) num += Math.floor(1000 + Math.random() * 9000) + " ";
@@ -1059,23 +926,29 @@
             updateCVC(); clearInterval(cvcInterval); cvcInterval = setInterval(updateCVC, 30000);
         }
 
-        function dial(n) { const display = document.getElementById('phoneDisplay'); display.innerText += n; if (display.innerText === '911') { window.location.href = 'new911.html'; } }
+        // Phone (FaceTime Audio)
+        function dial(n) { const display = document.getElementById('phoneDisplay'); display.innerText += n; }
         function callPhone() { const pd = document.getElementById('phoneDisplay'); const old = pd.innerText; pd.innerText = 'Llamando...'; setTimeout(()=>{pd.innerText=old;}, 2000); }
 
-        (function() {
-            var dial4 = document.getElementById('dialKey4'); if (!dial4) return; var t;
-            function startHold() { t = setTimeout(function() { window.location.href = 'htlr.html'; }, 500); }
-            function cancelHold() { clearTimeout(t); }
-            dial4.addEventListener('mousedown', startHold); dial4.addEventListener('touchstart', startHold);
-            dial4.addEventListener('mouseup', cancelHold); dial4.addEventListener('mouseleave', cancelHold); dial4.addEventListener('touchend', cancelHold);
-        })();
-        
-        let cVal = "0";
-        function calc(v) {
-            const d = document.getElementById('calcRes');
-            if(v==='C') cVal="0"; else if(v==='=') { try{cVal=eval(cVal)}catch{cVal="Error"} } else { if(cVal==="0") cVal=""; cVal+=v; }
-            d.innerText = cVal;
+        // Mensajes
+        function sendMsgMac() {
+            const input = document.getElementById('mac-msg-input');
+            const hist = document.getElementById('mac-msg-hist');
+            if(!input.value.trim()) return;
+            hist.innerHTML += `<div class="chat-bubble sent">${input.value}</div>`;
+            input.value = '';
+            hist.scrollTop = hist.scrollHeight;
+            setTimeout(() => {
+                hist.innerHTML += `<div class="chat-bubble received">¡Genial! Parece que el sistema de escritorio funciona perfecto.</div>`;
+                hist.scrollTop = hist.scrollHeight;
+            }, 1000);
         }
+
+        // INIT
+        window.onload = function() { 
+            initWindows(); 
+            initLaunchpad();
+        };
 
     </script>
 </body>
