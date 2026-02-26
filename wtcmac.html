@@ -1,427 +1,1082 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WTC Mac 1.0</title>
-<link rel="icon" href="https://www.svgrepo.com/show/503173/apple-logo.svg" type="image/svg+xml">
-<script src="https://unpkg.com/lucide@latest"></script>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@700&family=Roboto:wght@400;500;700&display=swap');
-:root{--mac-bg:#1e1e2e;--win-bg:rgba(30,30,30,0.85);--win-border:rgba(255,255,255,0.12);--title-bar:#2a2a2a;--dock-bg:rgba(50,50,50,0.7);--accent:#007aff;--text:#fff;--text-secondary:#aaa;--app-bg:#1c1c1e;--list-bg:#2c2c2e;--border-color:#38383a}
-*{box-sizing:border-box;margin:0;padding:0;user-select:none;-webkit-font-smoothing:antialiased}
-body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Inter',sans-serif;background:var(--mac-bg);height:100vh;overflow:hidden;color:var(--text)}
-.desktop{width:100vw;height:100vh;position:relative;background:linear-gradient(135deg,#021B79,#0575E6,#00F260);background-size:400% 400%;animation:gradAnim 15s ease infinite;display:flex;flex-direction:column}
-@keyframes gradAnim{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-/* MENU BAR */
-.menu-bar{height:28px;background:rgba(0,0,0,0.45);backdrop-filter:blur(30px);display:flex;align-items:center;padding:0 12px;font-size:13px;font-weight:500;z-index:9999;flex-shrink:0;justify-content:space-between}
-.menu-left{display:flex;align-items:center;gap:16px}
-.menu-left .apple-logo{font-size:16px;cursor:pointer}
-.menu-left span{cursor:pointer;opacity:0.9}
-.menu-left span:hover{opacity:1}
-.menu-right{display:flex;align-items:center;gap:14px;font-size:12px}
-.menu-right span{opacity:0.85}
-/* DESKTOP ICONS */
-.desktop-content{flex:1;position:relative;padding:20px;display:flex;flex-wrap:wrap;align-content:flex-start;gap:8px}
-.desktop-icon{width:82px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:8px 4px;border-radius:8px;transition:background 0.2s}
-.desktop-icon:hover{background:rgba(255,255,255,0.1)}
-.desktop-icon .icon-img{width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
-.desktop-icon .icon-label{font-size:11px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.8);text-align:center;line-height:1.2}
-.icon-mail{background:linear-gradient(135deg,#007aff,#5ac8fa)}
-.icon-cal{background:#fff;color:#ff3b30;font-size:10px;font-weight:800;flex-direction:column;gap:1px}
-.icon-cal span{font-size:22px;color:#000}
-.icon-photos{background:#fff}
-.icon-camera{background:linear-gradient(135deg,#555,#888)}
-.icon-maps{background:#4cd964}
-.icon-clock{background:#000;border:1px solid #333}
-.icon-weather{background:linear-gradient(135deg,#5ac8fa,#007aff)}
-.icon-wallet{background:#000;border:1px solid #333}
-.icon-notes{background:#ffd60a}
-.icon-calc{background:#333}
-.icon-settings{background:linear-gradient(135deg,#636366,#8e8e93)}
-.icon-phone{background:#34c759}
-.icon-safari{background:#fff;color:#007aff}
-.icon-messages{background:#34c759}
-.icon-music{background:linear-gradient(135deg,#ff2d55,#ff375f)}
-/* DOCK */
-.dock{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);height:64px;padding:4px 8px;background:var(--dock-bg);backdrop-filter:blur(30px);border-radius:16px;border:1px solid rgba(255,255,255,0.15);display:flex;align-items:center;gap:4px;z-index:5000}
-.dock-item{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;transition:transform 0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
-.dock-item:hover{transform:scale(1.3) translateY(-8px)}
-/* WINDOWS */
-.app-window{position:absolute;background:var(--win-bg);backdrop-filter:blur(40px);border:1px solid var(--win-border);border-radius:12px;display:none;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.5);z-index:1000;min-width:300px;min-height:200px}
-.app-window.open{display:flex}
-.app-window.maximized{top:28px!important;left:0!important;width:100vw!important;height:calc(100vh - 28px - 76px)!important;border-radius:0}
-.title-bar{height:36px;background:var(--title-bar);display:flex;align-items:center;padding:0 12px;flex-shrink:0;cursor:grab;border-bottom:1px solid rgba(255,255,255,0.05)}
-.title-bar:active{cursor:grabbing}
-.traffic-lights{display:flex;gap:7px}
-.traffic-light{width:12px;height:12px;border-radius:50%;cursor:pointer;position:relative}
-.tl-close{background:#ff5f56}
-.tl-minimize{background:#ffbd2e}
-.tl-maximize{background:#27c93f}
-.traffic-light:hover::after{font-size:8px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-weight:700}
-.tl-close:hover::after{content:'✕';color:#4a0002}
-.tl-minimize:hover::after{content:'−';color:#975500}
-.tl-maximize:hover::after{content:'+';color:#006500}
-.title-text{flex:1;text-align:center;font-size:13px;font-weight:500;opacity:0.8}
-.win-body{flex:1;overflow-y:auto;color:var(--text)}
-/* LOGIN SCREEN */
-#loginScreen{position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;background:linear-gradient(135deg,#021B79,#0575E6,#00F260);background-size:400% 400%;animation:gradAnim 15s ease infinite;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.8s}
-#loginScreen.hidden{opacity:0;pointer-events:none}
-.login-avatar{width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.2);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:12px;border:2px solid rgba(255,255,255,0.3)}
-.login-name{font-size:18px;font-weight:600;margin-bottom:16px}
-.login-input{width:200px;height:32px;border-radius:16px;border:none;background:rgba(255,255,255,0.2);backdrop-filter:blur(10px);color:#fff;text-align:center;font-size:13px;outline:none}
-.login-input::placeholder{color:rgba(255,255,255,0.6)}
-.login-hint{font-size:12px;margin-top:12px;opacity:0.6}
-.login-time{font-size:64px;font-weight:700;margin-bottom:4px}
-.login-date{font-size:16px;margin-bottom:40px;opacity:0.8;text-transform:capitalize}
-/* SETTINGS LISTS */
-.list-group{background:var(--list-bg);margin:12px;border-radius:10px;overflow:hidden}
-.list-item{padding:12px 16px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-size:13px}
-.list-item:last-child{border-bottom:none}
-.list-item:hover{background:rgba(255,255,255,0.05)}
-.toggle{width:44px;height:26px;background:#555;border-radius:13px;position:relative;transition:0.3s;cursor:pointer}
-.toggle.active{background:#34c759}
-.toggle-handle{width:22px;height:22px;background:#fff;border-radius:50%;position:absolute;top:2px;left:2px;transition:0.3s;box-shadow:0 1px 3px rgba(0,0,0,0.3)}
-.toggle.active .toggle-handle{transform:translateX(18px)}
-.theme-picker{display:flex;flex-wrap:wrap;gap:10px;padding:12px 16px}
-.theme-btn{width:36px;height:36px;border-radius:50%;border:3px solid transparent;cursor:pointer;transition:transform 0.2s}
-.theme-btn.active{border-color:#007aff;transform:scale(1.15)}
-/* CALCULATOR */
-.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:16px}
-.calc-btn{height:52px;border-radius:26px;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;background:#333;color:#fff;border:none;transition:background 0.15s}
-.calc-btn:hover{background:#444}
-.calc-btn.gray{background:#a5a5a5;color:#000}
-.calc-btn.orange{background:#ff9f0a;color:#fff}
-.calc-btn.orange:hover{background:#ffb340}
-/* WALLET */
-.credit-card{background:linear-gradient(135deg,#1a1a1a,#444);border-radius:14px;height:180px;color:#fff;padding:20px;position:relative;box-shadow:0 8px 24px rgba(0,0,0,0.4);margin:16px}
-.card-chip{width:42px;height:32px;background:linear-gradient(135deg,#FFD700,#FFA500);border-radius:6px}
-/* PHONE KEYPAD */
-.key-btn{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;background:#e5e5ea;color:#000;border:none;transition:background 0.15s}
-.key-btn:hover{background:#d1d1d6}
-/* CAMERA */
-.cam-modes{display:flex;justify-content:center;gap:16px;padding:12px;background:rgba(0,0,0,0.6);font-size:12px;color:#aaa}
-.cam-modes span.active{color:#fff;font-weight:600}
-.shutter{width:60px;height:60px;border-radius:50%;border:4px solid #fff;position:relative;cursor:pointer}
-.shutter::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:48px;height:48px;background:#fff;border-radius:50%;transition:0.1s}
-.shutter:active::after{transform:translate(-50%,-50%) scale(0.9)}
-/* SUPER CHARGE */
-.charge-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:99998;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px}
-.charge-overlay.show{display:flex}
-.charge-pct{font-size:72px;font-weight:700;color:#FFD700;text-shadow:0 0 30px rgba(255,215,0,0.6)}
-.charge-badge{background:linear-gradient(135deg,#FFD700,#FFA500);padding:6px 16px;border-radius:14px;font-size:12px;font-weight:800;color:#000}
-.charge-watts{font-size:16px;color:#fff}
-/* NOTIFICATION */
-.mac-notif{position:fixed;top:36px;right:12px;width:340px;background:rgba(40,40,40,0.9);backdrop-filter:blur(30px);border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.1);z-index:99997;transform:translateX(400px);transition:transform 0.4s cubic-bezier(0.16,1,0.3,1);box-shadow:0 10px 30px rgba(0,0,0,0.4)}
-.mac-notif.show{transform:translateX(0)}
-.glitch-text{animation:glitch 0.4s infinite alternate}
-@keyframes glitch{0%{filter:none;transform:none;color:#fff}25%{filter:invert(1);transform:skewX(-5deg);color:#f00}50%{filter:hue-rotate(180deg);color:#0f0}75%{transform:scaleX(-1);color:#f0f}100%{filter:none;transform:none;color:#f00}}
-.order-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border-color);font-size:13px}
-.order-btns{display:flex;gap:6px}
-.order-btns button{width:30px;height:30px;border-radius:6px;border:none;background:#555;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WTC Mac 1.1</title>
+    <link rel="icon" href="https://www.svgrepo.com/show/503173/apple-logo.svg" type="image/svg+xml">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;600&family=Roboto:wght@400;500;700&display=swap');
+
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --app-bg: #f2f2f7;
+            --app-text: #000;
+            --accent: #007aff;
+            --list-bg: #fff;
+            --border-color: #e5e5ea;
+        }
+
+        .iphone-frame.dark-mode {
+            --app-bg: #000;
+            --app-text: #fff;
+            --glass-bg: rgba(30, 30, 30, 0.6);
+            --list-bg: #1c1c1e;
+            --border-color: #38383a;
+        }
+
+        * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif; background: #111; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+
+        #scaler { transition: transform 0.1s; display: flex; gap: 20px; align-items: center; }
+
+        .iphone-frame {
+            width: 380px; height: 800px; background: #000; border-radius: 55px;
+            position: relative; box-shadow: 0 0 0 12px #1a1a1a, 0 0 0 14px #4a4a4a, 0 20px 50px rgba(0,0,0,0.5);
+            overflow: hidden; z-index: 10; transition: background 0.3s;
+        }
+
+        /* --- PANTALLA DE BIENVENIDA (HELLO) --- */
+        #welcomeScreen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; z-index: 5000; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+            transition: transform 0.8s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+        }
+        #welcomeText {
+            font-family: 'Dancing Script', cursive; font-size: 60px; font-weight: 700;
+            opacity: 0; transition: opacity 1s; color: black;
+        }
+        .swipe-hint-text {
+            position: absolute; bottom: 50px; font-family: -apple-system, sans-serif;
+            font-weight: 500; font-size: 16px; opacity: 0; animation: fadeUp 2s infinite; color: #888;
+        }
+        @keyframes fadeUp { 0% { opacity: 0; transform: translateY(10px); } 50% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-10px); } }
+
+        /* --- ISLA DINÁMICA --- */
+        .notch {
+            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+            width: 120px; height: 35px; background: #000; border-radius: 20px; 
+            z-index: 6000;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: white; overflow: visible; display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+            cursor: pointer; box-shadow: 0 0 0 0px transparent;
+        }
+
+        /* Animación Aura Boreal para Bienvenida */
+        .notch.welcome-aura {
+            animation: islandBreathe 3s infinite alternate;
+            box-shadow: 0 0 20px 2px rgba(0, 122, 255, 0.6), 0 0 40px 5px rgba(50, 255, 100, 0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        @keyframes islandBreathe {
+            0% { box-shadow: 0 0 15px 1px rgba(0, 122, 255, 0.5), 0 0 30px 2px rgba(200, 50, 255, 0.2); }
+            100% { box-shadow: 0 0 25px 4px rgba(50, 200, 255, 0.8), 0 0 50px 8px rgba(50, 255, 100, 0.4); }
+        }
+
+        /* Estados de la Isla - SUPER CHARGE 200W */
+        .notch.expanded-charge { 
+            width: 320px; 
+            height: 120px; 
+            border-radius: 35px; 
+            justify-content: center; 
+            background: linear-gradient(135deg, #000, #1a1a2e, #000);
+            border: 2px solid #FFD700;
+            flex-direction: column;
+            animation: superChargeGlow 2s infinite alternate;
+        }
+
+        @keyframes superChargeGlow {
+            0% { 
+                box-shadow: 0 0 20px 2px rgba(255, 215, 0, 0.6), 
+                            0 0 40px 4px rgba(255, 255, 0, 0.4),
+                            inset 0 0 20px rgba(255, 215, 0, 0.2); 
+            }
+            100% { 
+                box-shadow: 0 0 30px 4px rgba(255, 215, 0, 0.9), 
+                            0 0 60px 8px rgba(255, 215, 0, 0.6),
+                            inset 0 0 30px rgba(255, 215, 0, 0.3); 
+            }
+        }
+
+        /* Rayos eléctricos */
+        .lightning {
+            position: absolute;
+            width: 3px;
+            height: 30px;
+            background: linear-gradient(to bottom, #FFD700, transparent);
+            opacity: 0;
+            animation: lightning 1.5s infinite;
+        }
+
+        .lightning:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .lightning:nth-child(2) { left: 30%; animation-delay: 0.3s; }
+        .lightning:nth-child(3) { right: 30%; animation-delay: 0.6s; }
+        .lightning:nth-child(4) { right: 10%; animation-delay: 0.9s; }
+
+        @keyframes lightning {
+            0%, 100% { opacity: 0; transform: translateY(-10px) scaleY(0); }
+            10% { opacity: 1; transform: translateY(0) scaleY(1); }
+            20% { opacity: 0; transform: translateY(10px) scaleY(0.5); }
+        }
+
+        /* Partículas de energía */
+        .energy-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #FFD700;
+            border-radius: 50%;
+            opacity: 0;
+            animation: particleFloat 2s infinite;
+        }
+
+        @keyframes particleFloat {
+            0% { opacity: 0; transform: translateY(20px) scale(0); }
+            50% { opacity: 1; transform: translateY(-20px) scale(1); }
+            100% { opacity: 0; transform: translateY(-40px) scale(0); }
+        }
+
+        .notch.expanded-faceid { width: 160px; height: 160px; border-radius: 40px; justify-content: center; flex-direction: column; }
+
+        .notch.expanded-language {
+            width: 280px; height: 60px; border-radius: 30px; justify-content: center;
+            background: linear-gradient(45deg, #000, #1a1a1a);
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 0 30px rgba(0,122,255,0.5);
+        }
+
+        .notch-content { display: none; width: 100%; opacity: 0; transition: opacity 0.2s; }
+        .notch.expanded-charge .charge-ui, 
+        .notch.expanded-faceid .faceid-ui,
+        .notch.expanded-language .lang-ui { display: flex; opacity: 1; align-items: center; justify-content: center; gap: 10px; }
+
+        .charge-ui {
+            flex-direction: column;
+            gap: 8px !important;
+            position: relative;
+        }
+
+        .super-charge-badge {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 800;
+            color: #000;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.5);
+        }
+
+        .charge-percentage {
+            font-size: 48px;
+            font-weight: 700;
+            color: #FFD700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            line-height: 1;
+        }
+
+        .charge-watts {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            opacity: 0.9;
+        }
+
+        .globe-spin { animation: spin 2s linear infinite; color: #007aff; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .scan-line { width: 50px; height: 50px; border: 2px solid #007aff; border-radius: 10px; position: relative; }
+        .scan-line::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: #007aff; animation: scan 1.5s infinite; }
+        @keyframes scan { 0% { top: 0; opacity: 0; } 50% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+
+        /* TUTORIAL MEJORADO */
+        #tutorialOverlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(20px);
+            z-index: 4000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .tut-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 30px;
+            padding: 40px;
+            text-align: center;
+            color: white;
+            display: none;
+            max-width: 300px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .tut-card.active { display: block; animation: fadeIn 0.5s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .tut-btn {
+            background: linear-gradient(135deg, #007aff, #0051d5);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0, 122, 255, 0.4);
+            transition: all 0.3s;
+        }
+
+        .tut-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 122, 255, 0.6);
+        }
+
+        /* FONDOS */
+        .wallpaper-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
+            background: linear-gradient(135deg, #021B79, #0575E6, #00F260);
+            background-size: 400% 400%; animation: gradientAnim 15s ease infinite;
+        }
+        @keyframes gradientAnim { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        /* LOCK SCREEN */
+        .lock-screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;
+            background: linear-gradient(135deg, #021B79, #0575E6, #00F260);
+            background-size: 400% 400%; animation: gradientAnim 15s ease infinite;
+            display: flex; flex-direction: column; align-items: center;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .lock-screen.unlocked { transform: translateY(-100%); }
+        .clock-container { margin-top: 80px; text-align: center; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .lock-time { font-size: 90px; font-weight: 700; letter-spacing: -3px; line-height: 1; }
+        .lock-date { font-size: 20px; font-weight: 500; text-transform: capitalize; margin-top: 5px; }
+        .lock-shortcuts { margin-top: auto; margin-bottom: 50px; width: 100%; display: flex; justify-content: space-between; padding: 0 40px; }
+        .glass-btn { width: 50px; height: 50px; border-radius: 50%; background: rgba(0,0,0,0.4); backdrop-filter: blur(20px); display: flex; justify-content: center; align-items: center; color: white; cursor: pointer; }
+
+        /* HOME SCREEN */
+        .home-screen { 
+            position: relative; z-index: 1; 
+            padding: 55px 20px 20px 20px;
+            height: 100%; display: flex; flex-direction: column; 
+            gap: 15px;
+        }
+        .app-grid { 
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px 8px;
+            padding: 0;
+            overflow-y: auto; scrollbar-width: none; 
+        }
+        .app-grid::-webkit-scrollbar { display: none; }
+        .app-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
+
+        .app-icon { width: 62px; height: 62px; border-radius: 14px; display: flex; justify-content: center; align-items: center; background: var(--glass-bg); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 4px 10px rgba(0,0,0,0.2); color: white; font-size: 28px; position: relative; overflow: hidden; }
+        .icon-cal { background: #fff; color: #ff3b30; flex-direction: column; font-size: 10px; font-weight: 800; gap: 2px; }
+        .icon-cal span { font-size: 28px; color: #000; }
+        .icon-maps { background: #4cd964; }
+        .icon-clock { background: #000; color: #fff; border: 1px solid #333; }
+        .icon-weather { background: #5ac8fa; }
+        .icon-phone { background: #34c759; }
+        .icon-messages { background: #34c759; }
+        .icon-wallet { background: #000; border: 1px solid #333; }
+        .app-name { font-size: 11px; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+        .dock-bar { margin-top: auto; width: 100%; height: 95px; border-radius: 35px; background: rgba(255,255,255,0.2); backdrop-filter: blur(30px); display: flex; justify-content: space-evenly; align-items: center; border: 1px solid rgba(255,255,255,0.2); }
+
+        .cam-modes { display: flex; justify-content: center; gap: 20px; padding: 15px; background: rgba(0,0,0,0.5); font-size: 13px; color: #aaa; }
+        .cam-modes span.active { color: #fff; font-weight: 600; }
+        .cam-filter-btn { width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; }
+
+        /* WINDOWS */
+        .app-window { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--app-bg); color: var(--app-text); z-index: 1100; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1); border-radius: 55px; overflow: hidden; }
+        .app-window.open { transform: translateY(0); }
+        .nav-bar { height: 90px; padding: 45px 20px 10px 20px; display: flex; align-items: center; justify-content: space-between; background: rgba(245,245,245,0.9); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0,0,0,0.1); font-weight: 600; z-index: 20; }
+        .iphone-frame.dark-mode .nav-bar { background: #1c1c1e; border-bottom: 1px solid #333; color: white; }
+        .app-body { flex: 1; overflow-y: auto; }
+
+        /* CAMERA */
+        .camera-app { background: black !important; color: white; display: flex; flex-direction: column; }
+        .cam-controls { padding: 20px; background: black; display: flex; justify-content: space-around; align-items: center; height: 150px; }
+        .shutter { width: 70px; height: 70px; border-radius: 50%; border: 4px solid white; position: relative; }
+        .shutter::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 56px; height: 56px; background: white; border-radius: 50%; transition: 0.1s; }
+        .shutter:active::after { transform: translate(-50%,-50%) scale(0.9); }
+
+        /* LISTAS & SETTINGS */
+        .list-group { background: var(--list-bg); margin: 20px; border-radius: 12px; overflow: hidden; }
+        .list-item { padding: 15px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: var(--app-text); }
+        .list-item:last-child { border-bottom: none; }
+        .toggle { width: 50px; height: 30px; background: #e9e9ea; border-radius: 15px; position: relative; transition: 0.3s; }
+        .toggle.active { background: #34c759; }
+        .toggle-handle { width: 26px; height: 26px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .toggle.active .toggle-handle { transform: translateX(20px); }
+
+        /* ESTILOS COMUNES APPS */
+        .chat-history { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; background: var(--app-bg); }
+        .chat-bubble { padding: 10px 14px; border-radius: 18px; max-width: 80%; font-size: 15px; line-height: 1.4; }
+        .chat-bubble.received { align-self: flex-start; background: #e5e5ea; color: #000; border-bottom-left-radius: 4px; }
+        .chat-bubble.sent { align-self: flex-end; background: #007aff; color: #fff; border-bottom-right-radius: 4px; }
+        .chat-input-area { display: flex; padding: 10px 15px 25px 15px; border-top: 1px solid var(--border-color); background: var(--list-bg); gap: 10px; align-items: center; }
+        .chat-input { flex: 1; border-radius: 20px; border: 1px solid var(--border-color); padding: 10px 15px; outline: none; background: var(--app-bg); color: var(--app-text); font-size: 15px; }
+        .chat-send { background: #007aff; color: white; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        
+        .mail-list { flex: 1; overflow-y: auto; background: var(--app-bg); }
+        .mail-detail { display: none; flex: 1; flex-direction: column; background: var(--app-bg); }
+        .mail-header { padding: 15px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 10px; cursor: pointer; color: #007aff; font-weight: 500; background: var(--list-bg); }
+        .mail-content { padding: 20px; flex: 1; overflow-y: auto; color: var(--app-text); }
+
+        /* WALLET */
+        .credit-card { background: linear-gradient(135deg, #1a1a1a, #444); border-radius: 15px; height: 200px; color: white; padding: 25px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.3); margin: 20px; }
+        .card-chip { width: 50px; height: 40px; background: linear-gradient(135deg, #FFD700, #FFA500); border-radius: 8px; }
+        .card-cvc-timer { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
+        .cvc-bar { width: 60px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; overflow: hidden; margin-top: 4px; }
+        .cvc-progress { width: 100%; height: 100%; background: #34c759; transition: width 1s linear; }
+        .card-number { font-size: 22px; font-weight: 600; letter-spacing: 3px; margin: 30px 0 20px; }
+        .card-container { padding-top: 20px; }
+        .balance-section { padding: 30px; text-align: center; }
+
+        .home-indicator { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 130px; height: 5px; background: white; border-radius: 10px; z-index: 2000; cursor: pointer; transition: background-color 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
+        .home-indicator.dark { background-color: #000; }
+        .status-bar { position: absolute; top: 15px; width: 100%; padding: 0 25px; display: flex; justify-content: space-between; color: white; font-size: 14px; font-weight: 600; z-index: 2000; transition: color 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
+        .status-bar.dark { color: #000; }
+
+        /* PHONE & CALC */
+        .keypad, .calc-grid { display: grid; gap: 12px; padding: 20px; justify-items: center; }
+        .key-btn, .calc-btn { width: 70px; height: 70px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; }
+        .key-btn { background: #e5e5ea; color: #000; }
+        .calc-btn { background: #333; color: white; }
+        .calc-btn.orange, .call-btn { background: #ff9f0a; color: white; } .call-btn { background: #34c759; }
+
+        /* SETTINGS PAGES */
+        .settings-page { width: 100%; height: 100%; position: absolute; top: 0; left: 0; background: var(--app-bg); transition: transform 0.3s ease; padding-top: 90px; }
+        .settings-page.hidden { transform: translateX(100%); }
+        .settings-page.main { z-index: 1; padding-top: 0; }
+        .settings-page.sub { z-index: 2; }
+
+        .theme-picker { display: flex; flex-wrap: wrap; gap: 12px; padding: 15px 20px; }
+        .theme-btn { width: 44px; height: 44px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: transform 0.2s; }
+        .theme-btn.active { border-color: #007aff; transform: scale(1.1); }
+        .theme-btn:hover { transform: scale(1.05); }
+        .order-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid var(--border-color); color: var(--app-text); }
+        .order-row:last-child { border-bottom: none; }
+        .order-btns { display: flex; gap: 8px; }
+        .order-btns button { width: 36px; height: 36px; border-radius: 8px; border: none; background: #e5e5ea; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #000; }
+        .font-check { display: none; }
+        .list-item.font-selected .font-check { display: block; color: #007aff; }
+
+        /* --- ADMIN ABUSE GLITCH EFFECT --- */
+        .glitch-text {
+            animation: glitch-text-anim 0.4s infinite alternate;
+            display: inline-flex;
+            align-items: center;
+        }
+        @keyframes glitch-text-anim {
+            0% { font-family: 'Roboto', sans-serif; filter: invert(0); transform: none; letter-spacing: normal; color: #fff; text-shadow: none; }
+            20% { font-family: 'Dancing Script', cursive; filter: invert(1); transform: scaleX(-1); letter-spacing: 2px; color: #ff0000; text-shadow: 2px 2px 0 #00ff00; }
+            40% { font-family: monospace; transform: skewX(-15deg); color: #00ff00; text-shadow: -2px -2px 0 #ff00ff; }
+            60% { font-family: 'Inter', sans-serif; transform: scaleY(-1); letter-spacing: -2px; filter: hue-rotate(180deg); color: #fff; }
+            80% { font-family: 'Courier New', Courier, monospace; transform: translate(2px, -2px) rotate(2deg); filter: invert(1) contrast(200%); color: #ff00ff; }
+            100% { font-family: 'Roboto', sans-serif; filter: invert(0); transform: none; letter-spacing: normal; color: #ff0000; }
+        }
+        @keyframes bg-glitch {
+            0% { background-position: 0 0; opacity: 0.3; }
+            25% { opacity: 0.8; filter: invert(1); }
+            50% { background-position: 20px 20px; opacity: 0.5; }
+            75% { transform: scale(1.05); }
+            100% { background-position: -20px -20px; opacity: 0.3; }
+        }
+
+    </style>
 </head>
 <body>
-<!-- LOGIN SCREEN -->
-<div id="loginScreen">
-<div class="login-time" id="loginTime">--:--</div>
-<div class="login-date" id="loginDate">...</div>
-<div class="login-avatar">👤</div>
-<div class="login-name">Usuario</div>
-<input class="login-input" type="password" placeholder="Contraseña" id="loginInput">
-<div class="login-hint">Presiona Enter para desbloquear</div>
-</div>
 
-<!-- CHARGE OVERLAY -->
-<div class="charge-overlay" id="chargeOverlay">
-<div class="charge-badge">⚡ SUPER CHARGE 200W</div>
-<div class="charge-pct" id="chargePct">0%</div>
-<div class="charge-watts" id="chargeWatts">200W</div>
-</div>
+    <div id="scaler">
+        <div class="iphone-frame" id="iphoneFrame">
 
-<!-- NOTIFICATION -->
-<div class="mac-notif" id="macNotif"></div>
+            <!-- BIENVENIDA / HELLO SCREEN -->
+            <div id="welcomeScreen" onclick="startSetup()">
+                <div id="welcomeText">hello</div>
+                <div class="swipe-hint-text" id="swipeText">Desliza para empezar</div>
+            </div>
 
-<div class="desktop" id="desktop" style="display:none">
-<!-- MENU BAR -->
-<div class="menu-bar">
-<div class="menu-left">
-<span class="apple-logo" onclick="showAppleMenu()">&#63743;</span>
-<span style="font-weight:700">Finder</span>
-<span>Archivo</span><span>Editar</span><span>Ver</span><span>Ir</span><span>Ventana</span><span>Ayuda</span>
-</div>
-<div class="menu-right">
-<span id="menuChargeIcon" style="cursor:pointer" onclick="triggerSuperCharge()">🔋</span>
-<span>Wi-Fi</span>
-<span id="menuClock">--:--</span>
-</div>
-</div>
+            <!-- ISLA DINÁMICA (Aura Welcome) -->
+            <div class="notch welcome-aura" id="notch">
+                <!-- RAYOS ELÉCTRICOS -->
+                <div class="lightning" style="top: -30px;"></div>
+                <div class="lightning" style="top: -30px;"></div>
+                <div class="lightning" style="top: -30px;"></div>
+                <div class="lightning" style="top: -30px;"></div>
 
-<!-- DESKTOP ICONS -->
-<div class="desktop-content" id="desktopContent">
-<div class="desktop-icon" ondblclick="openApp('mail')"><div class="icon-img icon-mail"><i data-lucide="mail"></i></div><div class="icon-label" data-key="mail">Mail</div></div>
-<div class="desktop-icon" ondblclick="openApp('calendar')"><div class="icon-img icon-cal">DOM<span>28</span></div><div class="icon-label" data-key="calendar">Calendario</div></div>
-<div class="desktop-icon" ondblclick="openApp('photos')"><div class="icon-img icon-photos"><i data-lucide="image" color="#ff2d55"></i></div><div class="icon-label" data-key="photos">Fotos</div></div>
-<div class="desktop-icon" ondblclick="openApp('camera')"><div class="icon-img icon-camera"><i data-lucide="camera"></i></div><div class="icon-label" data-key="camera">Cámara</div></div>
-<div class="desktop-icon" ondblclick="openApp('maps')"><div class="icon-img icon-maps"><i data-lucide="map-pinned"></i></div><div class="icon-label" data-key="maps">Mapas</div></div>
-<div class="desktop-icon" ondblclick="openApp('clock')"><div class="icon-img icon-clock"><i data-lucide="clock"></i></div><div class="icon-label" data-key="clock">Reloj</div></div>
-<div class="desktop-icon" ondblclick="openApp('weather')"><div class="icon-img icon-weather"><i data-lucide="cloud-sun"></i></div><div class="icon-label" data-key="weather">Clima</div></div>
-<div class="desktop-icon" ondblclick="openApp('wallet')"><div class="icon-img icon-wallet"><i data-lucide="wallet-cards"></i></div><div class="icon-label" data-key="wallet">Cartera</div></div>
-<div class="desktop-icon" ondblclick="openApp('notes')"><div class="icon-img icon-notes"><i data-lucide="file-text" color="#000"></i></div><div class="icon-label" data-key="notes">Notas</div></div>
-<div class="desktop-icon" ondblclick="openApp('calculator')"><div class="icon-img icon-calc"><i data-lucide="calculator"></i></div><div class="icon-label" data-key="calculator">Calculadora</div></div>
-<div class="desktop-icon" ondblclick="openApp('settings')"><div class="icon-img icon-settings"><i data-lucide="settings"></i></div><div class="icon-label" data-key="settings">Ajustes</div></div>
-</div>
+                <!-- PARTÍCULAS DE ENERGÍA -->
+                <div class="energy-particle" style="left: 20%; animation-delay: 0s;"></div>
+                <div class="energy-particle" style="left: 40%; animation-delay: 0.5s;"></div>
+                <div class="energy-particle" style="left: 60%; animation-delay: 1s;"></div>
+                <div class="energy-particle" style="right: 20%; animation-delay: 1.5s;"></div>
 
-<!-- DOCK -->
-<div class="dock">
-<div class="dock-item icon-phone" onclick="openApp('phone')"><i data-lucide="phone" size="22"></i></div>
-<div class="dock-item" style="background:#fff;color:#007aff" onclick="openApp('safari')"><i data-lucide="compass" size="22"></i></div>
-<div class="dock-item icon-messages" onclick="openApp('messages')"><i data-lucide="message-circle" size="22"></i></div>
-<div class="dock-item" style="background:#ff2d55" onclick="openApp('music')"><i data-lucide="music" size="22"></i></div>
-<div class="dock-item icon-settings" onclick="openApp('settings')"><i data-lucide="settings" size="22"></i></div>
-</div>
+                <div class="notch-content charge-ui">
+                    <div class="super-charge-badge">⚡ SUPER CHARGE 200W</div>
+                    <div class="charge-percentage" id="chargePercent">100%</div>
+                    <div class="charge-watts" id="chargeSpeed">Carga Completa</div>
+                </div>
+                <div class="notch-content faceid-ui">
+                    <div class="scan-line"></div>
+                    <span style="font-size:12px; margin-top:5px;" id="notchFaceIdText">Face ID</span>
+                </div>
+                <div class="notch-content lang-ui">
+                    <i data-lucide="globe" class="globe-spin"></i> <span style="font-weight:600;" id="langNotchText">Cambiando Idioma...</span>
+                </div>
+            </div>
 
-<!-- APP WINDOWS -->
-<!-- SETTINGS -->
-<div id="app-settings" class="app-window" style="width:680px;height:520px;top:60px;left:80px">
-<div class="title-bar"><div class="traffic-lights"><div class="traffic-light tl-close" onclick="closeApp('settings')"></div><div class="traffic-light tl-minimize" onclick="minimizeApp('settings')"></div><div class="traffic-light tl-maximize" onclick="maximizeApp('settings')"></div></div><div class="title-text" data-key="settings">Ajustes</div></div>
-<div class="win-body" id="settingsBody">
-<div id="setMain">
-<h2 style="padding:16px" data-key="settings">Ajustes</h2>
-<div class="list-group"><div class="list-item"><div style="display:flex;gap:8px;align-items:center"><i data-lucide="user" size="16"></i> Usuario</div><div style="color:#888">Apple ID</div></div></div>
-<div class="list-group">
-<div class="list-item" onclick="navSettings('personalize')"><div style="display:flex;gap:8px;align-items:center"><i data-lucide="palette" size="16" style="color:#ff6b6b"></i> Personalización</div><div style="color:#34c759;font-weight:600">Nuevo ›</div></div>
-<div class="list-item" onclick="navSettings('langs')"><div style="display:flex;gap:8px;align-items:center"><i data-lucide="globe" size="16" style="color:#007aff"></i> <span data-key="lang_region">Idioma y Región</span></div><div style="color:#888" id="currentLangDisplay">Español ›</div></div>
-<div class="list-item"><div style="display:flex;gap:8px;align-items:center"><i data-lucide="moon" size="16" style="color:#5856d6"></i> <span data-key="dark_mode">Modo Oscuro</span></div><div class="toggle active" id="darkToggle" onclick="toggleDark()"><div class="toggle-handle"></div></div></div>
-</div>
-<div class="list-group"><div class="list-item" onclick="triggerSuperCharge()"><div style="display:flex;gap:8px;align-items:center"><i data-lucide="zap" size="16" style="color:#FFD700"></i> <span data-key="charging">⚡ Super Charge 200W</span></div><div style="color:#FFD700;font-weight:600">Probar</div></div></div>
-<div class="list-group"><div class="list-item" onclick="window.location.href='betaindex.html'"><div style="display:flex;gap:8px;align-items:center"><i data-lucide="flask-conical" size="16" style="color:#ff9f0a"></i> Ir a versión beta</div><div style="color:#888">Beta ›</div></div></div>
-<div class="list-group"><div class="list-item" onclick="window.location.href='lite.html'"><div style="display:flex;gap:8px;align-items:center"><i data-lucide="sparkles" size="16" style="color:#34c759"></i> Ir a versión lite</div><div style="color:#34c759;font-weight:600">Nuevo ›</div></div></div>
-<div class="list-group"><div class="list-item" onclick="window.location.href='ultra.html'"><div style="display:flex;gap:8px;align-items:center"><i data-lucide="crown" size="16" style="color:#FFD700"></i> Ir a ULTRA</div><div style="color:#FFD700;font-weight:600">ULTRA ›</div></div></div>
-<div class="list-group"><div class="list-item" onclick="window.location.href='reservadminabuse.html'" style="background:#111"><div style="display:flex;gap:8px;align-items:center" class="glitch-text"><i data-lucide="skull" size="16" style="color:#f00"></i> ir al admin abuse</div><div style="color:#f00;font-weight:800" class="glitch-text">NUEVO ›</div></div></div>
-</div>
-<div id="setPersonalize" style="display:none">
-<div style="padding:12px 16px"><span style="color:#007aff;cursor:pointer" onclick="navSettings('back')">‹ Atrás</span></div>
-<div class="list-group"><div style="padding:12px 16px;font-weight:600">Tema de color</div>
-<div class="theme-picker">
-<div class="theme-btn active" data-theme="0" style="background:linear-gradient(135deg,#021B79,#0575E6,#00F260)" onclick="applyTheme(0)"></div>
-<div class="theme-btn" data-theme="1" style="background:linear-gradient(135deg,#0f5132,#198754,#20c997)" onclick="applyTheme(1)"></div>
-<div class="theme-btn" data-theme="2" style="background:linear-gradient(135deg,#2d1b69,#6f42c1,#e83e8c)" onclick="applyTheme(2)"></div>
-<div class="theme-btn" data-theme="3" style="background:linear-gradient(135deg,#c2185b,#e91e63,#f48fb1)" onclick="applyTheme(3)"></div>
-<div class="theme-btn" data-theme="4" style="background:linear-gradient(135deg,#e65100,#ff6f00,#ffab40)" onclick="applyTheme(4)"></div>
-<div class="theme-btn" data-theme="5" style="background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)" onclick="applyTheme(5)"></div>
-</div></div>
-<div class="list-group"><div style="padding:12px 16px;font-weight:600">Fuente</div>
-<div class="list-item font-opt" data-font="system" onclick="applyFont('system')"><div>Sistema</div><span class="font-check" id="font-check-system">✓</span></div>
-<div class="list-item font-opt" data-font="inter" onclick="applyFont('inter')"><div>Inter</div><span class="font-check" id="font-check-inter" style="display:none">✓</span></div>
-<div class="list-item font-opt" data-font="dancing" onclick="applyFont('dancing')"><div>Dancing Script</div><span class="font-check" id="font-check-dancing" style="display:none">✓</span></div>
-<div class="list-item font-opt" data-font="roboto" onclick="applyFont('roboto')"><div>Roboto</div><span class="font-check" id="font-check-roboto" style="display:none">✓</span></div>
-</div>
-<div class="list-group"><div style="padding:12px 16px;font-weight:600">Orden de apps</div><div id="orderListContainer"></div>
-<div style="padding:10px 16px"><button onclick="saveAppOrder()" style="width:100%;padding:10px;background:#007aff;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer">Guardar orden</button></div>
-</div>
-</div>
-<div id="setLangs" style="display:none">
-<div style="padding:12px 16px"><span style="color:#007aff;cursor:pointer" onclick="navSettings('back')">‹ Atrás</span></div>
-<div class="list-group">
-<div class="list-item" onclick="setLanguage('es')"><div>Español</div><span class="lang-check" id="check-es" style="color:#007aff">✓</span></div>
-<div class="list-item" onclick="setLanguage('en')"><div>English</div><span class="lang-check" id="check-en" style="display:none;color:#007aff">✓</span></div>
-<div class="list-item" onclick="setLanguage('fr')"><div>Français</div><span class="lang-check" id="check-fr" style="display:none;color:#007aff">✓</span></div>
-<div class="list-item" onclick="setLanguage('it')"><div>Italiano</div><span class="lang-check" id="check-it" style="display:none;color:#007aff">✓</span></div>
-<div class="list-item" onclick="setLanguage('jp')"><div>日本語</div><span class="lang-check" id="check-jp" style="display:none;color:#007aff">✓</span></div>
-<div class="list-item" onclick="setLanguage('cn')"><div>中文</div><span class="lang-check" id="check-cn" style="display:none;color:#007aff">✓</span></div>
-</div>
-</div>
-</div>
-</div>
+            <!-- TUTORIAL -->
+            <div id="tutorialOverlay">
+                <div class="tut-card active" id="tut1">
+                    <h2>⚡ Bienvenido a iOS 26</h2>
+                    <p style="margin:20px 0; opacity:0.8;">Liquid Glass UI con Super Charge 200W</p>
+                    <button class="tut-btn" onclick="nextTut(1)">Siguiente</button>
+                </div>
+                <div class="tut-card" id="tut2">
+                    <h2>🔋 Super Charge 200W</h2>
+                    <p style="margin:20px 0; opacity:0.8;">Carga ultrarrápida con efectos visuales</p>
+                    <button class="tut-btn" onclick="nextTut(2)">Siguiente</button>
+                </div>
+                <div class="tut-card" id="tut3">
+                    <h2>✨ Gestos</h2>
+                    <p style="margin:20px 0; opacity:0.8;">Navegación Fluida y Animada</p>
+                    <button class="tut-btn" onclick="closeTutorial()">Empezar</button>
+                </div>
+            </div>
 
-<!-- CALCULATOR -->
-<div id="app-calculator" class="app-window" style="width:280px;height:440px;top:80px;left:400px">
-<div class="title-bar"><div class="traffic-lights"><div class="traffic-light tl-close" onclick="closeApp('calculator')"></div><div class="traffic-light tl-minimize" onclick="minimizeApp('calculator')"></div><div class="traffic-light tl-maximize" onclick="maximizeApp('calculator')"></div></div><div class="title-text">Calculadora</div></div>
-<div class="win-body" style="background:#000;display:flex;flex-direction:column;justify-content:flex-end">
-<div id="calcRes" style="text-align:right;font-size:48px;padding:16px;color:#fff">0</div>
-<div class="calc-grid">
-<button class="calc-btn gray" onclick="calc('C')">AC</button><button class="calc-btn gray">+/-</button><button class="calc-btn gray">%</button><button class="calc-btn orange" onclick="calc('/')">÷</button>
-<button class="calc-btn" onclick="calc(7)">7</button><button class="calc-btn" onclick="calc(8)">8</button><button class="calc-btn" onclick="calc(9)">9</button><button class="calc-btn orange" onclick="calc('*')">×</button>
-<button class="calc-btn" onclick="calc(4)">4</button><button class="calc-btn" onclick="calc(5)">5</button><button class="calc-btn" onclick="calc(6)">6</button><button class="calc-btn orange" onclick="calc('-')">-</button>
-<button class="calc-btn" onclick="calc(1)">1</button><button class="calc-btn" onclick="calc(2)">2</button><button class="calc-btn" onclick="calc(3)">3</button><button class="calc-btn orange" onclick="calc('+')">+</button>
-<button class="calc-btn" onclick="calc(0)" style="grid-column:span 2">0</button><button class="calc-btn">.</button><button class="calc-btn orange" onclick="calc('=')">=</button>
-</div>
-</div></div>
+            <!-- PANTALLA BLOQUEO -->
+            <div class="lock-screen" id="lockScreen">
+                <div class="clock-container">
+                    <div style="font-size:16px; margin-bottom:5px;"><i data-lucide="lock" size="14"></i></div>
+                    <div class="lock-time" id="lockTime">--:--</div>
+                    <div class="lock-date" id="lockDate">...</div>
+                </div>
+                <div class="lock-shortcuts">
+                    <div class="glass-btn"><i data-lucide="flashlight"></i></div>
+                    <div class="glass-btn" onclick="openApp('camera')"><i data-lucide="camera"></i></div>
+                </div>
+                <div style="position:absolute; top:0; width:100%; height:100%;" onclick="unlockPhone()"></div>
+            </div>
 
-<!-- WALLET -->
-<div id="app-wallet" class="app-window" style="width:400px;height:420px;top:70px;left:300px">
-<div class="title-bar"><div class="traffic-lights"><div class="traffic-light tl-close" onclick="closeApp('wallet')"></div><div class="traffic-light tl-minimize" onclick="minimizeApp('wallet')"></div><div class="traffic-light tl-maximize" onclick="maximizeApp('wallet')"></div></div><div class="title-text">Cartera</div></div>
-<div class="win-body" style="background:#000;color:#fff">
-<div class="credit-card"><div style="display:flex;justify-content:space-between"><div class="card-chip"></div><div style="text-align:right"><div style="font-size:10px;color:#aaa">CVC</div><div style="font-weight:700" id="walletCVC">---</div><div style="width:60px;height:4px;background:rgba(255,255,255,0.2);border-radius:2px;overflow:hidden;margin-top:4px"><div id="cvcProgress" style="width:100%;height:100%;background:#34c759;transition:width 1s linear"></div></div></div></div>
-<div style="font-size:20px;font-weight:600;letter-spacing:3px;margin:24px 0 16px" id="walletNum">**** **** **** ****</div>
-<div style="display:flex;justify-content:space-between"><div style="font-weight:600">JUAN PEREZ</div><div style="font-weight:600">12/28</div></div></div>
-<div style="padding:24px;text-align:center"><div style="color:#aaa;font-size:14px">Saldo Total</div><div style="font-size:36px;font-weight:700">$5,000.00</div></div>
-</div></div>
+            <div class="wallpaper-layer" id="wallpaper"></div>
 
-<!-- PHONE -->
-<div id="app-phone" class="app-window" style="width:300px;height:500px;top:50px;left:250px">
-<div class="title-bar"><div class="traffic-lights"><div class="traffic-light tl-close" onclick="closeApp('phone')"></div><div class="traffic-light tl-minimize" onclick="minimizeApp('phone')"></div><div class="traffic-light tl-maximize" onclick="maximizeApp('phone')"></div></div><div class="title-text">Teléfono</div></div>
-<div class="win-body" style="display:flex;flex-direction:column;justify-content:flex-end;background:#1c1c1e">
-<div id="phoneDisplay" style="font-size:28px;text-align:center;padding:16px;color:#fff"></div>
-<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:20px;justify-items:center">
-<div class="key-btn" onclick="dial('1')">1</div><div class="key-btn" onclick="dial('2')">2</div><div class="key-btn" onclick="dial('3')">3</div>
-<div class="key-btn" id="dialKey4" onclick="dial('4')">4</div><div class="key-btn" onclick="dial('5')">5</div><div class="key-btn" onclick="dial('6')">6</div>
-<div class="key-btn" onclick="dial('7')">7</div><div class="key-btn" onclick="dial('8')">8</div><div class="key-btn" onclick="dial('9')">9</div>
-<div class="key-btn" onclick="dial('*')">*</div><div class="key-btn" onclick="dial('0')">0</div><div class="key-btn" onclick="dial('#')">#</div>
-<div></div><div class="key-btn" style="background:#34c759;color:#fff" onclick="alert('Llamando...')"><i data-lucide="phone" size="20"></i></div><div></div>
-</div></div></div>
+            <!-- HOME SCREEN -->
+            <div class="home-screen">
+                <div class="app-grid" id="appGrid">
+                    <div class="app-item" data-app-id="mail" onclick="openApp('mail')">
+                    <div class="app-icon"><img src="https://i.ibb.co/Rp6zxQc4/250.jpg" style="width:100%;height:100%;object-fit:cover;"></div>
+                    <span class="app-name" data-key="mail">Mail</span>
+                    </div>
+                    <div class="app-item" data-app-id="calendar" onclick="openApp('calendar')"><div class="app-icon icon-cal">DOM<span>28</span></div><span class="app-name" data-key="calendar">Calendario</span></div>
+                    <div class="app-item" data-app-id="photos" onclick="openApp('photos')"><div class="app-icon" style="background:white;"><i data-lucide="image" color="#ff2d55"></i></div><span class="app-name" data-key="photos">Fotos</span></div>
+                    <div class="app-item" data-app-id="camera" onclick="openApp('camera')"><div class="app-icon" style="background:#ccc;"><i data-lucide="camera" color="#000"></i></div><span class="app-name" data-key="camera">Cámara</span></div>
 
-<!-- CAMERA -->
-<div id="app-camera" class="app-window" style="width:500px;height:450px;top:60px;left:200px">
-<div class="title-bar" style="background:#000"><div class="traffic-lights"><div class="traffic-light tl-close" onclick="closeApp('camera')"></div><div class="traffic-light tl-minimize" onclick="minimizeApp('camera')"></div><div class="traffic-light tl-maximize" onclick="maximizeApp('camera')"></div></div><div class="title-text">Cámara</div></div>
-<div class="win-body" style="background:#000;display:flex;flex-direction:column">
-<div style="flex:1;position:relative;overflow:hidden"><video id="camFeed" autoplay playsinline style="width:100%;height:100%;object-fit:cover;transform:scaleX(-1)"></video></div>
-<div class="cam-modes"><span>Cine</span><span>Video</span><span class="active">Foto</span><span>Retrato</span><span>Pano</span></div>
-<div style="padding:12px;background:#000;display:flex;justify-content:space-around;align-items:center">
-<div style="width:42px;height:42px;background:#333;border-radius:4px;overflow:hidden" onclick="openApp('photos')"><img id="lastPhoto" style="width:100%;height:100%;object-fit:cover;display:none"></div>
-<div class="shutter" onclick="takePhoto()"></div>
-<div style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;cursor:pointer" onclick="toggleFilter()"><i data-lucide="filter" size="18"></i></div>
-</div></div>
-<canvas id="photoCanvas" style="display:none"></canvas>
-</div>
+                    <div class="app-item" data-app-id="maps" onclick="openApp('maps')"><div class="app-icon icon-maps"><i data-lucide="map-pinned"></i></div><span class="app-name" data-key="maps">Mapas</span></div>
+                    <div class="app-item" data-app-id="clock" onclick="openApp('clock')"><div class="app-icon icon-clock"><i data-lucide="clock"></i></div><span class="app-name" data-key="clock">Reloj</span></div>
+                    <div class="app-item" data-app-id="weather" onclick="openApp('weather')"><div class="app-icon icon-weather"><i data-lucide="cloud-sun"></i></div><span class="app-name" data-key="weather">Clima</span></div>
+                    <div class="app-item" data-app-id="wallet" onclick="openApp('wallet')"><div class="app-icon icon-wallet"><i data-lucide="wallet-cards"></i></div><span class="app-name" data-key="wallet">Cartera</span></div>
 
-<!-- MAIL -->
-<div id="app-mail" class="app-window" style="width:500px;height:380px;top:90px;left:160px">
-<div class="title-bar"><div class="traffic-lights"><div class="traffic-light tl-close" onclick="closeApp('mail')"></div><div class="traffic-light tl-minimize" onclick="minimizeApp('mail')"></div><div class="traffic-light tl-maximize" onclick="maximizeApp('mail')"></div></div><div class="title-text">Mail</div></div>
-<div class="win-body" style="background:var(--app-bg)"><div class="list-group"><div class="list-item"><div><b>Apple</b><br><span style="font-size:12px;opacity:0.7">Recibo de compra</span></div><div style="font-size:11px;opacity:0.5">Ayer</div></div></div></div></div>
+                    <div class="app-item" data-app-id="notes" onclick="openApp('notes')"><div class="app-icon" style="background:#ffd60a; color:white;"><i data-lucide="file-text"></i></div><span class="app-name" data-key="notes">Notas</span></div>
+                    <div class="app-item" data-app-id="calculator" onclick="openApp('calculator')">
+                    <div class="app-icon"><img src="https://i.ibb.co/JRPgZLNR/images-removebg-preview.png" style="width:100%;height:100%;object-fit:cover;"></div>
+                    <span class="app-name" data-key="calculator">Calculadora</span>
+                    </div>
 
-<!-- CALENDAR -->
-<div id="app-calendar" class="app-window" style="width:400px;height:350px;top:100px;left:220px">
-<div class="title-bar"><div class="traffic-lights"><div class="traffic-light tl-close" onclick="closeApp('calendar')"></div><div class="traffic-light tl-minimize" onclick="minimizeApp('calendar')"></div><div class="traffic-light tl-maximize" onclick="maximizeApp('calendar')"></div></div><div class="title-text">Calendario</div></div>
-<div class="win-body" style="padding:20px;text-align:center;background:var(--app-bg)"><div style="color:red;font-weight:700;font-size:14px">2026</div><h1 style="color:red;margin-top:8px">ABRIL</h1></div></div>
+                    <div class="app-item" data-app-id="settings" onclick="openApp('settings')">
+                    <div class="app-icon"><img src="https://i.ibb.co/JS5p6Z7/Settings-29-dark-removebg-preview.png" onerror="this.style.display='none';this.parentNode.style.background='#8e8e93';this.parentNode.innerHTML='<i data-lucide=\'settings-2\'></i>'" style="width:100%;height:100%;object-fit:cover;"></div>
+                    <span class="app-name" data-key="settings">Ajustes</span>
+                    </div>
+                </div>
 
-<!-- PHOTOS -->
-<div id="app-photos" class="app-window" style="width:460px;height:380px;top:80px;left:180px">
-<div class="title-bar"><div class="traffic-lights"><div class="traffic-light tl-close" onclick="closeApp('photos')"></div><div class="traffic-light tl-minimize" onclick="minimizeApp('photos')"></div><div class="traffic-light tl-maximize" onclick="maximizeApp('photos')"></div></div><div class="title-text">Fotos</div></div>
-<div class="win-body" style="background:#1c1c1e"><div id="photoGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px"></div></div></div>
+                <div class="dock-bar">
+                    <div class="app-item" onclick="openApp('phone')"><div class="app-icon icon-phone"><i data-lucide="phone"></i></div></div>
+                    <div class="app-item" onclick="openApp('safari')"><div class="app-icon" style="background:white; color:#007aff;"><i data-lucide="compass"></i></div></div>
+                    <div class="app-item" onclick="openApp('messages')"><div class="app-icon icon-messages"><i data-lucide="message-circle"></i></div></div>
+                    <div class="app-item" onclick="openApp('music')"><div class="app-icon" style="background:#ff2d55;"><i data-lucide="music"></i></div></div>
+                </div>
+            </div>
 
-<!-- MAPS -->
-<div id="app-maps" class="app-window" style="width:560px;height:420px;top:50px;left:140px">
-<div class="title-bar"><div class="traffic-lights"><div class="traffic-light tl-close" onclick="closeApp('maps')"></div><div class="traffic-light tl-minimize" onclick="minimizeApp('maps')"></div><div class="traffic-light tl-maximize" onclick="maximizeApp('maps')"></div></div><div class="title-text">Mapas</div></div>
-<div class="win-body"><iframe width="100%" height="100%" frameborder="0" src="https://www.openstreetmap.org/export/embed.html"></iframe></div></div>
+            <!-- WINDOWS -->
 
-<!-- CLOCK -->
-<div id="app-clock" class="app-window" style="width:320px;height:250px;top:120px;left:320px">
-<div class="title-bar"><div class="traffic-lights"><div class="traffic-light tl-close" onclick="closeApp('clock')"></div><div class="traffic-light tl-minimize" onclick="minimizeApp('clock')"></div><div class="traffic-light tl-maximize" onclick="maximizeApp('clock')"></div></div><div class="title-text">Reloj</div></div>
-<div class="win-body" style="background:#000;color:#fff;padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center"><h1 id="clockAppTime">9:41</h1><div style="margin-top:8px;opacity:0.7">Ciudad de México</div></div></div>
+            <!-- CAMERA (PRO) -->
+            <div id="app-camera" class="app-window" style="z-index: 1200;">
+                <div class="camera-app" style="height:100%;">
+                    <div style="flex:1; position:relative; overflow:hidden;">
+                    <video id="camFeed" autoplay playsinline style="width:100%; height:100%; object-fit:cover; transform:scaleX(-1);"></video>
+                    <div style="position:absolute; top:20px; width:100%; display:flex; justify-content:space-between; padding:0 20px;">
+                    <i data-lucide="zap-off"></i>
+                    <i data-lucide="chevron-up"></i>
+                    <i data-lucide="aperture"></i>
+                    </div>
+                    </div>
+                    <div class="cam-modes">
+                    <span>Cine</span><span>Video</span><span class="active">Foto</span><span>Retrato</span><span>Pano</span>
+                    </div>
+                    <div class="cam-controls">
+                    <div style="width:50px; height:50px; background:#333; border-radius:5px; overflow:hidden;" onclick="openApp('photos')">
+                    <img id="lastPhoto" style="width:100%; height:100%; object-fit:cover; display:none;">
+                    </div>
+                    <div class="shutter" onclick="takePhoto()"></div>
+                    <div class="cam-filter-btn" onclick="toggleFilter()"><i data-lucide="filter" size="20"></i></div>
+                    </div>
+                </div>
+                <canvas id="photoCanvas" style="display:none;"></canvas>
+            </div>
 
-<!-- WEATHER -->
-<div id="app-weather" class="app-window" style="width:350px;height:300px;top:90px;left:280px">
-<div class="title-bar"><div class="traffic-lights"><div class="traffic-light tl-close" onclick="closeApp('weather')"></div><div class="traffic-light tl-minimize" onclick="minimizeApp('weather')"></div><div class="traffic-light tl-maximize" onclick="maximizeApp('weather')"></div></div><div class="title-text">Clima</div></div>
-<div class="win-body" style="background:linear-gradient(#1e3c72,#2a5298);color:#fff;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center"><h1 style="font-size:64px">22°</h1><div style="font-size:18px;margin-top:8px">Soleado</div></div></div>
+            <!-- SETTINGS -->
+            <div id="app-settings" class="app-window">
+                <div class="nav-bar"><div id="setBackBtn" onclick="closeApp('settings')" style="color:var(--accent); cursor:pointer;">Atrás</div><div id="setTitle">Ajustes</div><div></div></div>
+                <div class="app-body">
+                    <!-- MAIN PAGE -->
+                    <div id="setMain" class="settings-page main">
+                    <h1 style="padding:20px 20px 0;" data-key="settings">Ajustes</h1>
+                    <div class="list-group">
+                    <div class="list-item"><div style="display:flex; gap:10px;"><i data-lucide="user"></i> Usuario</div><div style="color:#888">Apple ID</div></div>
+                    </div>
+                    <div class="list-group">
+                    <div class="list-item" onclick="navSettings('personalize')">
+                    <div style="display:flex; gap:10px;"><i data-lucide="palette" style="color:#ff6b6b"></i> <span>Personalización</span></div>
+                    <div style="color:#34c759; font-weight:600; display:flex; align-items:center;">Nuevo <i data-lucide="chevron-right" size="16"></i></div>
+                    </div>
+                    <div class="list-item" onclick="navSettings('langs')">
+                    <div style="display:flex; gap:10px;"><i data-lucide="globe" style="color:#007aff"></i> <span data-key="lang_region">Idioma y Región</span></div>
+                    <div style="color:#888; display:flex; align-items:center;" id="currentLangDisplay">Español <i data-lucide="chevron-right" size="16"></i></div>
+                    </div>
+                    <div class="list-item"><div style="display:flex; gap:10px;"><i data-lucide="moon" style="color:#5856d6"></i> <span data-key="dark_mode">Modo Oscuro</span></div><div class="toggle" id="darkToggle" onclick="toggleDark()"><div class="toggle-handle"></div></div></div>
+                    </div>
+                    <div class="list-group">
+                    <div class="list-item" onclick="triggerSuperCharge()"><div style="display:flex; gap:10px;"><i data-lucide="zap" style="color:#FFD700"></i> <span data-key="charging">⚡ Super Charge 200W</span></div><div style="color:#FFD700; font-weight:600;">Probar</div></div>
+                    </div>
+                    <div class="list-group">
+                    <div class="list-item" onclick="window.location.href='betaindex.html'">
+                    <div style="display:flex; gap:10px;"><i data-lucide="flask-conical" style="color:#ff9f0a"></i> Ir a versión beta</div>
+                    <div style="color:#888; display:flex; align-items:center;">Beta <i data-lucide="chevron-right" size="16"></i></div>
+                    </div>
+                    </div>
+                    <div class="list-group">
+                    <div class="list-item" onclick="window.location.href='lite.html'">
+                    <div style="display:flex; gap:10px;"><i data-lucide="sparkles" style="color:#34c759"></i> Ir a versión lite</div>
+                    <div style="color:#34c759; font-weight:600; display:flex; align-items:center;">Nuevo <i data-lucide="chevron-right" size="16"></i></div>
+                    </div>
+                    </div>
+                    <div class="list-group">
+                    <div class="list-item" onclick="window.location.href='ultra.html'">
+                    <div style="display:flex; gap:10px;"><i data-lucide="crown" style="color:#FFD700"></i> Ir a ULTRA</div>
+                    <div style="color:#FFD700; font-weight:600; display:flex; align-items:center;">ULTRA <i data-lucide="chevron-right" size="16"></i></div>
+                    </div>
+                    </div>
 
-<!-- NOTES -->
-<div id="app-notes" class="app-window" style="width:420px;height:380px;top:70px;left:240px">
-<div class="title-bar"><div class="traffic-lights"><div class="traffic-light tl-close" onclick="closeApp('notes')"></div><div class="traffic-light tl-minimize" onclick="minimizeApp('notes')"></div><div class="traffic-light tl-maximize" onclick="maximizeApp('notes')"></div></div><div class="title-text">Notas</div></div>
-<div class="win-body"><textarea style="width:100%;height:100%;border:none;padding:16px;font-size:15px;background:#1c1c1e;color:#fff;resize:none;outline:none">Nueva nota...</textarea></div></div>
+                    <!-- NUEVO BOTÓN ADMIN ABUSE -->
+                    <div class="list-group">
+                        <div class="list-item" onclick="window.location.href='reservadminabuse.html'" style="position: relative; overflow: hidden; background: #111;">
+                            <div style="display:flex; gap:10px; z-index: 2; position: relative;" class="glitch-text">
+                                <i data-lucide="skull" style="color:#ff0000"></i> ir al admin abuse
+                            </div>
+                            <div style="color:#ff0000; font-weight:800; display:flex; align-items:center; z-index: 2; position: relative;" class="glitch-text">
+                                NUEVO <i data-lucide="chevron-right" size="16"></i>
+                            </div>
+                            <div class="glitch-bg" style="position: absolute; top:0; left:0; width:100%; height:100%; background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,0,0,0.2) 10px, rgba(255,0,0,0.2) 20px); z-index: 1; pointer-events: none; mix-blend-mode: overlay; animation: bg-glitch 0.5s infinite linear;"></div>
+                        </div>
+                    </div>
 
-<!-- SAFARI -->
-<div id="app-safari" class="app-window" style="width:700px;height:500px;top:40px;left:100px">
-<div class="title-bar"><div class="traffic-lights"><div class="traffic-light tl-close" onclick="closeApp('safari')"></div><div class="traffic-light tl-minimize" onclick="minimizeApp('safari')"></div><div class="traffic-light tl-maximize" onclick="maximizeApp('safari')"></div></div><div class="title-text" style="background:#333;border-radius:6px;padding:2px 12px;font-size:12px">🔒 bing.com</div></div>
-<div class="win-body"><iframe src="https://www.bing.com" style="width:100%;height:100%;border:none"></iframe></div></div>
+                    </div>
 
-<!-- MESSAGES -->
-<div id="app-messages" class="app-window" style="width:440px;height:360px;top:100px;left:200px">
-<div class="title-bar"><div class="traffic-lights"><div class="traffic-light tl-close" onclick="closeApp('messages')"></div><div class="traffic-light tl-minimize" onclick="minimizeApp('messages')"></div><div class="traffic-light tl-maximize" onclick="maximizeApp('messages')"></div></div><div class="title-text">Mensajes</div></div>
-<div class="win-body" style="padding:20px;background:var(--app-bg);display:flex;align-items:center;justify-content:center;opacity:0.5">Sin mensajes</div></div>
+                    <!-- PERSONALIZE PAGE -->
+                    <div id="setPersonalize" class="settings-page hidden sub">
+                    <div class="list-group">
+                    <div style="padding:15px 20px; font-weight:600; color:var(--app-text);">Tema de color</div>
+                    <div class="theme-picker">
+                    <div class="theme-btn active" data-theme="0" title="Azul" style="background:linear-gradient(135deg, #021B79, #0575E6, #00F260);" onclick="applyTheme(0)"></div>
+                    <div class="theme-btn" data-theme="1" title="Verde" style="background:linear-gradient(135deg, #0f5132, #198754, #20c997);" onclick="applyTheme(1)"></div>
+                    <div class="theme-btn" data-theme="2" title="Morado" style="background:linear-gradient(135deg, #2d1b69, #6f42c1, #e83e8c);" onclick="applyTheme(2)"></div>
+                    <div class="theme-btn" data-theme="3" title="Rosa" style="background:linear-gradient(135deg, #c2185b, #e91e63, #f48fb1);" onclick="applyTheme(3)"></div>
+                    <div class="theme-btn" data-theme="4" title="Naranja" style="background:linear-gradient(135deg, #e65100, #ff6f00, #ffab40);" onclick="applyTheme(4)"></div>
+                    <div class="theme-btn" data-theme="5" title="Oscuro" style="background:linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);" onclick="applyTheme(5)"></div>
+                    </div>
+                    </div>
+                    <div class="list-group">
+                    <div style="padding:15px 20px; font-weight:600; color:var(--app-text);">Fuente</div>
+                    <div class="list-item font-opt" data-font="system" onclick="applyFont('system')"><div>Sistema</div><i data-lucide="check" class="font-check" id="font-check-system"></i></div>
+                    <div class="list-item font-opt" data-font="inter" onclick="applyFont('inter')"><div>Inter</div><i data-lucide="check" class="font-check" id="font-check-inter" style="display:none;"></i></div>
+                    <div class="list-item font-opt" data-font="dancing" onclick="applyFont('dancing')"><div>Dancing Script</div><i data-lucide="check" class="font-check" id="font-check-dancing" style="display:none;"></i></div>
+                    <div class="list-item font-opt" data-font="roboto" onclick="applyFont('roboto')"><div>Roboto</div><i data-lucide="check" class="font-check" id="font-check-roboto" style="display:none;"></i></div>
+                    </div>
+                    <div class="list-group">
+                    <div style="padding:15px 20px; font-weight:600; color:var(--app-text);">Orden de apps</div>
+                    <div id="orderListContainer"></div>
+                    <div style="padding:12px 20px;"><button onclick="saveAppOrder()" style="width:100%; padding:12px; background:#007aff; color:white; border:none; border-radius:10px; font-weight:600; cursor:pointer;">Guardar orden</button></div>
+                    </div>
+                    </div>
 
-<!-- MUSIC -->
-<div id="app-music" class="app-window" style="width:500px;height:500px;top:50px;left:180px">
-<div class="title-bar" style="background:#111"><div class="traffic-lights"><div class="traffic-light tl-close" onclick="closeApp('music')"></div><div class="traffic-light tl-minimize" onclick="minimizeApp('music')"></div><div class="traffic-light tl-maximize" onclick="maximizeApp('music')"></div></div><div class="title-text">Música</div></div>
-<div class="win-body" style="background:#111"><iframe style="border-radius:0" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator&theme=0" width="100%" height="100%" frameBorder="0" allowfullscreen loading="lazy"></iframe></div></div>
-</div>
+                    <!-- LANGUAGES PAGE -->
+                    <div id="setLangs" class="settings-page hidden sub">
+                    <div class="list-group">
+                    <div class="list-item" onclick="setLanguage('es')"><div>Español</div><i data-lucide="check" class="lang-check" id="check-es" style="color:#007aff"></i></div>
+                    <div class="list-item" onclick="setLanguage('en')"><div>English</div><i data-lucide="check" class="lang-check" id="check-en" style="display:none; color:#007aff"></i></div>
+                    <div class="list-item" onclick="setLanguage('fr')"><div>Français</div><i data-lucide="check" class="lang-check" id="check-fr" style="display:none; color:#007aff"></i></div>
+                    <div class="list-item" onclick="setLanguage('it')"><div>Italiano</div><i data-lucide="check" class="lang-check" id="check-it" style="display:none; color:#007aff"></i></div>
+                    <div class="list-item" onclick="setLanguage('jp')"><div>日本語</div><i data-lucide="check" class="lang-check" id="check-jp" style="display:none; color:#007aff"></i></div>
+                    <div class="list-item" onclick="setLanguage('cn')"><div>中文</div><i data-lucide="check" class="lang-check" id="check-cn" style="display:none; color:#007aff"></i></div>
+                    </div>
+                    </div>
+                </div>
+            </div>
 
-<script>
-lucide.createIcons();
-const translations={es:{welcome:"Desliza para empezar",mail:"Mail",calendar:"Calendario",photos:"Fotos",camera:"Cámara",maps:"Mapas",clock:"Reloj",weather:"Clima",wallet:"Cartera",notes:"Notas",calculator:"Calculadora",settings:"Ajustes",lang_region:"Idioma y Región",dark_mode:"Modo Oscuro",charging:"⚡ Super Charge 200W",changing_lang:"Cambiando Idioma..."},en:{welcome:"Swipe to start",mail:"Mail",calendar:"Calendar",photos:"Photos",camera:"Camera",maps:"Maps",clock:"Clock",weather:"Weather",wallet:"Wallet",notes:"Notes",calculator:"Calculator",settings:"Settings",lang_region:"Language & Region",dark_mode:"Dark Mode",charging:"⚡ Super Charge 200W",changing_lang:"Changing Language..."},fr:{welcome:"Balayez",mail:"Mail",calendar:"Calendrier",photos:"Photos",camera:"Appareil",maps:"Plans",clock:"Horloge",weather:"Météo",wallet:"Cartes",notes:"Notes",calculator:"Calculatrice",settings:"Réglages",lang_region:"Langue et région",dark_mode:"Mode sombre",charging:"⚡ Super Charge 200W",changing_lang:"Changement de langue..."},it:{welcome:"Scorri",mail:"Mail",calendar:"Calendario",photos:"Foto",camera:"Fotocamera",maps:"Mappe",clock:"Orologio",weather:"Meteo",wallet:"Wallet",notes:"Note",calculator:"Calcolatrice",settings:"Impostazioni",lang_region:"Lingua e zona",dark_mode:"Modalità scura",charging:"⚡ Super Charge 200W",changing_lang:"Cambio lingua..."},jp:{welcome:"スワイプ",mail:"メール",calendar:"カレンダー",photos:"写真",camera:"カメラ",maps:"マップ",clock:"時計",weather:"天気",wallet:"ウォレット",notes:"メモ",calculator:"電卓",settings:"設定",lang_region:"言語と地域",dark_mode:"ダークモード",charging:"⚡ Super Charge 200W",changing_lang:"言語を変更中..."},cn:{welcome:"滑动",mail:"邮件",calendar:"日历",photos:"照片",camera:"相机",maps:"地图",clock:"时钟",weather:"天气",wallet:"钱包",notes:"备忘录",calculator:"计算器",settings:"设置",lang_region:"语言与地区",dark_mode:"深色模式",charging:"⚡ Super Charge 200W",changing_lang:"正在更改语言..."}};
-let currentLang='es';
+            <!-- WALLET -->
+            <div id="app-wallet" class="app-window">
+                <div class="nav-bar" style="background:black; color:white; border:none;"><div></div><div>Cartera</div><div onclick="closeApp('wallet')">Listo</div></div>
+                <div class="app-body" style="background:black; color:white;">
+                    <div class="card-container">
+                    <div class="credit-card">
+                    <div style="display:flex; justify-content:space-between;">
+                    <div class="card-chip"></div>
+                    <div class="card-cvc-timer"><div style="font-size:10px; color:#aaa;">CVC</div><div style="font-weight:bold; color:#fff;" id="walletCVC">---</div><div class="cvc-bar"><div class="cvc-progress" id="cvcProgress"></div></div></div>
+                    </div>
+                    <div class="card-number" id="walletNum">**** **** **** ****</div>
+                    <div style="display:flex; justify-content:space-between;"><div style="font-weight:600;">JUAN PEREZ</div><div style="font-weight:600;">12/28</div></div>
+                    </div>
+                    </div>
+                    <div class="balance-section">
+                    <div style="color:#aaa; font-size:14px;">Saldo Total</div><div style="font-size:40px; font-weight:700;">$5,000.00</div>
+                    </div>
+                </div>
+            </div>
 
-// LOGIN
-document.getElementById('loginInput').addEventListener('keydown',function(e){if(e.key==='Enter'){document.getElementById('loginScreen').classList.add('hidden');document.getElementById('desktop').style.display='flex';lucide.createIcons()}});
-document.getElementById('loginScreen').addEventListener('click',function(e){document.getElementById('loginInput').focus()});
+            <!-- OTHER APPS FUNCIONALES -->
+            
+            <div id="app-mail" class="app-window">
+                <div class="nav-bar"><div>Buzones</div><div>Entrada</div><div onclick="closeApp('mail')">Listo</div></div>
+                <div class="app-body" id="mobileMailBody" style="display:flex; flex-direction:column; padding:0; overflow:hidden;"></div>
+            </div>
 
-// CLOCK
-function updateClock(){const d=new Date(),t=d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});document.getElementById('loginTime').innerText=t;document.getElementById('menuClock').innerText=t;if(document.getElementById('clockAppTime'))document.getElementById('clockAppTime').innerText=t;const o={weekday:'long',day:'numeric',month:'long'};document.getElementById('loginDate').innerText=d.toLocaleDateString(currentLang==='es'?'es-ES':'en-US',o)}
-setInterval(updateClock,1000);updateClock();
+            <div id="app-phone" class="app-window">
+                <div class="app-body" style="display:flex; flex-direction:column; justify-content:flex-end;">
+                    <div id="phoneDisplay" style="font-size:32px; text-align:center; padding:20px; color:var(--app-text);"></div>
+                    <div class="keypad" style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px; padding:40px; justify-items:center;">
+                        <div class="key-btn" onclick="dial('1')">1</div><div class="key-btn" onclick="dial('2')">2</div><div class="key-btn" onclick="dial('3')">3</div>
+                        <div class="key-btn" id="dialKey4" onclick="dial('4')">4</div><div class="key-btn" onclick="dial('5')">5</div><div class="key-btn" onclick="dial('6')">6</div>
+                        <div class="key-btn" onclick="dial('7')">7</div><div class="key-btn" onclick="dial('8')">8</div><div class="key-btn" onclick="dial('9')">9</div>
+                        <div class="key-btn" onclick="dial('*')">*</div><div class="key-btn" onclick="dial('0')">0</div><div class="key-btn" onclick="dial('#')">#</div>
+                        <div class="key-btn" style="background:#34c759; color:white; grid-column:2;" onclick="callPhone()"><i data-lucide="phone"></i></div>
+                    </div>
+                </div>
+            </div>
 
-// WINDOW DRAGGING
-let dragWin=null,dragOff={x:0,y:0};
-document.querySelectorAll('.title-bar').forEach(tb=>{tb.addEventListener('mousedown',e=>{if(e.target.classList.contains('traffic-light'))return;dragWin=tb.parentElement;const r=dragWin.getBoundingClientRect();dragOff={x:e.clientX-r.left,y:e.clientY-r.top};dragWin.style.zIndex=++winZ})});
-document.addEventListener('mousemove',e=>{if(dragWin&&!dragWin.classList.contains('maximized')){dragWin.style.left=e.clientX-dragOff.x+'px';dragWin.style.top=e.clientY-dragOff.y+'px'}});
-document.addEventListener('mouseup',()=>{dragWin=null});
-let winZ=1000;
+            <div id="app-calculator" class="app-window">
+                <div class="app-body" style="background:black; color:white; display:flex; flex-direction:column; justify-content:flex-end;">
+                    <div id="calcRes" style="text-align:right; font-size:80px; padding:20px;">0</div>
+                    <div class="calc-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; padding:20px; background:black;">
+                        <div class="calc-btn" style="background:#a5a5a5; color:black;" onclick="calc('C')">AC</div><div class="calc-btn" style="background:#a5a5a5; color:black;">+/-</div><div class="calc-btn" style="background:#a5a5a5; color:black;">%</div><div class="calc-btn" style="background:#ff9f0a;" onclick="calc('/')">÷</div>
+                        <div class="calc-btn" onclick="calc(7)">7</div><div class="calc-btn" onclick="calc(8)">8</div><div class="calc-btn" onclick="calc(9)">9</div><div class="calc-btn" style="background:#ff9f0a;" onclick="calc('*')">×</div>
+                        <div class="calc-btn" onclick="calc(4)">4</div><div class="calc-btn" onclick="calc(5)">5</div><div class="calc-btn" onclick="calc(6)">6</div><div class="calc-btn" style="background:#ff9f0a;" onclick="calc('-')">-</div>
+                        <div class="calc-btn" onclick="calc(1)">1</div><div class="calc-btn" onclick="calc(2)">2</div><div class="calc-btn" onclick="calc(3)">3</div><div class="calc-btn" style="background:#ff9f0a;" onclick="calc('+')">+</div>
+                        <div class="calc-btn" style="grid-column:span 2; justify-content:flex-start; padding-left:30px;" onclick="calc(0)">0</div><div class="calc-btn">.</div><div class="calc-btn" style="background:#ff9f0a;" onclick="calc('=')">=</div>
+                    </div>
+                </div>
+            </div>
 
-function openApp(id){const w=document.getElementById('app-'+id);if(w){w.classList.add('open');w.style.zIndex=++winZ;if(id==='wallet')startWallet();if(id==='camera')startCamera();lucide.createIcons()}}
-function closeApp(id){const w=document.getElementById('app-'+id);if(w){w.classList.remove('open');w.classList.remove('maximized')}if(id==='wallet')clearInterval(cvcInterval);if(id==='camera')stopCamera()}
-function minimizeApp(id){closeApp(id)}
-function maximizeApp(id){document.getElementById('app-'+id).classList.toggle('maximized')}
+            <div id="app-calendar" class="app-window">
+                <div class="nav-bar"><div style="color:red">2026</div><div>Calendario</div><div onclick="closeApp('calendar')">Hoy</div></div>
+                <div class="app-body" id="mobileCalendarBody" style="padding:20px; background:var(--app-bg);"></div>
+            </div>
 
-// SETTINGS NAV
-function navSettings(t){const m=document.getElementById('setMain'),p=document.getElementById('setPersonalize'),l=document.getElementById('setLangs');if(t==='personalize'){m.style.display='none';l.style.display='none';p.style.display='block';renderOrderList();lucide.createIcons()}else if(t==='langs'){m.style.display='none';p.style.display='none';l.style.display='block'}else{m.style.display='block';p.style.display='none';l.style.display='none'}}
+            <div id="app-photos" class="app-window">
+                <div class="nav-bar"><div style="color:#007aff" onclick="closeApp('photos')">Atrás</div><div>Fotos</div><div></div></div>
+                <div class="app-body" style="background:var(--app-bg);"><div id="mobilePhotoGrid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:2px;"></div></div>
+            </div>
 
-// LANGUAGE
-function setLanguage(lang){currentLang=lang;const t=translations[lang];document.querySelectorAll('[data-key]').forEach(el=>{const k=el.getAttribute('data-key');if(t[k])el.textContent=t[k]});document.querySelectorAll('.lang-check').forEach(i=>i.style.display='none');const c=document.getElementById('check-'+lang);if(c)c.style.display='inline';const names={es:"Español",en:"English",fr:"Français",it:"Italiano",jp:"日本語",cn:"中文"};document.getElementById('currentLangDisplay').textContent=names[lang]+' ›';showNotif('🌐 '+t.changing_lang);setTimeout(()=>navSettings('back'),1500)}
+            <div id="app-maps" class="app-window"><div class="app-body"><iframe width="100%" height="100%" frameborder="0" src="https://www.openstreetmap.org/export/embed.html"></iframe></div></div>
+            
+            <div id="app-clock" class="app-window">
+                <div class="app-body" style="background:black; color:white; padding:20px; padding-top:60px; text-align:center;">
+                    <h1 id="mobileClockAppTime" style="font-size:70px; margin-bottom:10px;">--:--</h1>
+                    <div style="font-size:20px; color:#aaa;">Ciudad de México</div>
+                </div>
+            </div>
 
-// DARK MODE
-let isDark=true;
-function toggleDark(){isDark=!isDark;document.getElementById('darkToggle').classList.toggle('active');if(isDark){document.documentElement.style.setProperty('--app-bg','#1c1c1e');document.documentElement.style.setProperty('--list-bg','#2c2c2e')}else{document.documentElement.style.setProperty('--app-bg','#f2f2f7');document.documentElement.style.setProperty('--list-bg','#fff');document.documentElement.style.setProperty('--text','#000')}}
+            <div id="app-weather" class="app-window">
+                <div class="app-body" style="background:linear-gradient(#1e3c72, #2a5298); color:white; text-align:center; padding-top:60px; display:flex; flex-direction:column; align-items:center;">
+                    <h1 id="mobileWeatherTemp" style="font-size:90px; margin:20px 0;">--°</h1>
+                    <div id="mobileWeatherDesc" style="font-size:22px;">---</div>
+                </div>
+            </div>
 
-// THEMES
-const THEMES=['linear-gradient(135deg,#021B79,#0575E6,#00F260)','linear-gradient(135deg,#0f5132,#198754,#20c997)','linear-gradient(135deg,#2d1b69,#6f42c1,#e83e8c)','linear-gradient(135deg,#c2185b,#e91e63,#f48fb1)','linear-gradient(135deg,#e65100,#ff6f00,#ffab40)','linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)'];
-function applyTheme(i){document.getElementById('desktop').style.background=THEMES[i];document.getElementById('desktop').style.backgroundSize='400% 400%';document.getElementById('desktop').style.animation='gradAnim 15s ease infinite';document.getElementById('loginScreen').style.background=THEMES[i];document.querySelectorAll('.theme-btn').forEach(b=>b.classList.remove('active'));document.querySelector('.theme-btn[data-theme="'+i+'"]').classList.add('active');localStorage.setItem('wtcmac_theme',String(i))}
+            <div id="app-notes" class="app-window">
+                <div class="nav-bar"><div style="color:#ffd60a">Atrás</div><div>Notas</div><div onclick="closeApp('notes')">Listo</div></div>
+                <div class="app-body" style="padding:0;">
+                    <textarea id="mobileNotesArea" style="width:100%; height:100%; border:none; padding:20px; font-size:18px; outline:none; background:var(--app-bg); color:var(--app-text); resize:none;">Nueva nota...</textarea>
+                </div>
+            </div>
 
-// FONTS
-const FONTS={system:'-apple-system,BlinkMacSystemFont,sans-serif',inter:"'Inter',sans-serif",dancing:"'Dancing Script',cursive",roboto:"'Roboto',sans-serif"};
-function applyFont(id){document.body.style.fontFamily=FONTS[id]||FONTS.system;document.querySelectorAll('.font-check').forEach(c=>c.style.display='none');const c=document.getElementById('font-check-'+id);if(c)c.style.display='inline';localStorage.setItem('wtcmac_font',id)}
+            <div id="app-safari" class="app-window">
+                <div class="app-body" style="display:flex; flex-direction:column;">
+                    <div style="padding:15px; background:var(--list-bg); text-align:center; border-bottom:1px solid var(--border-color); color:var(--app-text); border-radius:15px; margin:10px;">🔒 bing.com</div>
+                    <iframe src="https://www.bing.com" style="width:100%; flex:1; border:none; background:white;"></iframe>
+                </div>
+            </div>
 
-// APP ORDER
-const DEFAULT_ORDER=['mail','calendar','photos','camera','maps','clock','weather','wallet','notes','calculator','settings'];
-const APP_NAMES={mail:'Mail',calendar:'Calendario',photos:'Fotos',camera:'Cámara',maps:'Mapas',clock:'Reloj',weather:'Clima',wallet:'Cartera',notes:'Notas',calculator:'Calculadora',settings:'Ajustes'};
-let appOrderEdit=[];
-function loadAppOrder(){try{const s=localStorage.getItem('wtcmac_app_order');return s?JSON.parse(s):[...DEFAULT_ORDER]}catch{return[...DEFAULT_ORDER]}}
-function renderOrderList(){appOrderEdit=loadAppOrder();const c=document.getElementById('orderListContainer');c.innerHTML=appOrderEdit.map((id,i)=>'<div class="order-row"><span>'+(APP_NAMES[id]||id)+'</span><div class="order-btns"><button onclick="moveAppUp('+i+')"'+(i===0?' disabled':'')+'>▲</button><button onclick="moveAppDown('+i+')"'+(i===appOrderEdit.length-1?' disabled':'')+'>▼</button></div></div>').join('')}
-function moveAppUp(i){if(i<=0)return;[appOrderEdit[i-1],appOrderEdit[i]]=[appOrderEdit[i],appOrderEdit[i-1]];renderOrderList()}
-function moveAppDown(i){if(i>=appOrderEdit.length-1)return;[appOrderEdit[i],appOrderEdit[i+1]]=[appOrderEdit[i+1],appOrderEdit[i]];renderOrderList()}
-function saveAppOrder(){localStorage.setItem('wtcmac_app_order',JSON.stringify(appOrderEdit));renderDesktopIcons()}
-function renderDesktopIcons(){const order=loadAppOrder();const grid=document.getElementById('desktopContent');const items=Array.from(grid.querySelectorAll('.desktop-icon'));const map={};items.forEach(el=>{const label=el.querySelector('.icon-label');if(label){const k=label.getAttribute('data-key');if(k)map[k]=el}});order.forEach(id=>{const key=id;if(map[key])grid.insertBefore(map[key],grid.firstChild)})}
+            <div id="app-messages" class="app-window">
+                <div class="nav-bar"><div>Editar</div><div>Mensajes</div><div onclick="closeApp('messages')">Listo</div></div>
+                <div class="app-body" id="mobileMessagesBody" style="display:flex; flex-direction:column; padding:0;"></div>
+            </div>
 
-// SUPER CHARGE
-function triggerSuperCharge(){const o=document.getElementById('chargeOverlay');const p=document.getElementById('chargePct');const w=document.getElementById('chargeWatts');o.classList.add('show');let pct=0;const iv=setInterval(()=>{pct+=2;p.textContent=pct+'%';w.textContent=Math.floor(180+Math.random()*40)+'W';if(pct>=100){clearInterval(iv);w.textContent='Carga Completa';setTimeout(()=>o.classList.remove('show'),2000)}},50)}
+            <div id="app-music" class="app-window"><div class="app-body" style="background:#111;"><iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator&theme=0" width="100%" height="100%" frameBorder="0" allowfullscreen="" loading="lazy"></iframe></div></div>
 
-// CAMERA
-let videoStream,filterIdx=0;const filters=['none','grayscale(1)','sepia(1)','saturate(2)'];
-async function startCamera(){try{videoStream=await navigator.mediaDevices.getUserMedia({video:true});document.getElementById('camFeed').srcObject=videoStream}catch(e){}}
-function stopCamera(){if(videoStream)videoStream.getTracks().forEach(t=>t.stop())}
-function toggleFilter(){filterIdx=(filterIdx+1)%filters.length;document.getElementById('camFeed').style.filter=filters[filterIdx]}
-function takePhoto(){const c=document.getElementById('photoCanvas'),v=document.getElementById('camFeed');c.width=v.videoWidth;c.height=v.videoHeight;const ctx=c.getContext('2d');ctx.filter=filters[filterIdx];ctx.drawImage(v,0,0);document.getElementById('lastPhoto').src=c.toDataURL('image/jpeg');document.getElementById('lastPhoto').style.display='block'}
+            <div class="home-indicator" id="homeIndicator" onclick="goHome()"></div>
+            <div class="status-bar" id="statusBar"><span id="statusBarClock">9:41</span><div style="display:flex; gap:5px;"><i data-lucide="signal" size="14"></i><i data-lucide="wifi" size="14"></i><i data-lucide="battery-full" size="18"></i></div></div>
 
-// WALLET
-let cvcInterval;
-function startWallet(){let n='';for(let i=0;i<4;i++)n+=Math.floor(1000+Math.random()*9000)+' ';document.getElementById('walletNum').innerText=n.trim();function updateCVC(){document.getElementById('walletCVC').innerText=Math.floor(100+Math.random()*900);const b=document.getElementById('cvcProgress');b.style.transition='none';b.style.width='100%';setTimeout(()=>{b.style.transition='width 30s linear';b.style.width='0%'},10)}updateCVC();clearInterval(cvcInterval);cvcInterval=setInterval(updateCVC,30000)}
+        </div>
+    </div>
 
-// PHONE
-function dial(n){const d=document.getElementById('phoneDisplay');d.innerText+=n;if(d.innerText==='911')window.location.href='new911.html'}
-(function(){var d4=document.getElementById('dialKey4');if(!d4)return;var t;function sh(){t=setTimeout(()=>window.location.href='htlr.html',500)}function ch(){clearTimeout(t)}d4.addEventListener('mousedown',sh);d4.addEventListener('touchstart',sh);d4.addEventListener('mouseup',ch);d4.addEventListener('mouseleave',ch);d4.addEventListener('touchend',ch)})();
+    <script>
+        lucide.createIcons();
 
-// CALCULATOR
-let cVal='0';
-function calc(v){const d=document.getElementById('calcRes');if(v==='C')cVal='0';else if(v==='='){try{cVal=String(eval(cVal))}catch{cVal='Error'}}else{if(cVal==='0')cVal='';cVal+=v}d.innerText=cVal}
+        // --- TRANSLATIONS CONFIG ---
+        const translations = {
+            es: { welcome: "Desliza para empezar", mail: "Mail", calendar: "Calendario", photos: "Fotos", camera: "Cámara", maps: "Mapas", clock: "Reloj", weather: "Clima", wallet: "Cartera", notes: "Notas", calculator: "Calculadora", settings: "Ajustes", lang_region: "Idioma y Región", dark_mode: "Modo Oscuro", charging: "⚡ Super Charge 200W", face_id: "Face ID", changing_lang: "Cambiando Idioma..." },
+            en: { welcome: "Swipe to start", mail: "Mail", calendar: "Calendar", photos: "Photos", camera: "Camera", maps: "Maps", clock: "Clock", weather: "Weather", wallet: "Wallet", notes: "Notes", calculator: "Calculator", settings: "Settings", lang_region: "Language & Region", dark_mode: "Dark Mode", charging: "⚡ Super Charge 200W", face_id: "Face ID", changing_lang: "Changing Language..." },
+            fr: { welcome: "Balayez pour commencer", mail: "Mail", calendar: "Calendrier", photos: "Photos", camera: "Appareil photo", maps: "Plans", clock: "Horloge", weather: "Météo", wallet: "Cartes", notes: "Notes", calculator: "Calculatrice", settings: "Réglages", lang_region: "Langue et région", dark_mode: "Mode sombre", charging: "⚡ Super Charge 200W", face_id: "Face ID", changing_lang: "Changement de langue..." },
+            it: { welcome: "Scorri per iniziare", mail: "Mail", calendar: "Calendario", photos: "Foto", camera: "Fotocamera", maps: "Mappe", clock: "Orologio", weather: "Meteo", wallet: "Wallet", notes: "Note", calculator: "Calcolatrice", settings: "Impostazioni", lang_region: "Lingua e zona", dark_mode: "Modalità scura", charging: "⚡ Super Charge 200W", face_id: "Face ID", changing_lang: "Cambio lingua..." },
+            jp: { welcome: "スワイプして始める", mail: "メール", calendar: "カレンダー", photos: "写真", camera: "カメラ", maps: "マップ", clock: "時計", weather: "天気", wallet: "ウォレット", notes: "メモ", calculator: "電卓", settings: "設定", lang_region: "言語と地域", dark_mode: "ダークモード", charging: "⚡ Super Charge 200W", face_id: "Face ID", changing_lang: "言語を変更中..." },
+            cn: { welcome: "向上轻扫以开始", mail: "邮件", calendar: "日历", photos: "照片", camera: "相机", maps: "地图", clock: "时钟", weather: "天气", wallet: "钱包", notes: "备忘录", calculator: "计算器", settings: "设置", lang_region: "语言与地区", dark_mode: "深色模式", charging: "⚡ Super Charge 200W", face_id: "Face ID", changing_lang: "正在更改语言..." }
+        };
+        let currentLang = 'es';
 
-// NOTIFICATIONS
-function showNotif(msg){const n=document.getElementById('macNotif');n.innerHTML=msg;n.classList.add('show');setTimeout(()=>n.classList.remove('show'),3000)}
+        // --- HELLO SEQUENCE ---
+        const greetings = ["Provechito", "hello", "hola", "bonjour", "ciao", "hallo", "olá", "你好", "こんにちは", "Provechito"];
+        let greetIdx = 0;
+        const welcomeText = document.getElementById('welcomeText');
+        let greetInterval;
 
-// APPLE MENU
-function showAppleMenu(){showNotif('🍎 WTC Mac OS — Sobre esta Mac')}
+        const hasSeenWelcome = localStorage.getItem('wtc_liquid_welcome_seen');
 
-// INIT
-(function(){const t=localStorage.getItem('wtcmac_theme');if(t!==null)applyTheme(parseInt(t,10));applyFont(localStorage.getItem('wtcmac_font')||'system')})();
-window.onload=function(){lucide.createIcons()};
-</script>
+        if (hasSeenWelcome === 'true') {
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('notch').classList.remove('welcome-aura');
+            document.getElementById('tutorialOverlay').style.display = 'none';
+        } else {
+            greetInterval = setInterval(() => {
+                welcomeText.style.opacity = 0;
+                setTimeout(() => {
+                    greetIdx = (greetIdx + 1) % greetings.length;
+                    welcomeText.innerText = greetings[greetIdx];
+                    welcomeText.style.opacity = 1;
+                }, 500);
+            }, 2000);
+        }
+
+        function startSetup() {
+            if (greetInterval) clearInterval(greetInterval);
+            document.getElementById('notch').classList.remove('welcome-aura');
+            document.getElementById('welcomeScreen').style.transform = "translateY(-100%)";
+            document.getElementById('tutorialOverlay').style.display = "flex";
+        }
+
+        // --- LOGICA DE APPS FUNCIONALES ---
+
+        function initAppFunctions() {
+            // Calendar
+            const d = new Date();
+            const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            let calHtml = `<h2 style="color:red; margin-bottom:15px; font-weight:700;">${monthNames[d.getMonth()].toUpperCase()} ${d.getFullYear()}</h2>`;
+            calHtml += `<div style="display:grid; grid-template-columns:repeat(7,1fr); gap:8px; text-align:center; font-size:14px;">`;
+            const days = ['D','L','M','M','J','V','S'];
+            days.forEach(day => calHtml += `<div style="font-weight:bold;color:gray;">${day}</div>`);
+            const firstDay = new Date(d.getFullYear(), d.getMonth(), 1).getDay();
+            const daysInMonth = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+            for(let i=0; i<firstDay; i++) calHtml += `<div></div>`;
+            for(let i=1; i<=daysInMonth; i++) {
+                const isToday = i === d.getDate() ? 'background:red;color:white;border-radius:50%;' : 'color:var(--app-text)';
+                calHtml += `<div style="padding:8px;${isToday}">${i}</div>`;
+            }
+            calHtml += `</div>`;
+            document.getElementById('mobileCalendarBody').innerHTML = calHtml;
+
+            // Photos
+            let photoHtml = '';
+            for(let i=1; i<=18; i++) photoHtml += `<div style="aspect-ratio:1; background:url('https://picsum.photos/seed/${i+100}/200') center/cover;"></div>`;
+            document.getElementById('mobilePhotoGrid').innerHTML = photoHtml;
+
+            // Weather
+            const temps = [18, 22, 25, 14, 30, 20];
+            const descs = ['Soleado', 'Nublado', 'Lluvioso', 'Parcialmente Nublado', 'Despejado'];
+            document.getElementById('mobileWeatherTemp').innerText = temps[Math.floor(Math.random()*temps.length)] + '°';
+            document.getElementById('mobileWeatherDesc').innerText = descs[Math.floor(Math.random()*descs.length)];
+
+            // Notes
+            const ta = document.getElementById('mobileNotesArea');
+            ta.value = localStorage.getItem('wtc_notes_mobile') || 'Nueva nota...';
+            ta.addEventListener('input', () => localStorage.setItem('wtc_notes_mobile', ta.value));
+
+            // Messages
+            const msgBody = document.getElementById('mobileMessagesBody');
+            msgBody.innerHTML = `
+                <div id="mob-msg-hist" class="chat-history">
+                    <div class="chat-bubble received">¡Hola! ¿Cómo estás?</div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="mob-msg-input" class="chat-input" placeholder="Mensaje...">
+                    <button onclick="sendMsgMobile()" class="chat-send">↑</button>
+                </div>
+            `;
+
+            // Mail
+            const mailBody = document.getElementById('mobileMailBody');
+            mailBody.innerHTML = `
+                <div id="mob-mail-list" class="mail-list">
+                    <div class="list-item" onclick="openMailMobile('Apple', 'Recibo de compra', 'Gracias por su compra reciente en la App Store. Su recibo está adjunto.')">
+                        <div><b>Apple</b><br><span style="font-size:13px;opacity:0.7">Recibo de compra</span></div>
+                        <div style="font-size:12px;opacity:0.5">Ayer</div>
+                    </div>
+                    <div class="list-item" onclick="openMailMobile('Equipo WTC', 'Actualización Disponible', 'La nueva versión Liquid 28.2 ya está instalada. ¡Disfruta!')">
+                        <div><b>Equipo WTC</b><br><span style="font-size:13px;opacity:0.7">Actualización Disponible</span></div>
+                        <div style="font-size:12px;opacity:0.5">Hace 2h</div>
+                    </div>
+                </div>
+                <div id="mob-mail-detail" class="mail-detail">
+                    <div class="mail-header" onclick="closeMailMobile()">‹ Volver</div>
+                    <div class="mail-content">
+                        <h2 id="mob-mail-title" style="margin-top:0;">Asunto</h2>
+                        <h4 id="mob-mail-sender" style="color:gray;">De</h4>
+                        <p id="mob-mail-body" style="margin-top:20px; line-height:1.5;">Cuerpo</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- FUNCIONES APPS ---
+
+        function sendMsgMobile() {
+            const input = document.getElementById('mob-msg-input');
+            const hist = document.getElementById('mob-msg-hist');
+            if(!input.value.trim()) return;
+            hist.innerHTML += `<div class="chat-bubble sent">${input.value}</div>`;
+            input.value = '';
+            hist.scrollTop = hist.scrollHeight;
+            setTimeout(() => {
+                hist.innerHTML += `<div class="chat-bubble received">Interesante... Cuéntame más.</div>`;
+                hist.scrollTop = hist.scrollHeight;
+            }, 1000);
+        }
+
+        function openMailMobile(sender, title, body) {
+            document.getElementById('mob-mail-list').style.display = 'none';
+            document.getElementById('mob-mail-detail').style.display = 'flex';
+            document.getElementById('mob-mail-title').innerText = title;
+            document.getElementById('mob-mail-sender').innerText = "De: " + sender;
+            document.getElementById('mob-mail-body').innerText = body;
+        }
+
+        function closeMailMobile() {
+            document.getElementById('mob-mail-detail').style.display = 'none';
+            document.getElementById('mob-mail-list').style.display = 'block';
+        }
+
+        // --- FIN LOGICA APPS ---
+
+        function triggerSuperCharge() {
+            const n = document.getElementById('notch');
+            const percentEl = document.getElementById('chargePercent');
+            const speedEl = document.getElementById('chargeSpeed');
+            n.classList.add('expanded-charge');
+            let percent = 0;
+            const chargeInterval = setInterval(() => {
+                percent += 2;
+                percentEl.textContent = percent + '%';
+                const wattage = Math.floor(180 + Math.random() * 40);
+                speedEl.textContent = `${wattage}W`;
+                if (percent >= 100) {
+                    clearInterval(chargeInterval);
+                    speedEl.textContent = 'Carga Completa';
+                    setTimeout(() => { n.classList.remove('expanded-charge'); percentEl.textContent = '100%'; }, 2000);
+                }
+            }, 50);
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            const t = translations[lang];
+            const n = document.getElementById('notch');
+            n.classList.add('expanded-language');
+            document.getElementById('langNotchText').textContent = t.changing_lang;
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if(t[key]) el.textContent = t[key];
+            });
+            document.getElementById('swipeText').textContent = t.welcome;
+            document.querySelectorAll('.lang-check').forEach(i => i.style.display = 'none');
+            document.getElementById('check-'+lang).style.display = 'block';
+            const langNames = {es:"Español", en:"English", fr:"Français", it:"Italiano", jp:"日本語", cn:"中文"};
+            document.getElementById('currentLangDisplay').innerHTML = langNames[lang] + ' <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg>';
+            setTimeout(() => { navSettings('back'); n.classList.remove('expanded-language'); }, 2000);
+        }
+
+        function navSettings(target) {
+            const main = document.getElementById('setMain'), langs = document.getElementById('setLangs'), personalize = document.getElementById('setPersonalize'), backBtn = document.getElementById('setBackBtn'), title = document.getElementById('setTitle');
+            if (target === 'langs') {
+                main.classList.add('hidden'); langs.classList.remove('hidden'); personalize.classList.add('hidden');
+                backBtn.style.visibility = 'visible'; backBtn.innerText = translations[currentLang].settings || "Ajustes";
+                backBtn.onclick = () => navSettings('back'); title.innerText = translations[currentLang].lang_region || "Idioma";
+            } else if (target === 'personalize') {
+                main.classList.add('hidden'); langs.classList.add('hidden'); personalize.classList.remove('hidden');
+                backBtn.style.visibility = 'visible'; backBtn.innerText = translations[currentLang].settings || "Ajustes";
+                backBtn.onclick = () => navSettings('back'); title.innerText = "Personalización";
+                renderOrderList(); if (typeof lucide !== 'undefined') lucide.createIcons();
+            } else if (target === 'back') {
+                main.classList.remove('hidden'); langs.classList.add('hidden'); personalize.classList.add('hidden');
+                backBtn.innerText = "Atrás"; backBtn.onclick = () => closeApp('settings');
+                title.innerText = translations[currentLang].settings || "Ajustes";
+            }
+        }
+
+        const THEMES = ['linear-gradient(135deg, #021B79, #0575E6, #00F260)', 'linear-gradient(135deg, #0f5132, #198754, #20c997)', 'linear-gradient(135deg, #2d1b69, #6f42c1, #e83e8c)', 'linear-gradient(135deg, #c2185b, #e91e63, #f48fb1)', 'linear-gradient(135deg, #e65100, #ff6f00, #ffab40)', 'linear-gradient(135deg, #1a1a2e, #16213e, #0f3460)'];
+        const FONTS = { system: '-apple-system, BlinkMacSystemFont, sans-serif', inter: "'Inter', sans-serif", dancing: "'Dancing Script', cursive", roboto: "'Roboto', sans-serif" };
+        const DEFAULT_APP_ORDER = ['mail','calendar','photos','camera','maps','clock','weather','wallet','notes','calculator','settings'];
+        const APP_NAMES = { mail: 'Mail', calendar: 'Calendario', photos: 'Fotos', camera: 'Cámara', maps: 'Mapas', clock: 'Reloj', weather: 'Clima', wallet: 'Cartera', notes: 'Notas', calculator: 'Calculadora', settings: 'Ajustes' };
+        let appOrderEdit = [];
+
+        function applyTheme(idx) {
+            const bg = THEMES[idx];
+            document.getElementById('wallpaper').style.background = bg;
+            document.getElementById('wallpaper').style.backgroundSize = '100% 100%';
+            document.getElementById('wallpaper').style.animation = 'none';
+            document.getElementById('lockScreen').style.background = bg;
+            document.getElementById('lockScreen').style.backgroundSize = '100% 100%';
+            document.getElementById('lockScreen').style.animation = 'none';
+            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('.theme-btn[data-theme="'+idx+'"]').classList.add('active');
+            localStorage.setItem('wtc_liquid_theme', String(idx));
+        }
+        function applyFont(id) {
+            const font = FONTS[id] || FONTS.system;
+            document.body.style.fontFamily = font;
+            document.querySelectorAll('.font-opt').forEach(el => { el.classList.remove('font-selected'); const c = el.querySelector('.font-check'); if(c) c.style.display = 'none'; });
+            const sel = document.querySelector('.font-opt[data-font="'+id+'"]');
+            if(sel) { sel.classList.add('font-selected'); const c = sel.querySelector('.font-check'); if(c) c.style.display = 'block'; }
+            localStorage.setItem('wtc_liquid_font', id);
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+        function loadAppOrder() { try { const s = localStorage.getItem('wtc_liquid_app_order'); return s ? JSON.parse(s) : [...DEFAULT_APP_ORDER]; } catch { return [...DEFAULT_APP_ORDER]; } }
+        function renderAppGrid() {
+            const order = loadAppOrder(); const grid = document.getElementById('appGrid');
+            const items = Array.from(grid.querySelectorAll('.app-item[data-app-id]')); const byId = {};
+            items.forEach(el => { byId[el.getAttribute('data-app-id')] = el; });
+            order.forEach(id => { if (byId[id]) grid.appendChild(byId[id]); });
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+        function renderOrderList() {
+            appOrderEdit = loadAppOrder(); const cont = document.getElementById('orderListContainer'); const len = appOrderEdit.length;
+            cont.innerHTML = appOrderEdit.map((id, i) => '<div class="order-row"><span>'+(APP_NAMES[id]||id)+'</span><div class="order-btns"><button onclick="moveAppUp('+i+')"'+(i===0?' disabled':'')+'><i data-lucide="chevron-up" size="18"></i></button><button onclick="moveAppDown('+i+')"'+(i===len-1?' disabled':'')+'><i data-lucide="chevron-down" size="18"></i></button></div></div>').join('');
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+        function moveAppUp(i) { if (i <= 0) return; [appOrderEdit[i-1], appOrderEdit[i]] = [appOrderEdit[i], appOrderEdit[i-1]]; renderOrderList(); }
+        function moveAppDown(i) { if (i >= appOrderEdit.length - 1) return; [appOrderEdit[i], appOrderEdit[i+1]] = [appOrderEdit[i+1], appOrderEdit[i]]; renderOrderList(); }
+        function saveAppOrder() { localStorage.setItem('wtc_liquid_app_order', JSON.stringify(appOrderEdit)); renderAppGrid(); }
+
+        function nextTut(n) { document.getElementById('tut'+n).classList.remove('active'); document.getElementById('tut'+(n+1)).classList.add('active'); }
+        function closeTutorial() { document.getElementById('tutorialOverlay').style.display = "none"; localStorage.setItem('wtc_liquid_welcome_seen', 'true'); }
+
+        function updateClock() {
+            const d = new Date(); const t = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+            document.getElementById('lockTime').innerText = t;
+            document.getElementById('statusBarClock').innerText = t;
+            if(document.getElementById('mobileClockAppTime')) document.getElementById('mobileClockAppTime').innerText = t;
+            const o = {weekday:'long', day:'numeric', month:'long'};
+            document.getElementById('lockDate').innerText = d.toLocaleDateString(currentLang === 'es' ? 'es-ES' : 'en-US', o);
+        }
+        setInterval(updateClock, 1000); updateClock();
+
+        function resize() {
+            const s = Math.min((window.innerWidth-20)/380, (window.innerHeight-20)/800, 1);
+            document.getElementById('scaler').style.transform = `scale(${s})`;
+        }
+        window.onresize = resize; 
+
+        (function initPersonalization() {
+            const theme = localStorage.getItem('wtc_liquid_theme');
+            if (theme !== null) applyTheme(parseInt(theme, 10));
+            applyFont(localStorage.getItem('wtc_liquid_font') || 'system');
+            renderAppGrid();
+        })();
+
+        window.onload = function() { resize(); initAppFunctions(); lucide.createIcons(); };
+
+        function unlockPhone() {
+            const n = document.getElementById('notch'); n.classList.add('expanded-faceid');
+            setTimeout(() => { n.classList.remove('expanded-faceid'); document.getElementById('lockScreen').classList.add('unlocked'); }, 1000);
+        }
+
+        function goHome() {
+            document.querySelectorAll('.app-window').forEach(w => w.classList.remove('open'));
+            clearInterval(cvcInterval); document.getElementById('homeIndicator').classList.remove('dark'); document.getElementById('statusBar').classList.remove('dark');
+        }
+
+        const lightApps = ['mail', 'calendar', 'photos', 'maps', 'notes', 'settings', 'phone', 'safari', 'messages'];
+
+        function openApp(id) {
+            if(id === 'wallet') startWallet(); if(id === 'camera') startCamera();
+            const app = document.getElementById('app-' + id);
+            if(app) {
+                app.classList.add('open');
+                if(lightApps.includes(id)) { document.getElementById('homeIndicator').classList.add('dark'); document.getElementById('statusBar').classList.add('dark'); }
+            }
+        }
+        function closeApp(id) { document.getElementById('app-' + id).classList.remove('open'); if(id === 'wallet') clearInterval(cvcInterval); if(id === 'camera') stopCamera(); goHome(); }
+
+        function toggleDark() { document.getElementById('iphoneFrame').classList.toggle('dark-mode'); document.getElementById('darkToggle').classList.toggle('active'); }
+
+        let videoStream; let filterIdx = 0; const filters = ['none', 'grayscale(1)', 'sepia(1)', 'saturate(2)'];
+        async function startCamera() { try { videoStream = await navigator.mediaDevices.getUserMedia({ video: true }); document.getElementById('camFeed').srcObject = videoStream; } catch(e) {} }
+        function stopCamera() { if(videoStream) videoStream.getTracks().forEach(t => t.stop()); }
+        function toggleFilter() { filterIdx = (filterIdx + 1) % filters.length; document.getElementById('camFeed').style.filter = filters[filterIdx]; }
+        function takePhoto() {
+            const c = document.getElementById('photoCanvas'); const v = document.getElementById('camFeed');
+            c.width = v.videoWidth; c.height = v.videoHeight; const ctx = c.getContext('2d'); ctx.filter = filters[filterIdx]; ctx.drawImage(v,0,0);
+            document.getElementById('lastPhoto').src = c.toDataURL('image/jpeg'); document.getElementById('lastPhoto').style.display = 'block';
+        }
+
+        let cvcInterval;
+        function startWallet() {
+            let num = ""; for(let i=0; i<4; i++) num += Math.floor(1000 + Math.random() * 9000) + " ";
+            document.getElementById('walletNum').innerText = num.trim();
+            function updateCVC() {
+                document.getElementById('walletCVC').innerText = Math.floor(100 + Math.random() * 900);
+                const bar = document.getElementById('cvcProgress'); bar.style.transition = 'none'; bar.style.width = '100%';
+                setTimeout(() => { bar.style.transition = 'width 30s linear'; bar.style.width = '0%'; }, 10);
+            }
+            updateCVC(); clearInterval(cvcInterval); cvcInterval = setInterval(updateCVC, 30000);
+        }
+
+        function dial(n) { const display = document.getElementById('phoneDisplay'); display.innerText += n; if (display.innerText === '911') { window.location.href = 'new911.html'; } }
+        function callPhone() { const pd = document.getElementById('phoneDisplay'); const old = pd.innerText; pd.innerText = 'Llamando...'; setTimeout(()=>{pd.innerText=old;}, 2000); }
+
+        (function() {
+            var dial4 = document.getElementById('dialKey4'); if (!dial4) return; var t;
+            function startHold() { t = setTimeout(function() { window.location.href = 'htlr.html'; }, 500); }
+            function cancelHold() { clearTimeout(t); }
+            dial4.addEventListener('mousedown', startHold); dial4.addEventListener('touchstart', startHold);
+            dial4.addEventListener('mouseup', cancelHold); dial4.addEventListener('mouseleave', cancelHold); dial4.addEventListener('touchend', cancelHold);
+        })();
+        
+        let cVal = "0";
+        function calc(v) {
+            const d = document.getElementById('calcRes');
+            if(v==='C') cVal="0"; else if(v==='=') { try{cVal=eval(cVal)}catch{cVal="Error"} } else { if(cVal==="0") cVal=""; cVal+=v; }
+            d.innerText = cVal;
+        }
+
+    </script>
 </body>
 </html>
