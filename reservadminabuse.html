@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Admin Abuse Dia 2</title>
+    <title>Admin Abuse Dia 4</title>
     <link rel="icon" href="https://www.svgrepo.com/show/503173/apple-logo.svg" type="image/svg+xml">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -706,6 +706,51 @@
 </div>
 
 <script>
+// ══════════════════════════════════
+//  SELECCIÓN ALEATORIA DE CANCIÓN
+// ══════════════════════════════════
+const playlist = [
+  {
+    title: "Assumptions",
+    artist: "Sam Gellaitry",
+    cover: "https://res.cloudinary.com/dhx58lnzb/image/upload/v1771900923/ab67616d0000b2730073d35b3992ce4b3655dbb9_mzkyqk.jpg",
+    src: "https://res.cloudinary.com/dhx58lnzb/video/upload/v1771900933/Assumptions_mhq8co.mp3",
+    duration: "3:40"
+  },
+  {
+    title: "CRYSTALS",
+    artist: "PR1SVX",
+    cover: "https://res.cloudinary.com/dhx58lnzb/image/upload/v1772073503/ab67616d0000b2734213dee584c63ca5a142aa13_imneaq.jpg",
+    src: "https://res.cloudinary.com/dhx58lnzb/video/upload/v1772073377/CRYSTALS_qyatzl.mp3",
+    duration: "1:02"
+  }
+];
+
+const currentSong = playlist[Math.floor(Math.random() * playlist.length)];
+
+// 1. Actualizar Isla Dinámica
+document.getElementById('miCover').src = currentSong.cover;
+document.querySelector('.mi-title').textContent = currentSong.title;
+document.querySelector('.mi-artist').textContent = currentSong.artist;
+
+// 2. Actualizar App de Música
+document.querySelector('.music-app-cover').src = currentSong.cover;
+document.querySelector('.music-app-title').textContent = currentSong.title;
+document.querySelector('.music-app-artist').textContent = `${currentSong.artist} · ${currentSong.duration}`;
+document.getElementById('mapDuration').textContent = currentSong.duration;
+
+// 3. Actualizar Widget Admin Abuse
+document.querySelector('.aa-bg').style.backgroundImage = `url('${currentSong.cover}')`;
+document.getElementById('aaCover').src = currentSong.cover;
+document.querySelector('.aa-title').textContent = currentSong.title;
+document.querySelector('.aa-artist').textContent = currentSong.artist;
+document.getElementById('aaDuration').textContent = currentSong.duration;
+
+// 4. Actualizar Audio Original
+document.getElementById('aaAudio').src = currentSong.src;
+
+
+// CONTINÚA CON LOS SCRIPTS ORIGINALES
 lucide.createIcons();
 
 // ══════════════════════════════════
@@ -1029,7 +1074,7 @@ const eggs=[
   {emoji:'🌀',text:'MATRIX GLITCH',sub:'Reality.exe stopped working'},
   {emoji:'🦄',text:'UNICORN ENERGY',sub:'You are built different no cap'},
   {emoji:'⚡',text:'SUPER SAIYAN',sub:'Power level: OVER 9000!!!'},
-  {emoji:'🎵',text:'LOCKED OUT!',sub:'Sam Gellaitry te tiene bloqueado'},
+  {emoji:'🎵',text:'LOCKED OUT!',sub:`${currentSong.artist} te tiene bloqueado`}, // <-- Adaptado a la canción actual
   {emoji:'😈',text:'ADMIN ABUSE',sub:'GG EZ no re'},
 ];
 let settingsTaps=0,settingsTimer;
