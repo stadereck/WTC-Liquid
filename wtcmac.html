@@ -1,14 +1,22 @@
-<!DOCTYPE html>
+a<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WTC Mac OS 1.1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="description" content="WTC Mac OS 1.1 - Un sistema operativo funcional basado en macOS con interfaz Liquid Glass">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <title>WTC Tahoe 26.2</title>
     <link rel="icon" href="https://www.svgrepo.com/show/503173/apple-logo.svg" type="image/svg+xml">
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="apple-touch-icon" href="https://www.svgrepo.com/show/503173/apple-logo.svg">
+    <script src="https://unpkg.com/lucide@latest" async defer></script>
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;600&family=Roboto:wght@400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;600;700&family=Roboto:wght@400;500;700&display=swap');
 
+        /* ============ ROOT & VARIABLES ============ */
         :root {
             --glass-bg: rgba(255, 255, 255, 0.2);
             --glass-border: rgba(255, 255, 255, 0.3);
@@ -19,6 +27,13 @@
             --border-color: #d2d2d7;
             --menu-bar-bg: rgba(255, 255, 255, 0.3);
             --menu-bar-text: #000;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.4);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 24px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         body.dark-mode {
@@ -32,101 +47,516 @@
             --menu-bar-text: #fff;
         }
 
-        * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif; background: #000; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
-
-        /* --- FONDOS --- */
-        .wallpaper-layer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
-            background: linear-gradient(135deg, #021B79, #0575E6, #00F260);
-            background-size: 400% 400%; animation: gradientAnim 15s ease infinite;
+        /* ============ RESET & GLOBAL ============ */
+        * { 
+            box-sizing: border-box; 
+            -webkit-user-select: none; 
+            user-select: none; 
+            -webkit-tap-highlight-color: transparent; 
         }
-        @keyframes gradientAnim { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        /* --- PANTALLA DE INICIO (LOGIN) --- */
+        html { height: 100%; }
+        
+        body { 
+            margin: 0; 
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif; 
+            background: #000; 
+            height: 100vh; 
+            width: 100vw;
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column;
+            color: var(--app-text);
+        }
+
+        input, textarea, button { font-family: inherit; }
+
+        /* ============ FONDOS & WALLPAPER ============ */
+        .wallpaper-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: linear-gradient(135deg, #021B79, #0575E6, #00F260);
+            background-size: 400% 400%;
+            animation: gradientAnim 15s ease infinite;
+            pointer-events: none;
+        }
+
+        @keyframes gradientAnim {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ============ LOGIN SCREEN ============ */
         #loginScreen {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: inherit; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            z-index: 9000; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; text-align: center;
-            transition: opacity 0.8s ease, visibility 0.8s;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 9000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
             color: white;
         }
-        .login-avatar { width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 60px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid rgba(255,255,255,0.4); }
-        .login-name { font-size: 24px; font-weight: 600; margin-bottom: 30px; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
-        .login-input { padding: 10px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.5); background: rgba(0,0,0,0.2); color: white; outline: none; text-align: center; font-size: 16px; backdrop-filter: blur(10px); width: 200px; cursor: pointer; transition: all 0.3s; }
-        .login-input:hover { background: rgba(255,255,255,0.1); }
-        .login-time { position: absolute; top: 40px; right: 40px; font-size: 18px; font-weight: 500; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
 
-        /* --- BARRA DE MENÚ (TOP) --- */
+        #loginScreen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .login-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-md);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            animation: avatarFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes avatarFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .login-name {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-input {
+            padding: 12px 24px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            outline: none;
+            text-align: center;
+            font-size: 16px;
+            backdrop-filter: blur(10px);
+            width: 200px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .login-input:hover,
+        .login-input:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.7);
+        }
+
+        .login-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .login-time {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            font-size: 18px;
+            font-weight: 500;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            z-index: 9001;
+        }
+
+        /* ============ MENU BAR TOP ============ */
         #menu-bar {
-            position: absolute; top: 0; left: 0; width: 100%; height: 30px;
-            background: var(--menu-bar-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            z-index: 5000; display: flex; justify-content: space-between; align-items: center;
-            padding: 0 15px; font-size: 13px; font-weight: 500; color: var(--menu-bar-text);
-            box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 30px;
+            background: var(--menu-bar-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 5000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--menu-bar-text);
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+            gap: 20px;
         }
-        .menu-left, .menu-right { display: flex; align-items: center; gap: 15px; }
-        .menu-item { cursor: default; padding: 0 8px; height: 30px; display: flex; align-items: center; border-radius: 4px; transition: background 0.2s; }
-        .menu-item:hover { background: rgba(255,255,255,0.2); }
-        .menu-app-name { font-weight: 700; }
-        
-        /* --- MACBOOK NOTCH --- */
+
+        .menu-left,
+        .menu-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .menu-item {
+            cursor: default;
+            padding: 0 8px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .menu-app-name {
+            font-weight: 700;
+            min-width: 80px;
+        }
+
+        /* ============ MACBOOK NOTCH ============ */
         .notch {
-            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-            width: 160px; height: 32px; background: #000; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;
-            z-index: 6000; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            color: white; overflow: visible; display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
-            cursor: pointer; box-shadow: 0 0 0 0px transparent;
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 160px;
+            height: 32px;
+            background: #000;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            z-index: 6000;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: white;
+            overflow: visible;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            cursor: pointer;
+            box-shadow: 0 0 0 0px transparent;
         }
-        .notch::before { content: ''; position: absolute; left: -10px; top: 0; width: 10px; height: 10px; background: radial-gradient(circle at 0 100%, transparent 10px, #000 10px); }
-        .notch::after { content: ''; position: absolute; right: -10px; top: 0; width: 10px; height: 10px; background: radial-gradient(circle at 100% 100%, transparent 10px, #000 10px); }
 
-        /* Estados del Notch - Mantenidos de WTC Mac 1.1 */
-        .notch.expanded-charge { width: 320px; height: 140px; border-radius: 25px; border-top-left-radius: 0; border-top-right-radius: 0; justify-content: center; background: linear-gradient(135deg, #000, #1a1a2e, #000); border: 2px solid #FFD700; border-top: none; flex-direction: column; animation: superChargeGlow 2s infinite alternate; }
-        @keyframes superChargeGlow { 0% { box-shadow: 0 10px 20px 2px rgba(255, 215, 0, 0.6), inset 0 0 20px rgba(255, 215, 0, 0.2); } 100% { box-shadow: 0 20px 40px 4px rgba(255, 215, 0, 0.9), inset 0 0 30px rgba(255, 215, 0, 0.3); } }
-        .lightning { position: absolute; width: 3px; height: 30px; background: linear-gradient(to bottom, #FFD700, transparent); opacity: 0; animation: lightning 1.5s infinite; }
-        .lightning:nth-child(1) { left: 10%; animation-delay: 0s; } .lightning:nth-child(2) { left: 30%; animation-delay: 0.3s; }
-        .lightning:nth-child(3) { right: 30%; animation-delay: 0.6s; } .lightning:nth-child(4) { right: 10%; animation-delay: 0.9s; }
-        @keyframes lightning { 0%, 100% { opacity: 0; transform: translateY(-10px) scaleY(0); } 10% { opacity: 1; transform: translateY(0) scaleY(1); } 20% { opacity: 0; transform: translateY(10px) scaleY(0.5); } }
-        .notch.expanded-faceid { width: 180px; height: 180px; border-radius: 25px; border-top-left-radius: 0; border-top-right-radius: 0; justify-content: center; flex-direction: column; }
-        .notch.expanded-language { width: 280px; height: 80px; border-radius: 25px; border-top-left-radius: 0; border-top-right-radius: 0; justify-content: center; background: linear-gradient(45deg, #000, #1a1a1a); box-shadow: 0 10px 30px rgba(0,122,255,0.5); }
-        .notch-content { display: none; width: 100%; opacity: 0; transition: opacity 0.2s; }
-        .notch.expanded-charge .charge-ui, .notch.expanded-faceid .faceid-ui, .notch.expanded-language .lang-ui { display: flex; opacity: 1; align-items: center; justify-content: center; gap: 10px; }
-        .charge-ui { flex-direction: column; gap: 8px !important; position: relative; }
-        .super-charge-badge { background: linear-gradient(135deg, #FFD700, #FFA500); padding: 4px 12px; border-radius: 12px; font-size: 10px; font-weight: 800; color: #000; letter-spacing: 1px; box-shadow: 0 2px 8px rgba(255, 215, 0, 0.5); }
-        .charge-percentage { font-size: 48px; font-weight: 700; color: #FFD700; text-shadow: 0 0 20px rgba(255, 215, 0, 0.8); line-height: 1; }
-        .charge-watts { font-size: 14px; font-weight: 600; color: #fff; opacity: 0.9; }
-        .globe-spin { animation: spin 2s linear infinite; color: #007aff; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        .scan-line { width: 60px; height: 60px; border: 2px solid #007aff; border-radius: 10px; position: relative; }
-        .scan-line::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: #007aff; animation: scan 1.5s infinite; }
-        @keyframes scan { 0% { top: 0; opacity: 0; } 50% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+        .notch::before,
+        .notch::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle at 100% 100%, transparent 10px, #000 10px);
+        }
 
-        /* --- DESKTOP ICONS --- */
-        #desktop-area { position: absolute; top: 30px; left: 0; right: 0; bottom: 80px; z-index: 10; padding: 20px; display: flex; flex-direction: column; flex-wrap: wrap; align-content: flex-start; gap: 20px; }
-        .desktop-icon { width: 80px; display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; border-radius: 8px; padding: 10px 5px; transition: background 0.2s; }
-        .desktop-icon:hover { background: rgba(255,255,255,0.2); }
-        .desktop-icon img { width: 50px; height: 50px; border-radius: 12px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .desktop-icon .icon-placeholder { width: 50px; height: 50px; border-radius: 12px; display: flex; justify-content: center; align-items: center; color: white; font-size: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .desktop-icon span { color: white; font-size: 12px; text-align: center; text-shadow: 0 1px 3px rgba(0,0,0,0.8); font-weight: 500; }
+        .notch::before {
+            left: -10px;
+            background: radial-gradient(circle at 0 100%, transparent 10px, #000 10px);
+        }
 
-        /* --- LAUNCHPAD --- */
+        .notch::after {
+            right: -10px;
+        }
+
+        /* Notch States */
+        .notch.expanded-charge {
+            width: 320px;
+            height: 140px;
+            border-radius: 25px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            justify-content: center;
+            background: linear-gradient(135deg, #000, #1a1a2e, #000);
+            border: 2px solid #FFD700;
+            border-top: none;
+            flex-direction: column;
+            animation: superChargeGlow 2s infinite alternate;
+        }
+
+        @keyframes superChargeGlow {
+            0% {
+                box-shadow: 0 10px 20px 2px rgba(255, 215, 0, 0.6), inset 0 0 20px rgba(255, 215, 0, 0.2);
+            }
+            100% {
+                box-shadow: 0 20px 40px 4px rgba(255, 215, 0, 0.9), inset 0 0 30px rgba(255, 215, 0, 0.3);
+            }
+        }
+
+        .lightning {
+            position: absolute;
+            width: 3px;
+            height: 30px;
+            background: linear-gradient(to bottom, #FFD700, transparent);
+            opacity: 0;
+            animation: lightning 1.5s infinite;
+        }
+
+        @keyframes lightning {
+            0%, 100% { opacity: 0; transform: translateY(-10px) scaleY(0); }
+            10% { opacity: 1; transform: translateY(0) scaleY(1); }
+            20% { opacity: 0; transform: translateY(10px) scaleY(0.5); }
+        }
+
+        .notch.expanded-faceid {
+            width: 180px;
+            height: 180px;
+            border-radius: 25px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .notch.expanded-language {
+            width: 280px;
+            height: 80px;
+            border-radius: 25px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            justify-content: center;
+            background: linear-gradient(45deg, #000, #1a1a1a);
+            box-shadow: 0 10px 30px rgba(0, 122, 255, 0.5);
+        }
+
+        .notch-content {
+            display: none;
+            width: 100%;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .notch.expanded-charge .charge-ui,
+        .notch.expanded-faceid .faceid-ui,
+        .notch.expanded-language .lang-ui {
+            display: flex;
+            opacity: 1;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .charge-ui {
+            flex-direction: column;
+            gap: 8px !important;
+            position: relative;
+        }
+
+        .super-charge-badge {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 800;
+            color: #000;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.5);
+        }
+
+        .charge-percentage {
+            font-size: 48px;
+            font-weight: 700;
+            color: #FFD700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            line-height: 1;
+        }
+
+        .charge-watts {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            opacity: 0.9;
+        }
+
+        .globe-spin {
+            animation: spin 2s linear infinite;
+            color: var(--accent);
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        .scan-line {
+            width: 60px;
+            height: 60px;
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .scan-line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent);
+            animation: scan 1.5s infinite;
+        }
+
+        @keyframes scan {
+            0% { top: 0; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        /* ============ DESKTOP ICONS ============ */
+        #desktop-area {
+            position: fixed;
+            top: 30px;
+            left: 0;
+            right: 0;
+            bottom: 80px;
+            z-index: 10;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            gap: 20px;
+            overflow-y: auto;
+        }
+
+        .desktop-icon {
+            width: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            padding: 10px 5px;
+            transition: background var(--transition);
+        }
+
+        .desktop-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .desktop-icon img {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: var(--shadow-md);
+        }
+
+        .desktop-icon .icon-placeholder {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .desktop-icon span {
+            color: white;
+            font-size: 12px;
+            text-align: center;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        /* ============ LAUNCHPAD ============ */
         #launchpad {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            z-index: 4000; display: flex; flex-direction: column;
-            opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            z-index: 4000;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
             padding: 50px;
+            overflow-y: auto;
         }
-        #launchpad.active { opacity: 1; visibility: visible; }
-        .launchpad-search { margin: 20px auto 50px; width: 300px; padding: 10px 20px; border-radius: 20px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; outline: none; text-align: center; font-size: 16px; transition: width 0.3s; }
-        .launchpad-search:focus { width: 400px; background: rgba(255,255,255,0.3); }
-        .launchpad-search::placeholder { color: rgba(255,255,255,0.7); }
-        .launchpad-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 30px 20px; justify-items: center; max-width: 1000px; margin: 0 auto; width: 100%; }
-        
-        /* App Icons Styles */
-        .app-icon { width: 60px; height: 60px; border-radius: 14px; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); color: white; font-size: 28px; position: relative; overflow: hidden; background: var(--glass-bg); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2); }
+
+        #launchpad.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .launchpad-search {
+            margin: 20px auto 50px;
+            width: 300px;
+            padding: 10px 20px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            outline: none;
+            text-align: center;
+            font-size: 16px;
+            transition: width var(--transition);
+        }
+
+        .launchpad-search:focus {
+            width: 400px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .launchpad-search::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .launchpad-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 30px 20px;
+            justify-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* App Icon Styles */
+        .app-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+            color: white;
+            font-size: 28px;
+            position: relative;
+            overflow: hidden;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .app-icon:hover {
+            transform: scale(1.05);
+        }
+
         .icon-cal { background: #fff; color: #ff3b30; flex-direction: column; font-size: 10px; font-weight: 800; gap: 2px; }
         .icon-cal span { font-size: 26px; color: #000; }
         .icon-maps { background: #4cd964; }
@@ -135,145 +565,754 @@
         .icon-phone { background: #34c759; }
         .icon-messages { background: #34c759; }
         .icon-wallet { background: #000; border: 1px solid #333; }
-        .icon-safari { background: white; color: #007aff; }
+        .icon-safari { background: white; color: var(--accent); }
         .icon-music { background: #ff2d55; }
         .icon-notes { background: #ffd60a; color: white; }
 
-        /* --- DOCK --- */
-        #dock-container { position: absolute; bottom: 10px; left: 0; width: 100%; display: flex; justify-content: center; z-index: 5000; pointer-events: none; }
-        #dock {
-            background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.3); border-radius: 24px; padding: 10px;
-            display: flex; gap: 10px; align-items: flex-end; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            pointer-events: auto;
+        /* ============ DOCK ============ */
+        #dock-container {
+            position: fixed;
+            bottom: 10px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 5000;
+            pointer-events: none;
         }
-        body.dark-mode #dock { background: rgba(0, 0, 0, 0.4); border-color: rgba(255,255,255,0.1); }
-        .dock-item { position: relative; cursor: pointer; transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1); display: flex; flex-direction: column; align-items: center; gap: 5px; }
-        .dock-item:hover { transform: scale(1.2) translateY(-10px); z-index: 10; }
-        .dock-item .app-icon { width: 50px; height: 50px; font-size: 24px; }
-        .dock-indicator { width: 4px; height: 4px; background: rgba(0,0,0,0.5); border-radius: 50%; display: none; margin-top: 2px; }
-        body.dark-mode .dock-indicator { background: rgba(255,255,255,0.8); }
-        .dock-item.running .dock-indicator { display: block; }
-        .dock-separator { width: 1px; height: 40px; background: rgba(255,255,255,0.3); margin: 5px; }
 
-        /* --- WINDOW SYSTEM --- */
-        #window-manager { position: absolute; top: 30px; left: 0; right: 0; bottom: 0; z-index: 20; pointer-events: none; }
+        #dock {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+            box-shadow: var(--shadow-md);
+            pointer-events: auto;
+            max-width: 90vw;
+            overflow-x: auto;
+        }
+
+        body.dark-mode #dock {
+            background: rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .dock-item {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+        .dock-item:hover {
+            transform: scale(1.2) translateY(-10px);
+            z-index: 10;
+        }
+
+        .dock-item .app-icon {
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+        }
+
+        .dock-indicator {
+            width: 4px;
+            height: 4px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            display: none;
+            margin-top: 2px;
+        }
+
+        body.dark-mode .dock-indicator {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .dock-item.running .dock-indicator {
+            display: block;
+        }
+
+        .dock-separator {
+            width: 1px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.3);
+            margin: 5px;
+        }
+
+        /* ============ WINDOW SYSTEM ============ */
+        #window-manager {
+            position: fixed;
+            top: 30px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 20;
+            pointer-events: none;
+        }
+
         .mac-window {
-            position: absolute; top: 50px; left: 50px; width: 600px; height: 400px;
-            background: var(--app-bg); color: var(--app-text); border-radius: 12px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,0,0,0.1);
-            display: flex; flex-direction: column; overflow: hidden;
-            pointer-events: auto; opacity: 0; transform: scale(0.95); transition: opacity 0.2s, transform 0.2s;
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            width: 600px;
+            height: 400px;
+            background: var(--app-bg);
+            color: var(--app-text);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg), 0 0 0 1px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            pointer-events: auto;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.2s ease, transform 0.2s ease;
             visibility: hidden;
+            user-select: text;
         }
-        .mac-window.active { opacity: 1; transform: scale(1); visibility: visible; }
-        
-        /* Traffic Lights & Title Bar */
+
+        .mac-window.active {
+            opacity: 1;
+            transform: scale(1);
+            visibility: visible;
+        }
+
+        /* Title Bar & Traffic Lights */
         .title-bar {
-            height: 38px; display: flex; align-items: center; justify-content: center;
-            background: var(--menu-bar-bg); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color);
-            position: relative; cursor: default;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--menu-bar-bg);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+            cursor: grab;
+            user-select: none;
         }
-        .traffic-lights { position: absolute; left: 15px; display: flex; gap: 8px; }
-        .tl-btn { width: 12px; height: 12px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); cursor: pointer; display: flex; justify-content: center; align-items: center; }
-        .tl-btn svg { width: 8px; height: 8px; opacity: 0; transition: opacity 0.2s; stroke: #000; stroke-width: 3;}
-        .traffic-lights:hover .tl-btn svg { opacity: 0.5; }
+
+        .title-bar:active {
+            cursor: grabbing;
+        }
+
+        .traffic-lights {
+            position: absolute;
+            left: 15px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .tl-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .tl-btn svg {
+            width: 8px;
+            height: 8px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            stroke: #000;
+            stroke-width: 3;
+        }
+
+        .traffic-lights:hover .tl-btn svg {
+            opacity: 0.5;
+        }
+
         .tl-close { background: #ff5f56; }
         .tl-min { background: #ffbd2e; }
         .tl-max { background: #27c93f; }
-        .window-title { font-weight: 600; font-size: 13px; color: var(--app-text); pointer-events: none; }
-        
-        .window-content { flex: 1; overflow: auto; position: relative; background: var(--app-bg); }
 
-        /* --- CONTENIDO DE LAS APLICACIONES --- */
-        
-        /* Settings */
-        .settings-layout { display: flex; height: 100%; }
-        .settings-sidebar { width: 220px; border-right: 1px solid var(--border-color); background: rgba(0,0,0,0.03); overflow-y: auto; }
-        .settings-main { flex: 1; padding: 20px; overflow-y: auto; }
-        .set-nav-item { padding: 10px 15px; margin: 5px 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--app-text); }
-        .set-nav-item:hover { background: rgba(0,0,0,0.05); }
-        body.dark-mode .set-nav-item:hover { background: rgba(255,255,255,0.1); }
-        .set-nav-item.active { background: var(--accent); color: white; }
-        .settings-panel { display: none; }
-        .settings-panel.active { display: block; }
-        
-        /* Elementos UI comunes */
-        .list-group { background: var(--list-bg); border-radius: 12px; overflow: hidden; margin-bottom: 20px; border: 1px solid var(--border-color); }
-        .list-item { padding: 12px 15px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 14px; }
-        .list-item:last-child { border-bottom: none; }
-        .toggle { width: 44px; height: 24px; background: #e9e9ea; border-radius: 12px; position: relative; transition: 0.3s; cursor: pointer; }
-        body.dark-mode .toggle { background: #39393d; }
-        .toggle.active { background: #34c759; }
-        .toggle-handle { width: 20px; height: 20px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .toggle.active .toggle-handle { transform: translateX(20px); }
+        .window-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--app-text);
+            pointer-events: none;
+            user-select: none;
+        }
 
-        /* Temas y Fuentes */
-        .theme-picker { display: flex; flex-wrap: wrap; gap: 12px; padding: 15px; }
-        .theme-btn { width: 40px; height: 40px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: transform 0.2s; }
-        .theme-btn.active { border-color: var(--accent); transform: scale(1.1); }
-        .theme-btn:hover { transform: scale(1.05); }
-        .font-check { display: none; color: var(--accent); }
-        .list-item.font-selected .font-check { display: block; }
+        .window-content {
+            flex: 1;
+            overflow: auto;
+            position: relative;
+            background: var(--app-bg);
+            user-select: text;
+        }
 
-        /* Calculator (Tamaño Fijo) */
-        #window-calculator { width: 320px; height: 450px; background: #2c2c2e; border-radius: 12px; }
-        #window-calculator .title-bar { background: transparent; border: none; position: absolute; width: 100%; z-index: 10; }
-        .calc-body { background: #2c2c2e; color: white; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; padding-top: 30px; }
-        #calcRes { text-align: right; font-size: 60px; padding: 20px; font-weight: 300; }
-        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: #000; padding: 1px; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; overflow: hidden; }
-        .calc-btn { background: #505050; color: white; height: 60px; display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; transition: background 0.1s; }
-        .calc-btn:active { background: #707070; }
-        .calc-btn.op { background: #ff9f0a; }
-        .calc-btn.op:active { background: #c27600; }
-        .calc-btn.top { background: #d4d4d2; color: black; }
-        .calc-btn.top:active { background: #a5a5a5; }
+        /* ============ SETTINGS PANEL ============ */
+        .settings-layout {
+            display: flex;
+            height: 100%;
+        }
 
-        /* Camera */
-        .camera-app { background: black !important; color: white; display: flex; flex-direction: column; height: 100%; }
-        .cam-controls { padding: 15px; background: rgba(0,0,0,0.8); display: flex; justify-content: space-around; align-items: center; height: 100px; }
-        .shutter { width: 60px; height: 60px; border-radius: 50%; border: 4px solid white; position: relative; cursor: pointer; }
-        .shutter::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 48px; height: 48px; background: white; border-radius: 50%; transition: 0.1s; }
-        .shutter:active::after { transform: translate(-50%,-50%) scale(0.9); }
-        .cam-filter-btn { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; }
+        .settings-sidebar {
+            width: 220px;
+            border-right: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.03);
+            overflow-y: auto;
+        }
 
-        /* Wallet */
-        .credit-card { background: linear-gradient(135deg, #1a1a1a, #444); border-radius: 15px; height: 200px; color: white; padding: 25px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.3); margin: 20px auto; max-width: 400px; }
-        .card-chip { width: 50px; height: 40px; background: linear-gradient(135deg, #FFD700, #FFA500); border-radius: 8px; }
-        .card-cvc-timer { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
-        .cvc-bar { width: 60px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; overflow: hidden; margin-top: 4px; }
-        .cvc-progress { width: 100%; height: 100%; background: #34c759; transition: width 1s linear; }
-        .card-number { font-size: 22px; font-weight: 600; letter-spacing: 3px; margin: 30px 0 20px; }
-        .balance-section { padding: 30px; text-align: center; color: var(--app-text); }
+        body.dark-mode .settings-sidebar {
+            background: rgba(255, 255, 255, 0.02);
+        }
 
-        /* Phone (Facetime-like Dialer) */
-        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 20px; justify-items: center; max-width: 300px; margin: 0 auto; }
-        .key-btn { width: 65px; height: 65px; border-radius: 50%; background: rgba(128,128,128,0.2); display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; color: var(--app-text); }
-        .key-btn:hover { background: rgba(128,128,128,0.3); }
-        
-        /* Chat / Messages */
-        .chat-layout { display: flex; height: 100%; }
-        .chat-list { width: 250px; border-right: 1px solid var(--border-color); background: rgba(0,0,0,0.02); overflow-y: auto; }
-        .chat-main { flex: 1; display: flex; flex-direction: column; background: var(--app-bg); }
-        .chat-history { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
-        .chat-bubble { padding: 10px 14px; border-radius: 18px; max-width: 70%; font-size: 15px; line-height: 1.4; }
-        .chat-bubble.received { align-self: flex-start; background: #e5e5ea; color: #000; border-bottom-left-radius: 4px; }
-        body.dark-mode .chat-bubble.received { background: #3a3a3c; color: #fff; }
-        .chat-bubble.sent { align-self: flex-end; background: #007aff; color: #fff; border-bottom-right-radius: 4px; }
-        .chat-input-area { display: flex; padding: 15px; border-top: 1px solid var(--border-color); background: var(--app-bg); gap: 10px; align-items: center; }
-        .chat-input { flex: 1; border-radius: 20px; border: 1px solid var(--border-color); padding: 10px 15px; outline: none; background: var(--list-bg); color: var(--app-text); font-size: 14px; }
-        .chat-send { background: #007aff; color: white; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .settings-main {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
 
-        /* Mail */
-        .mail-layout { display: flex; height: 100%; }
-        .mail-list { width: 300px; border-right: 1px solid var(--border-color); overflow-y: auto; background: var(--list-bg); }
-        .mail-detail { flex: 1; display: flex; flex-direction: column; background: var(--app-bg); padding: 30px; }
-        .mail-item { padding: 15px; border-bottom: 1px solid var(--border-color); cursor: pointer; }
-        .mail-item:hover { background: rgba(0,0,0,0.05); }
-        body.dark-mode .mail-item:hover { background: rgba(255,255,255,0.05); }
+        .set-nav-item {
+            padding: 10px 15px;
+            margin: 5px 10px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--app-text);
+            transition: var(--transition);
+        }
 
-        /* Admin Abuse Glitch */
-        .glitch-text { animation: glitch-text-anim 0.4s infinite alternate; display: inline-flex; align-items: center; }
+        .set-nav-item:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        body.dark-mode .set-nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .set-nav-item.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .settings-panel {
+            display: none;
+        }
+
+        .settings-panel.active {
+            display: block;
+        }
+
+        /* ============ LIST COMPONENTS ============ */
+        .list-group {
+            background: var(--list-bg);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .list-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background var(--transition);
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-item:hover {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        body.dark-mode .list-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .toggle {
+            width: 44px;
+            height: 24px;
+            background: #e9e9ea;
+            border-radius: 12px;
+            position: relative;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            padding: 0;
+        }
+
+        body.dark-mode .toggle {
+            background: #39393d;
+        }
+
+        .toggle.active {
+            background: #34c759;
+        }
+
+        .toggle-handle {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: var(--transition);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle.active .toggle-handle {
+            transform: translateX(20px);
+        }
+
+        /* ============ THEMES & FONTS ============ */
+        .theme-picker {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 15px;
+        }
+
+        .theme-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .theme-btn.active {
+            border-color: var(--accent);
+            transform: scale(1.1);
+        }
+
+        .theme-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .font-check {
+            display: none;
+            color: var(--accent);
+        }
+
+        .list-item.font-selected .font-check {
+            display: block;
+        }
+
+        /* ============ CALCULATOR ============ */
+        #window-calculator {
+            width: 320px;
+            height: 450px;
+            background: #2c2c2e;
+            border-radius: var(--radius-md);
+        }
+
+        #window-calculator .title-bar {
+            background: transparent;
+            border: none;
+            position: absolute;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .calc-body {
+            background: #2c2c2e;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            height: 100%;
+            padding-top: 30px;
+        }
+
+        #calcRes {
+            text-align: right;
+            font-size: 60px;
+            padding: 20px;
+            font-weight: 300;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: #000;
+            padding: 1px;
+            border-bottom-left-radius: var(--radius-md);
+            border-bottom-right-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .calc-btn {
+            background: #505050;
+            color: white;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: background 0.1s ease;
+            border: none;
+            user-select: none;
+        }
+
+        .calc-btn:active {
+            background: #707070;
+        }
+
+        .calc-btn.op {
+            background: #ff9f0a;
+        }
+
+        .calc-btn.op:active {
+            background: #c27600;
+        }
+
+        .calc-btn.top {
+            background: #d4d4d2;
+            color: black;
+        }
+
+        .calc-btn.top:active {
+            background: #a5a5a5;
+        }
+
+        /* ============ CAMERA ============ */
+        .camera-app {
+            background: black !important;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .cam-controls {
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 100px;
+            gap: 15px;
+        }
+
+        #camFeed {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .shutter {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 4px solid white;
+            position: relative;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .shutter::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 48px;
+            height: 48px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.1s ease;
+        }
+
+        .shutter:active::after {
+            transform: translate(-50%, -50%) scale(0.9);
+        }
+
+        .cam-filter-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            border: none;
+            flex-shrink: 0;
+            transition: var(--transition);
+        }
+
+        .cam-filter-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* ============ WALLET ============ */
+        .credit-card {
+            background: linear-gradient(135deg, #1a1a1a, #444);
+            border-radius: 15px;
+            height: 200px;
+            color: white;
+            padding: 25px;
+            position: relative;
+            box-shadow: var(--shadow-md);
+            margin: 20px auto;
+            max-width: 400px;
+        }
+
+        .card-chip {
+            width: 50px;
+            height: 40px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border-radius: 8px;
+        }
+
+        .card-cvc-timer {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-items: flex-end;
+        }
+
+        .cvc-bar {
+            width: 60px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .cvc-progress {
+            width: 100%;
+            height: 100%;
+            background: #34c759;
+            transition: width 1s linear;
+        }
+
+        .card-number {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            margin: 30px 0 20px;
+        }
+
+        .balance-section {
+            padding: 30px;
+            text-align: center;
+            color: var(--app-text);
+        }
+
+        /* ============ PHONE / FACETIME ============ */
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            padding: 20px;
+            justify-items: center;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .key-btn {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: rgba(128, 128, 128, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--app-text);
+            border: none;
+            transition: var(--transition);
+        }
+
+        .key-btn:hover {
+            background: rgba(128, 128, 128, 0.3);
+        }
+
+        .key-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* ============ MESSAGES / CHAT ============ */
+        .chat-layout {
+            display: flex;
+            height: 100%;
+        }
+
+        .chat-list {
+            width: 250px;
+            border-right: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.02);
+            overflow-y: auto;
+        }
+
+        body.dark-mode .chat-list {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--app-bg);
+        }
+
+        .chat-history {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chat-bubble {
+            padding: 10px 14px;
+            border-radius: 18px;
+            max-width: 70%;
+            font-size: 15px;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .chat-bubble.received {
+            align-self: flex-start;
+            background: #e5e5ea;
+            color: #000;
+            border-bottom-left-radius: 4px;
+        }
+
+        body.dark-mode .chat-bubble.received {
+            background: #3a3a3c;
+            color: #fff;
+        }
+
+        .chat-bubble.sent {
+            align-self: flex-end;
+            background: var(--accent);
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-input-area {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
+            background: var(--app-bg);
+            gap: 10px;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            padding: 10px 15px;
+            outline: none;
+            background: var(--list-bg);
+            color: var(--app-text);
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .chat-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .chat-send {
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: var(--transition);
+        }
+
+        .chat-send:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-send:active {
+            transform: scale(0.95);
+        }
+
+        /* ============ MAIL ============ */
+        .mail-layout {
+            display: flex;
+            height: 100%;
+        }
+
+        .mail-list {
+            width: 300px;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            background: var(--list-bg);
+        }
+
+        .mail-detail {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--app-bg);
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .mail-item {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background var(--transition);
+        }
+
+        .mail-item:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        body.dark-mode .mail-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* ============ GLITCH EFFECT ============ */
+        .glitch-text {
+            animation: glitch-text-anim 0.4s infinite alternate;
+            display: inline-flex;
+            align-items: center;
+        }
+
         @keyframes glitch-text-anim {
             0% { font-family: 'Roboto', sans-serif; filter: invert(0); transform: none; letter-spacing: normal; color: #fff; text-shadow: none; }
             20% { font-family: 'Dancing Script', cursive; filter: invert(1); transform: scaleX(-1); letter-spacing: 2px; color: #ff0000; text-shadow: 2px 2px 0 #00ff00; }
@@ -282,26 +1321,115 @@
             80% { font-family: 'Courier New', Courier, monospace; transform: translate(2px, -2px) rotate(2deg); filter: invert(1) contrast(200%); color: #ff00ff; }
             100% { font-family: 'Roboto', sans-serif; filter: invert(0); transform: none; letter-spacing: normal; color: #ff0000; }
         }
-        @keyframes bg-glitch { 0% { background-position: 0 0; opacity: 0.3; } 25% { opacity: 0.8; filter: invert(1); } 50% { background-position: 20px 20px; opacity: 0.5; } 75% { transform: scale(1.05); } 100% { background-position: -20px -20px; opacity: 0.3; } }
 
+        @keyframes bg-glitch {
+            0% { background-position: 0 0; opacity: 0.3; }
+            25% { opacity: 0.8; filter: invert(1); }
+            50% { background-position: 20px 20px; opacity: 0.5; }
+            75% { transform: scale(1.05); }
+            100% { background-position: -20px -20px; opacity: 0.3; }
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 1024px) {
+            .mac-window { width: calc(100vw - 40px) !important; height: calc(100vh - 150px) !important; top: 70px !important; left: 20px !important; }
+            .settings-sidebar { width: 150px; }
+            .settings-main { padding: 15px; }
+            .launchpad-grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
+        }
+
+        @media (max-width: 768px) {
+            #menu-bar { font-size: 11px; padding: 0 8px; }
+            .menu-app-name { min-width: 60px; }
+            .menu-left, .menu-right { gap: 8px; }
+            .mac-window { width: calc(100vw - 20px) !important; height: calc(100vh - 120px) !important; }
+            #desktop-area { bottom: 100px; }
+            .chat-list { width: 150px; }
+            .desktop-icon { width: 70px; }
+            .settings-sidebar { width: 120px; font-size: 12px; }
+        }
+
+        @media (max-width: 480px) {
+            body { font-size: 14px; }
+            #menu-bar { height: 26px; font-size: 10px; }
+            .menu-item { padding: 0 4px; }
+            .mac-window { width: 100vw !important; height: 100vh !important; top: 26px !important; left: 0 !important; border-radius: 0; }
+            .mac-window.active { width: 100vw !important; height: calc(100vh - 26px) !important; }
+            .notch { display: none; }
+            .chat-list { display: none; }
+            .settings-sidebar { display: none; }
+            #launchpad { padding: 30px 10px; }
+            .launchpad-grid { grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        }
+
+        /* ============ SCROLLBAR STYLING ============ */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        body.dark-mode ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* ============ ACCESSIBILITY ============ */
+        :focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        button:focus-visible,
+        input:focus-visible,
+        select:focus-visible,
+        textarea:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body { background: #000; }
+        }
     </style>
 </head>
 <body>
+    <!-- WALLPAPER -->
+    <div class="wallpaper-layer" id="wallpaper" aria-hidden="true"></div>
 
-    <!-- FONDOS -->
-    <div class="wallpaper-layer" id="wallpaper"></div>
-
-    <!-- PANTALLA DE INICIO (LOGIN) -->
-    <div id="loginScreen" onclick="focusPassword()">
-        <div class="login-time" id="loginTime">--:--</div>
-        <div class="login-avatar"><i data-lucide="user"></i></div>
+    <!-- LOGIN SCREEN -->
+    <div id="loginScreen" onclick="focusPassword()" role="dialog" aria-label="Login Screen">
+        <div class="login-time" id="loginTime" aria-live="polite">--:--</div>
+        <div class="login-avatar" aria-hidden="true"><i data-lucide="user"></i></div>
         <div class="login-name">Usuario</div>
-        <input type="password" id="loginInput" class="login-input" placeholder="Haz clic para iniciar" readonly onclick="unlockMac()">
+        <input type="password" id="loginInput" class="login-input" placeholder="Haz clic para iniciar" readonly onclick="unlockMac()" aria-label="Password Input">
     </div>
 
-    <!-- MACBOOK NOTCH (Top Center) -->
-    <div class="notch" id="notch">
-        <!-- Rayos y partículas para Super Charge -->
+    <!-- NOTCH -->
+    <div class="notch" id="notch" role="status" aria-label="System Status Notch">
         <div class="lightning" style="top: -10px;"></div><div class="lightning" style="top: -10px;"></div>
         <div class="lightning" style="top: -10px;"></div><div class="lightning" style="top: -10px;"></div>
         
@@ -319,637 +1447,111 @@
         </div>
     </div>
 
-    <!-- BARRA DE MENÚ SUPERIOR -->
-    <div id="menu-bar">
+    <!-- MENU BAR -->
+    <div id="menu-bar" role="menubar">
         <div class="menu-left">
-            <div class="menu-item" style="font-size: 16px;"><i data-lucide="apple" size="16" fill="currentColor"></i></div>
-            <div class="menu-item menu-app-name" id="top-app-name">Finder</div>
-            <div class="menu-item">Archivo</div>
-            <div class="menu-item">Edición</div>
-            <div class="menu-item">Visualización</div>
-            <div class="menu-item">Ir</div>
-            <div class="menu-item">Ventana</div>
-            <div class="menu-item">Ayuda</div>
+            <div class="menu-item" role="none" aria-hidden="true"><i data-lucide="apple" size="16" fill="currentColor"></i></div>
+            <div class="menu-item menu-app-name" id="top-app-name" role="none">Finder</div>
+            <div class="menu-item" role="none">Archivo</div>
+            <div class="menu-item" role="none">Edición</div>
+            <div class="menu-item" role="none">Visualización</div>
+            <div class="menu-item" role="none">Ir</div>
+            <div class="menu-item" role="none">Ventana</div>
+            <div class="menu-item" role="none">Ayuda</div>
         </div>
         <div class="menu-right">
-            <div class="menu-item"><i data-lucide="wifi" size="14"></i></div>
-            <div class="menu-item"><i data-lucide="battery-full" size="16"></i></div>
-            <div class="menu-item"><i data-lucide="search" size="14"></i></div>
-            <div class="menu-item"><i data-lucide="sliders-horizontal" size="14"></i></div>
-            <div class="menu-item" id="top-time" style="font-variant-numeric: tabular-nums;">--:--</div>
+            <div class="menu-item" role="none" aria-hidden="true"><i data-lucide="wifi" size="14"></i></div>
+            <div class="menu-item" role="none" aria-hidden="true"><i data-lucide="battery-full" size="16"></i></div>
+            <div class="menu-item" role="none" aria-hidden="true"><i data-lucide="search" size="14"></i></div>
+            <div class="menu-item" role="none" aria-hidden="true"><i data-lucide="sliders-horizontal" size="14"></i></div>
+            <div class="menu-item" id="top-time" style="font-variant-numeric: tabular-nums;" role="status" aria-live="polite">--:--</div>
         </div>
     </div>
 
-    <!-- ESCRITORIO (Iconos directos) -->
-    <div id="desktop-area">
-        <div class="desktop-icon" onclick="openWindow('settings')">
-            <div class="icon-placeholder" style="background: #8e8e93;"><i data-lucide="settings-2"></i></div>
+    <!-- DESKTOP -->
+    <div id="desktop-area" role="main">
+        <div class="desktop-icon" onclick="openWindow('settings')" role="button" tabindex="0" aria-label="Open System Settings">
+            <div class="icon-placeholder" style="background: #8e8e93;"><i data-lucide="settings-2" aria-hidden="true"></i></div>
             <span data-key="settings">Ajustes del Sistema</span>
         </div>
-        <div class="desktop-icon" onclick="openWindow('notes')">
-            <div class="icon-placeholder icon-notes"><i data-lucide="file-text"></i></div>
+        <div class="desktop-icon" onclick="openWindow('notes')" role="button" tabindex="0" aria-label="Open Notes">
+            <div class="icon-placeholder icon-notes"><i data-lucide="file-text" aria-hidden="true"></i></div>
             <span data-key="notes">Notas</span>
         </div>
     </div>
 
-    <!-- CONTENEDOR DE VENTANAS -->
-    <div id="window-manager">
+    <!-- WINDOWS -->
+    <div id="window-manager" role="region" aria-label="Applications">
         
-        <!-- SETTINGS -->
-        <div id="window-settings" class="mac-window" style="width: 700px; height: 500px;">
+        <!-- SETTINGS WINDOW -->
+        <div id="window-settings" class="mac-window" style="width: 700px; height: 500px;" role="dialog" aria-labelledby="settings-title">
             <div class="title-bar">
                 <div class="traffic-lights">
-                    <div class="tl-btn tl-close" onclick="closeWindow('settings')"><svg viewBox="0 0 14 14"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg></div>
-                    <div class="tl-btn tl-min"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="7"/></svg></div>
-                    <div class="tl-btn tl-max"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="3"/><line x1="11" y1="3" x2="7" y2="11"/><line x1="7" y1="11" x2="3" y2="7"/></svg></div>
+                    <button class="tl-btn tl-close" onclick="closeWindow('settings')" aria-label="Close Settings" title="Close">
+                        <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg>
+                    </button>
+                    <button class="tl-btn tl-min" aria-label="Minimize" title="Minimize">
+                        <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="3" y1="7" x2="11" y2="7"/></svg>
+                    </button>
+                    <button class="tl-btn tl-max" aria-label="Maximize" title="Maximize">
+                        <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="3" y1="7" x2="11" y2="3"/><line x1="11" y1="3" x2="7" y2="11"/><line x1="7" y1="11" x2="3" y2="7"/></svg>
+                    </button>
                 </div>
-                <div class="window-title" data-key="settings">Ajustes del Sistema</div>
+                <div class="window-title" id="settings-title" data-key="settings">Ajustes del Sistema</div>
             </div>
             <div class="window-content settings-layout">
-                <div class="settings-sidebar">
+                <div class="settings-sidebar" role="navigation">
                     <div style="padding: 15px; font-weight: 600; font-size: 12px; color: gray;">GENERAL</div>
-                    <div class="set-nav-item active" onclick="switchSettingsPanel('general', this)"><i data-lucide="settings"></i> General</div>
-                    <div class="set-nav-item" onclick="switchSettingsPanel('personalize', this)"><i data-lucide="palette" style="color:#ff6b6b"></i> Personalización</div>
-                    <div class="set-nav-item" onclick="switchSettingsPanel('langs', this)"><i data-lucide="globe" style="color:#007aff"></i> <span data-key="lang_region">Idioma</span></div>
+                    <div class="set-nav-item active" onclick="switchSettingsPanel('general', this)" role="button" tabindex="0"><i data-lucide="settings" aria-hidden="true"></i> General</div>
+                    <div class="set-nav-item" onclick="switchSettingsPanel('personalize', this)" role="button" tabindex="0"><i data-lucide="palette" style="color:#ff6b6b" aria-hidden="true"></i> Personalización</div>
+                    <div class="set-nav-item" onclick="switchSettingsPanel('langs', this)" role="button" tabindex="0"><i data-lucide="globe" style="color: var(--accent)" aria-hidden="true"></i> <span data-key="lang_region">Idioma</span></div>
                     <div style="padding: 15px; font-weight: 600; font-size: 12px; color: gray;">AVANZADO</div>
-                    <div class="set-nav-item" onclick="triggerSuperCharge()"><i data-lucide="zap" style="color:#FFD700"></i> Super Charge</div>
+                    <div class="set-nav-item" onclick="triggerSuperCharge()" role="button" tabindex="0"><i data-lucide="zap" style="color:#FFD700" aria-hidden="true"></i> Super Charge</div>
                 </div>
                 <div class="settings-main">
                     <!-- General Panel -->
                     <div id="set-panel-general" class="settings-panel active">
                         <h2>General</h2>
                         <div class="list-group">
-                            <div class="list-item"><div style="display:flex; gap:10px;"><i data-lucide="user"></i> Usuario</div><div style="color:#888">Apple ID</div></div>
+                            <div class="list-item"><div style="display:flex; gap:10px;"><i data-lucide="user" aria-hidden="true"></i> Usuario</div><div style="color:#888">Apple ID</div></div>
                         </div>
                         <div class="list-group">
-                            <div class="list-item"><div style="display:flex; gap:10px;"><i data-lucide="moon" style="color:#5856d6"></i> <span data-key="dark_mode">Modo Oscuro</span></div><div class="toggle" id="darkToggle" onclick="toggleDark()"><div class="toggle-handle"></div></div></div>
+                            <div class="list-item"><div style="display:flex; gap:10px;"><i data-lucide="moon" style="color:#5856d6" aria-hidden="true"></i> <span data-key="dark_mode">Modo Oscuro</span></div><button class="toggle" id="darkToggle" onclick="toggleDark()" aria-label="Toggle Dark Mode" role="switch"><div class="toggle-handle"></div></button></div>
                         </div>
                         
-                        <!-- Botón Admin Abuse -->
+                        <!-- Admin Abuse -->
                         <div class="list-group" style="margin-top: 30px;">
-                            <div class="list-item" onclick="alert('Iniciando entorno Admin Abuse...')" style="position: relative; overflow: hidden; background: #111; border: 1px solid #ff0000;">
+                            <div class="list-item" onclick="alert('Iniciando entorno Admin Abuse...')" style="position: relative; overflow: hidden; background: #111; border: 1px solid #ff0000; cursor: pointer;">
                                 <div style="display:flex; gap:10px; z-index: 2; position: relative;" class="glitch-text">
-                                    <i data-lucide="skull" style="color:#ff0000"></i> Ir al Admin Abuse
+                                    <i data-lucide="skull" style="color:#ff0000" aria-hidden="true"></i> Ir al Admin Abuse
                                 </div>
                                 <div style="color:#ff0000; font-weight:800; display:flex; align-items:center; z-index: 2; position: relative;" class="glitch-text">
-                                    NUEVO <i data-lucide="chevron-right" size="16"></i>
+                                    NUEVO <i data-lucide="chevron-right" size="16" aria-hidden="true"></i>
                                 </div>
-                                <div class="glitch-bg" style="position: absolute; top:0; left:0; width:100%; height:100%; background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,0,0,0.2) 10px, rgba(255,0,0,0.2) 20px); z-index: 1; pointer-events: none; mix-blend-mode: overlay; animation: bg-glitch 0.5s infinite linear;"></div>
+                                <div class="glitch-bg" style="position: absolute; top:0; left:0; width:100%; height:100%; background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,0,0,0.2) 10px, rgba(255,0,0,0.2) 20px); z-index: 1; pointer-events: none; mix-blend-mode: overlay; animation: bg-glitch 0.5s infinite linear;" aria-hidden="true"></div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Personalize Panel -->
+                    <!-- Personalization Panel -->
                     <div id="set-panel-personalize" class="settings-panel">
                         <h2>Personalización</h2>
                         <div class="list-group">
                             <div style="padding:15px 20px; font-weight:600; border-bottom: 1px solid var(--border-color);">Fondo de Pantalla</div>
                             <div class="theme-picker">
-                                <div class="theme-btn active" data-theme="0" style="background:linear-gradient(135deg, #021B79, #0575E6, #00F260);" onclick="applyTheme(0)"></div>
-                                <div class="theme-btn" data-theme="1" style="background:linear-gradient(135deg, #0f5132, #198754, #20c997);" onclick="applyTheme(1)"></div>
-                                <div class="theme-btn" data-theme="2" style="background:linear-gradient(135deg, #2d1b69, #6f42c1, #e83e8c);" onclick="applyTheme(2)"></div>
-                                <div class="theme-btn" data-theme="3" style="background:linear-gradient(135deg, #c2185b, #e91e63, #f48fb1);" onclick="applyTheme(3)"></div>
-                                <div class="theme-btn" data-theme="4" style="background:linear-gradient(135deg, #e65100, #ff6f00, #ffab40);" onclick="applyTheme(4)"></div>
-                                <div class="theme-btn" data-theme="5" style="background:linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);" onclick="applyTheme(5)"></div>
+                                <button class="theme-btn active" data-theme="0" style="background:linear-gradient(135deg, #021B79, #0575E6, #00F260);" onclick="applyTheme(0)" aria-label="Theme 1" title="Gradient Blue"></button>
+                                <button class="theme-btn" data-theme="1" style="background:linear-gradient(135deg, #0f5132, #198754, #20c997);" onclick="applyTheme(1)" aria-label="Theme 2" title="Gradient Green"></button>
+                                <button class="theme-btn" data-theme="2" style="background:linear-gradient(135deg, #2d1b69, #6f42c1, #e83e8c);" onclick="applyTheme(2)" aria-label="Theme 3" title="Gradient Purple"></button>
+                                <button class="theme-btn" data-theme="3" style="background:linear-gradient(135deg, #c2185b, #e91e63, #f48fb1);" onclick="applyTheme(3)" aria-label="Theme 4" title="Gradient Pink"></button>
+                                <button class="theme-btn" data-theme="4" style="background:linear-gradient(135deg, #e65100, #ff6f00, #ffab40);" onclick="applyTheme(4)" aria-label="Theme 5" title="Gradient Orange"></button>
+                                <button class="theme-btn" data-theme="5" style="background:linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);" onclick="applyTheme(5)" aria-label="Theme 6" title="Gradient Dark Blue"></button>
+                                <button class="theme-btn" data-theme="6" style="background:linear-gradient(135deg, #8b0000, #dc143c, #ff6347);" onclick="applyTheme(6)" aria-label="Theme 7" title="Gradient Red"></button>
+                                <button class="theme-btn" data-theme="7" style="background:linear-gradient(135deg, #000080, #0000cd, #4169e1);" onclick="applyTheme(7)" aria-label="Theme 8" title="Gradient Navy Blue"></button>
                             </div>
                         </div>
                         <div class="list-group">
                             <div style="padding:15px 20px; font-weight:600; border-bottom: 1px solid var(--border-color);">Fuente del Sistema</div>
-                            <div class="list-item font-opt" data-font="system" onclick="applyFont('system')"><div>Sistema (San Francisco)</div><i data-lucide="check" class="font-check" id="font-check-system"></i></div>
-                            <div class="list-item font-opt" data-font="inter" onclick="applyFont('inter')"><div>Inter</div><i data-lucide="check" class="font-check" id="font-check-inter" style="display:none;"></i></div>
-                            <div class="list-item font-opt" data-font="dancing" onclick="applyFont('dancing')"><div>Dancing Script</div><i data-lucide="check" class="font-check" id="font-check-dancing" style="display:none;"></i></div>
-                            <div class="list-item font-opt" data-font="roboto" onclick="applyFont('roboto')"><div>Roboto</div><i data-lucide="check" class="font-check" id="font-check-roboto" style="display:none;"></i></div>
-                        </div>
-                    </div>
-
-                    <!-- Languages Panel -->
-                    <div id="set-panel-langs" class="settings-panel">
-                        <h2>Idioma y Región</h2>
-                        <div class="list-group">
-                            <div class="list-item" onclick="setLanguage('es')"><div>Español</div><i data-lucide="check" class="lang-check" id="check-es" style="color:var(--accent)"></i></div>
-                            <div class="list-item" onclick="setLanguage('en')"><div>English</div><i data-lucide="check" class="lang-check" id="check-en" style="display:none; color:var(--accent)"></i></div>
-                            <div class="list-item" onclick="setLanguage('fr')"><div>Français</div><i data-lucide="check" class="lang-check" id="check-fr" style="display:none; color:var(--accent)"></i></div>
-                            <div class="list-item" onclick="setLanguage('it')"><div>Italiano</div><i data-lucide="check" class="lang-check" id="check-it" style="display:none; color:var(--accent)"></i></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- CALCULATOR -->
-        <div id="window-calculator" class="mac-window">
-            <div class="title-bar">
-                <div class="traffic-lights">
-                    <div class="tl-btn tl-close" onclick="closeWindow('calculator')"><svg viewBox="0 0 14 14"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg></div>
-                    <div class="tl-btn tl-min"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="7"/></svg></div>
-                    <div class="tl-btn tl-max"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="3"/><line x1="11" y1="3" x2="7" y2="11"/><line x1="7" y1="11" x2="3" y2="7"/></svg></div>
-                </div>
-            </div>
-            <div class="window-content calc-body">
-                <div id="calcRes">0</div>
-                <div class="calc-grid">
-                    <div class="calc-btn top" onclick="calc('C')">AC</div><div class="calc-btn top">+/-</div><div class="calc-btn top">%</div><div class="calc-btn op" onclick="calc('/')">÷</div>
-                    <div class="calc-btn" onclick="calc(7)">7</div><div class="calc-btn" onclick="calc(8)">8</div><div class="calc-btn" onclick="calc(9)">9</div><div class="calc-btn op" onclick="calc('*')">×</div>
-                    <div class="calc-btn" onclick="calc(4)">4</div><div class="calc-btn" onclick="calc(5)">5</div><div class="calc-btn" onclick="calc(6)">6</div><div class="calc-btn op" onclick="calc('-')">-</div>
-                    <div class="calc-btn" onclick="calc(1)">1</div><div class="calc-btn" onclick="calc(2)">2</div><div class="calc-btn" onclick="calc(3)">3</div><div class="calc-btn op" onclick="calc('+')">+</div>
-                    <div class="calc-btn" style="grid-column:span 2; border-bottom-left-radius: 12px;" onclick="calc(0)">0</div><div class="calc-btn">.</div><div class="calc-btn op" style="border-bottom-right-radius: 12px;" onclick="calc('=')">=</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- NOTES -->
-        <div id="window-notes" class="mac-window">
-            <div class="title-bar">
-                <div class="traffic-lights">
-                    <div class="tl-btn tl-close" onclick="closeWindow('notes')"><svg viewBox="0 0 14 14"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg></div>
-                    <div class="tl-btn tl-min"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="7"/></svg></div>
-                    <div class="tl-btn tl-max"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="3"/><line x1="11" y1="3" x2="7" y2="11"/><line x1="7" y1="11" x2="3" y2="7"/></svg></div>
-                </div>
-                <div class="window-title" data-key="notes">Notas</div>
-            </div>
-            <div class="window-content" style="display: flex;">
-                <div style="width: 200px; border-right: 1px solid var(--border-color); background: rgba(0,0,0,0.03); padding: 10px;">
-                    <div style="padding: 10px; background: rgba(0,0,0,0.05); border-radius: 6px; font-weight: 600; font-size: 14px;">Mi Nota Rápida</div>
-                </div>
-                <textarea id="macNotesArea" style="flex: 1; border: none; padding: 20px; font-size: 16px; outline: none; background: var(--app-bg); color: var(--app-text); resize: none; font-family: inherit;">Nueva nota de escritorio...</textarea>
-            </div>
-        </div>
-
-        <!-- SAFARI -->
-        <div id="window-safari" class="mac-window" style="width: 800px; height: 500px;">
-            <div class="title-bar">
-                <div class="traffic-lights">
-                    <div class="tl-btn tl-close" onclick="closeWindow('safari')"><svg viewBox="0 0 14 14"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg></div>
-                    <div class="tl-btn tl-min"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="7"/></svg></div>
-                    <div class="tl-btn tl-max"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="3"/><line x1="11" y1="3" x2="7" y2="11"/><line x1="7" y1="11" x2="3" y2="7"/></svg></div>
-                </div>
-                <div style="display:flex; justify-content:center; width:100%; pointer-events:none;">
-                    <div style="background: rgba(0,0,0,0.1); padding: 4px 150px; border-radius: 6px; font-size: 12px; color: var(--app-text); pointer-events:auto;">🔒 bing.com</div>
-                </div>
-            </div>
-            <div class="window-content" style="display: flex;">
-                <iframe src="https://www.bing.com" style="width:100%; height:100%; border:none; background:white;"></iframe>
-            </div>
-        </div>
-
-        <!-- CAMERA -->
-        <div id="window-camera" class="mac-window">
-            <div class="title-bar" style="background: #222; border-bottom: 1px solid #111;">
-                <div class="traffic-lights">
-                    <div class="tl-btn tl-close" onclick="closeWindow('camera')"><svg viewBox="0 0 14 14"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg></div>
-                    <div class="tl-btn tl-min"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="7"/></svg></div>
-                    <div class="tl-btn tl-max"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="3"/><line x1="11" y1="3" x2="7" y2="11"/><line x1="7" y1="11" x2="3" y2="7"/></svg></div>
-                </div>
-                <div class="window-title" style="color: white;" data-key="camera">Photo Booth</div>
-            </div>
-            <div class="window-content camera-app">
-                <div style="flex:1; position:relative; overflow:hidden;">
-                    <video id="camFeed" autoplay playsinline style="width:100%; height:100%; object-fit:cover; transform:scaleX(-1);"></video>
-                </div>
-                <div class="cam-controls">
-                    <div style="width:50px; height:50px; background:#333; border-radius:5px; overflow:hidden;">
-                        <img id="lastPhoto" style="width:100%; height:100%; object-fit:cover; display:none;">
-                    </div>
-                    <div class="shutter" onclick="takePhoto()"></div>
-                    <div class="cam-filter-btn" onclick="toggleFilter()"><i data-lucide="filter" size="20"></i></div>
-                </div>
-                <canvas id="photoCanvas" style="display:none;"></canvas>
-            </div>
-        </div>
-
-        <!-- MESSAGES -->
-        <div id="window-messages" class="mac-window">
-            <div class="title-bar">
-                <div class="traffic-lights">
-                    <div class="tl-btn tl-close" onclick="closeWindow('messages')"><svg viewBox="0 0 14 14"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg></div>
-                    <div class="tl-btn tl-min"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="7"/></svg></div>
-                    <div class="tl-btn tl-max"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="3"/><line x1="11" y1="3" x2="7" y2="11"/><line x1="7" y1="11" x2="3" y2="7"/></svg></div>
-                </div>
-                <div class="window-title">Mensajes</div>
-            </div>
-            <div class="window-content chat-layout">
-                <div class="chat-list">
-                    <div class="list-item" style="background: rgba(0,122,255,0.1); border-left: 3px solid #007aff;">
-                        <div><b>Soporte Apple</b><br><span style="font-size:12px; color:gray;">Interesante...</span></div>
-                    </div>
-                </div>
-                <div class="chat-main">
-                    <div id="mac-msg-hist" class="chat-history">
-                        <div style="text-align: center; font-size: 11px; color: gray; margin-bottom: 10px;">Hoy 9:41 AM</div>
-                        <div class="chat-bubble received">¡Hola! ¿Cómo estás disfrutando de WTC Mac OS?</div>
-                    </div>
-                    <div class="chat-input-area">
-                        <input type="text" id="mac-msg-input" class="chat-input" placeholder="iMessage..." onkeypress="if(event.key === 'Enter') sendMsgMac()">
-                        <button onclick="sendMsgMac()" class="chat-send"><i data-lucide="arrow-up" size="18"></i></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- WALLET -->
-        <div id="window-wallet" class="mac-window" style="background: #111; color: white;">
-            <div class="title-bar" style="background: #222; border-bottom: 1px solid #333;">
-                <div class="traffic-lights">
-                    <div class="tl-btn tl-close" onclick="closeWindow('wallet')"><svg viewBox="0 0 14 14"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg></div>
-                    <div class="tl-btn tl-min"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="7"/></svg></div>
-                    <div class="tl-btn tl-max"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="3"/><line x1="11" y1="3" x2="7" y2="11"/><line x1="7" y1="11" x2="3" y2="7"/></svg></div>
-                </div>
-                <div class="window-title" style="color: white;" data-key="wallet">Cartera</div>
-            </div>
-            <div class="window-content">
-                <div class="credit-card">
-                    <div style="display:flex; justify-content:space-between;">
-                        <div class="card-chip"></div>
-                        <div class="card-cvc-timer"><div style="font-size:10px; color:#aaa;">CVC Dinámico</div><div style="font-weight:bold; color:#fff;" id="walletCVC">---</div><div class="cvc-bar"><div class="cvc-progress" id="cvcProgress"></div></div></div>
-                    </div>
-                    <div class="card-number" id="walletNum">**** **** **** ****</div>
-                    <div style="display:flex; justify-content:space-between;"><div style="font-weight:600;">USUARIO MAC</div><div style="font-weight:600;">12/28</div></div>
-                </div>
-                <div class="balance-section">
-                    <div style="color:#aaa; font-size:14px;">Saldo Total Disponible</div><div style="font-size:48px; font-weight:700; margin-top: 10px;">$5,000.00</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- PHONE / FACETIME AUDIO -->
-        <div id="window-phone" class="mac-window" style="width: 350px; height: 550px;">
-            <div class="title-bar">
-                <div class="traffic-lights">
-                    <div class="tl-btn tl-close" onclick="closeWindow('phone')"><svg viewBox="0 0 14 14"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg></div>
-                    <div class="tl-btn tl-min"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="7"/></svg></div>
-                    <div class="tl-btn tl-max"><svg viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="3"/><line x1="11" y1="3" x2="7" y2="11"/><line x1="7" y1="11" x2="3" y2="7"/></svg></div>
-                </div>
-                <div class="window-title">FaceTime Audio</div>
-            </div>
-            <div class="window-content" style="display:flex; flex-direction:column; justify-content:center;">
-                <div id="phoneDisplay" style="font-size:36px; text-align:center; padding:20px; color:var(--app-text); height: 80px;"></div>
-                <div class="keypad">
-                    <div class="key-btn" onclick="dial('1')">1</div><div class="key-btn" onclick="dial('2')">2</div><div class="key-btn" onclick="dial('3')">3</div>
-                    <div class="key-btn" onclick="dial('4')">4</div><div class="key-btn" onclick="dial('5')">5</div><div class="key-btn" onclick="dial('6')">6</div>
-                    <div class="key-btn" onclick="dial('7')">7</div><div class="key-btn" onclick="dial('8')">8</div><div class="key-btn" onclick="dial('9')">9</div>
-                    <div class="key-btn" onclick="dial('*')">*</div><div class="key-btn" onclick="dial('0')">0</div><div class="key-btn" onclick="dial('#')">#</div>
-                    <div style="grid-column: 1 / span 3; display: flex; justify-content: center; margin-top: 10px;">
-                        <div class="key-btn" style="background:#34c759; color:white; width: 75px; height: 75px;" onclick="callPhone()"><i data-lucide="phone" fill="currentColor"></i></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- LAUNCHPAD OVERLAY -->
-    <div id="launchpad">
-        <input type="text" class="launchpad-search" placeholder="Buscar">
-        <div class="launchpad-grid" id="launchpadGrid">
-            <!-- Iconos generados por JS -->
-        </div>
-    </div>
-
-    <!-- DOCK INFERIOR -->
-    <div id="dock-container">
-        <div id="dock">
-            <div class="dock-item" onclick="openWindow('settings')" data-app="settings">
-                <div class="app-icon" style="background: #8e8e93;"><i data-lucide="settings-2"></i></div>
-                <div class="dock-indicator"></div>
-            </div>
-            <div class="dock-item" onclick="toggleLaunchpad()" data-app="launchpad">
-                <div class="app-icon" style="background: rgba(255,255,255,0.4); border: 2px solid white;"><i data-lucide="layout-grid"></i></div>
-                <div class="dock-indicator"></div>
-            </div>
-            <div class="dock-separator"></div>
-            <div class="dock-item" onclick="openWindow('safari')" data-app="safari">
-                <div class="app-icon icon-safari"><i data-lucide="compass"></i></div>
-                <div class="dock-indicator"></div>
-            </div>
-            <div class="dock-item" onclick="openWindow('messages')" data-app="messages">
-                <div class="app-icon icon-messages"><i data-lucide="message-circle" fill="white"></i></div>
-                <div class="dock-indicator"></div>
-            </div>
-            <div class="dock-item" onclick="openWindow('phone')" data-app="phone">
-                <div class="app-icon icon-phone"><i data-lucide="video" fill="white"></i></div>
-                <div class="dock-indicator"></div>
-            </div>
-            <div class="dock-item" onclick="openWindow('camera')" data-app="camera">
-                <div class="app-icon" style="background:#ccc;"><i data-lucide="camera" color="#000" fill="currentColor"></i></div>
-                <div class="dock-indicator"></div>
-            </div>
-            <div class="dock-item" onclick="openWindow('calculator')" data-app="calculator">
-                <div class="app-icon"><img src="https://i.ibb.co/JRPgZLNR/images-removebg-preview.png" style="width:100%;height:100%;object-fit:cover;"></div>
-                <div class="dock-indicator"></div>
-            </div>
-            <div class="dock-item" onclick="openWindow('wallet')" data-app="wallet">
-                <div class="app-icon icon-wallet"><i data-lucide="wallet-cards"></i></div>
-                <div class="dock-indicator"></div>
-            </div>
-            <div class="dock-item" onclick="openWindow('notes')" data-app="notes">
-                <div class="app-icon icon-notes"><i data-lucide="file-text" fill="white"></i></div>
-                <div class="dock-indicator"></div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        lucide.createIcons();
-
-        // --- TRADUCCIONES ---
-        const translations = {
-            es: { lang_region: "Idioma", dark_mode: "Modo Oscuro", settings: "Ajustes del Sistema", notes: "Notas", camera: "Cámara", wallet: "Cartera", changing_lang: "Cambiando Idioma..." },
-            en: { lang_region: "Language", dark_mode: "Dark Mode", settings: "System Settings", notes: "Notes", camera: "Camera", wallet: "Wallet", changing_lang: "Changing Language..." },
-            fr: { lang_region: "Langue", dark_mode: "Mode Sombre", settings: "Réglages Système", notes: "Notes", camera: "Appareil Photo", wallet: "Cartes", changing_lang: "Changement de langue..." },
-            it: { lang_region: "Lingua", dark_mode: "Modalità Scura", settings: "Impostazioni di Sistema", notes: "Note", camera: "Fotocamera", wallet: "Wallet", changing_lang: "Cambio lingua..." }
-        };
-        let currentLang = 'es';
-
-        // --- SISTEMA DE VENTANAS (DESKTOP) ---
-        let zIndexCounter = 100;
-        const openApps = new Set();
-
-        function makeDraggable(windowEl) {
-            const titleBar = windowEl.querySelector('.title-bar');
-            if (!titleBar) return;
-            
-            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-            
-            titleBar.onmousedown = dragMouseDown;
-
-            function dragMouseDown(e) {
-                if (e.target.closest('.traffic-lights')) return; // No arrastrar si hace clic en botones
-                e.preventDefault();
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-                document.onmouseup = closeDragElement;
-                document.onmousemove = elementDrag;
-                bringToFront(windowEl);
-            }
-
-            function elementDrag(e) {
-                e.preventDefault();
-                pos1 = pos3 - e.clientX;
-                pos2 = pos4 - e.clientY;
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-                windowEl.style.top = (windowEl.offsetTop - pos2) + "px";
-                windowEl.style.left = (windowEl.offsetLeft - pos1) + "px";
-            }
-
-            function closeDragElement() {
-                document.onmouseup = null;
-                document.onmousemove = null;
-            }
-        }
-
-        function bringToFront(windowEl) {
-            zIndexCounter++;
-            windowEl.style.zIndex = zIndexCounter;
-            const appName = windowEl.querySelector('.window-title')?.innerText || "Finder";
-            document.getElementById('top-app-name').innerText = appName;
-        }
-
-        function initWindows() {
-            document.querySelectorAll('.mac-window').forEach(win => {
-                makeDraggable(win);
-                win.addEventListener('mousedown', () => bringToFront(win));
-            });
-        }
-
-        function openWindow(appId) {
-            const win = document.getElementById('window-' + appId);
-            if (win) {
-                win.classList.add('active');
-                bringToFront(win);
-                openApps.add(appId);
-                updateDockIndicators();
-                
-                // Casos especiales al abrir
-                if (appId === 'camera') startCamera();
-                if (appId === 'wallet') startWallet();
-            }
-            const launchpad = document.getElementById('launchpad');
-            if (launchpad.classList.contains('active')) {
-                toggleLaunchpad();
-            }
-        }
-
-        function closeWindow(appId) {
-            const win = document.getElementById('window-' + appId);
-            if (win) {
-                win.classList.remove('active');
-                openApps.delete(appId);
-                updateDockIndicators();
-                document.getElementById('top-app-name').innerText = "Finder";
-                
-                // Casos especiales al cerrar
-                if (appId === 'camera') stopCamera();
-                if (appId === 'wallet') clearInterval(cvcInterval);
-            }
-        }
-
-        function updateDockIndicators() {
-            document.querySelectorAll('.dock-item').forEach(item => {
-                const app = item.getAttribute('data-app');
-                if (openApps.has(app)) {
-                    item.classList.add('running');
-                } else {
-                    item.classList.remove('running');
-                }
-            });
-        }
-
-        // --- RELOJ Y LOGIN ---
-        function updateClock() {
-            const d = new Date(); 
-            const t = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-            document.getElementById('top-time').innerText = t;
-            document.getElementById('loginTime').innerText = t;
-        }
-        setInterval(updateClock, 1000); updateClock();
-
-        function unlockMac() {
-            document.getElementById('loginScreen').style.opacity = '0';
-            document.getElementById('loginScreen').style.visibility = 'hidden';
-            
-            // Animación de bienvenida (FaceID simulado en desktop)
-            const n = document.getElementById('notch'); 
-            n.classList.add('expanded-faceid');
-            setTimeout(() => { n.classList.remove('expanded-faceid'); }, 1200);
-        }
-
-        function focusPassword() {
-            const input = document.getElementById('loginInput');
-            input.placeholder = "Ingresando...";
-            setTimeout(unlockMac, 500);
-        }
-
-        // --- LAUNCHPAD ---
-        function toggleLaunchpad() {
-            const lp = document.getElementById('launchpad');
-            lp.classList.toggle('active');
-            if(lp.classList.contains('active')) {
-                document.getElementById('top-app-name').innerText = "Launchpad";
-            } else {
-                document.getElementById('top-app-name').innerText = "Finder";
-            }
-        }
-
-        const allApps = [
-            { id: 'settings', name: 'Ajustes', icon: '<div class="app-icon" style="background:#8e8e93;"><i data-lucide="settings-2"></i></div>' },
-            { id: 'safari', name: 'Safari', icon: '<div class="app-icon icon-safari"><i data-lucide="compass"></i></div>' },
-            { id: 'messages', name: 'Mensajes', icon: '<div class="app-icon icon-messages"><i data-lucide="message-circle" fill="white"></i></div>' },
-            { id: 'phone', name: 'FaceTime', icon: '<div class="app-icon icon-phone"><i data-lucide="video" fill="white"></i></div>' },
-            { id: 'camera', name: 'Photo Booth', icon: '<div class="app-icon" style="background:#ccc;"><i data-lucide="camera" color="#000" fill="currentColor"></i></div>' },
-            { id: 'calculator', name: 'Calculadora', icon: '<div class="app-icon"><img src="https://i.ibb.co/JRPgZLNR/images-removebg-preview.png" style="width:100%;height:100%;object-fit:cover;"></div>' },
-            { id: 'wallet', name: 'Cartera', icon: '<div class="app-icon icon-wallet"><i data-lucide="wallet-cards"></i></div>' },
-            { id: 'notes', name: 'Notas', icon: '<div class="app-icon icon-notes"><i data-lucide="file-text" fill="white"></i></div>' },
-            { id: 'music', name: 'Música', icon: '<div class="app-icon icon-music"><i data-lucide="music" fill="white"></i></div>' },
-            { id: 'weather', name: 'Clima', icon: '<div class="app-icon icon-weather"><i data-lucide="cloud-sun"></i></div>' },
-            { id: 'maps', name: 'Mapas', icon: '<div class="app-icon icon-maps"><i data-lucide="map-pinned"></i></div>' }
-        ];
-
-        function initLaunchpad() {
-            const grid = document.getElementById('launchpadGrid');
-            allApps.forEach(app => {
-                grid.innerHTML += `
-                    <div class="desktop-icon" onclick="openWindow('${app.id}')">
-                        ${app.icon}
-                        <span>${app.name}</span>
-                    </div>
-                `;
-            });
-            lucide.createIcons();
-        }
-
-        // --- FUNCIONES ESPECÍFICAS DE APPS ---
-        
-        // Ajustes
-        function switchSettingsPanel(panelId, element) {
-            document.querySelectorAll('.set-nav-item').forEach(el => el.classList.remove('active'));
-            element.classList.add('active');
-            document.querySelectorAll('.settings-panel').forEach(p => p.classList.remove('active'));
-            document.getElementById('set-panel-' + panelId).classList.add('active');
-        }
-
-        function toggleDark() { 
-            document.body.classList.toggle('dark-mode'); 
-            document.getElementById('darkToggle').classList.toggle('active'); 
-        }
-
-        function triggerSuperCharge() {
-            const n = document.getElementById('notch');
-            const percentEl = document.getElementById('chargePercent');
-            const speedEl = document.getElementById('chargeSpeed');
-            n.classList.add('expanded-charge');
-            let percent = 0;
-            const chargeInterval = setInterval(() => {
-                percent += 2;
-                percentEl.textContent = percent + '%';
-                const wattage = Math.floor(180 + Math.random() * 40);
-                speedEl.textContent = `${wattage}W`;
-                if (percent >= 100) {
-                    clearInterval(chargeInterval);
-                    speedEl.textContent = 'Carga Completa';
-                    setTimeout(() => { n.classList.remove('expanded-charge'); percentEl.textContent = '100%'; }, 2000);
-                }
-            }, 50);
-        }
-
-        function setLanguage(lang) {
-            currentLang = lang;
-            const t = translations[lang];
-            const n = document.getElementById('notch');
-            n.classList.add('expanded-language');
-            document.getElementById('langNotchText').textContent = t.changing_lang || "Cambiando Idioma...";
-            document.querySelectorAll('[data-key]').forEach(el => {
-                const key = el.getAttribute('data-key');
-                if(t[key]) el.textContent = t[key];
-            });
-            document.querySelectorAll('.lang-check').forEach(i => i.style.display = 'none');
-            document.getElementById('check-'+lang).style.display = 'block';
-            setTimeout(() => { n.classList.remove('expanded-language'); }, 2000);
-        }
-
-        const THEMES = ['linear-gradient(135deg, #021B79, #0575E6, #00F260)', 'linear-gradient(135deg, #0f5132, #198754, #20c997)', 'linear-gradient(135deg, #2d1b69, #6f42c1, #e83e8c)', 'linear-gradient(135deg, #c2185b, #e91e63, #f48fb1)', 'linear-gradient(135deg, #e65100, #ff6f00, #ffab40)', 'linear-gradient(135deg, #1a1a2e, #16213e, #0f3460)'];
-        const FONTS = { system: '-apple-system, BlinkMacSystemFont, "Inter", sans-serif', inter: "'Inter', sans-serif", dancing: "'Dancing Script', cursive", roboto: "'Roboto', sans-serif" };
-
-        function applyTheme(idx) {
-            const bg = THEMES[idx];
-            document.getElementById('wallpaper').style.background = bg;
-            document.getElementById('wallpaper').style.backgroundSize = '100% 100%';
-            document.getElementById('wallpaper').style.animation = 'none';
-            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
-            document.querySelector('.theme-btn[data-theme="'+idx+'"]').classList.add('active');
-        }
-
-        function applyFont(id) {
-            const font = FONTS[id] || FONTS.system;
-            document.body.style.fontFamily = font;
-            document.querySelectorAll('.font-opt').forEach(el => { el.classList.remove('font-selected'); const c = el.querySelector('.font-check'); if(c) c.style.display = 'none'; });
-            const sel = document.querySelector('.font-opt[data-font="'+id+'"]');
-            if(sel) { sel.classList.add('font-selected'); const c = sel.querySelector('.font-check'); if(c) c.style.display = 'block'; }
-        }
-
-        // Notas
-        const ta = document.getElementById('macNotesArea');
-        ta.value = localStorage.getItem('wtc_notes_mac') || 'Nueva nota de escritorio...';
-        ta.addEventListener('input', () => localStorage.setItem('wtc_notes_mac', ta.value));
-
-        // Calculadora
-        let cVal = "0";
-        function calc(v) {
-            const d = document.getElementById('calcRes');
-            if(v==='C') cVal="0"; 
-            else if(v==='=') { try{cVal=eval(cVal)}catch{cVal="Error"} } 
-            else { if(cVal==="0") cVal=""; cVal+=v; }
-            d.innerText = cVal;
-        }
-
-        // Cámara (Photo Booth)
-        let videoStream; let filterIdx = 0; const filters = ['none', 'grayscale(1)', 'sepia(1)', 'saturate(2)'];
-        async function startCamera() { try { videoStream = await navigator.mediaDevices.getUserMedia({ video: true }); document.getElementById('camFeed').srcObject = videoStream; } catch(e) { console.warn("Camara no disponible"); } }
-        function stopCamera() { if(videoStream) videoStream.getTracks().forEach(t => t.stop()); }
-        function toggleFilter() { filterIdx = (filterIdx + 1) % filters.length; document.getElementById('camFeed').style.filter = filters[filterIdx]; }
-        function takePhoto() {
-            const c = document.getElementById('photoCanvas'); const v = document.getElementById('camFeed');
-            c.width = v.videoWidth; c.height = v.videoHeight; const ctx = c.getContext('2d'); ctx.filter = filters[filterIdx]; ctx.drawImage(v,0,0);
-            document.getElementById('lastPhoto').src = c.toDataURL('image/jpeg'); document.getElementById('lastPhoto').style.display = 'block';
-        }
-
-        // Cartera
-        let cvcInterval;
-        function startWallet() {
-            let num = ""; for(let i=0; i<4; i++) num += Math.floor(1000 + Math.random() * 9000) + " ";
-            document.getElementById('walletNum').innerText = num.trim();
-            function updateCVC() {
-                document.getElementById('walletCVC').innerText = Math.floor(100 + Math.random() * 900);
-                const bar = document.getElementById('cvcProgress'); bar.style.transition = 'none'; bar.style.width = '100%';
-                setTimeout(() => { bar.style.transition = 'width 30s linear'; bar.style.width = '0%'; }, 10);
-            }
-            updateCVC(); clearInterval(cvcInterval); cvcInterval = setInterval(updateCVC, 30000);
-        }
-
-        // Phone (FaceTime Audio)
-        function dial(n) { const display = document.getElementById('phoneDisplay'); display.innerText += n; }
-        function callPhone() { const pd = document.getElementById('phoneDisplay'); const old = pd.innerText; pd.innerText = 'Llamando...'; setTimeout(()=>{pd.innerText=old;}, 2000); }
-
-        // Mensajes
-        function sendMsgMac() {
-            const input = document.getElementById('mac-msg-input');
-            const hist = document.getElementById('mac-msg-hist');
-            if(!input.value.trim()) return;
-            hist.innerHTML += `<div class="chat-bubble sent">${input.value}</div>`;
-            input.value = '';
-            hist.scrollTop = hist.scrollHeight;
-            setTimeout(() => {
-                hist.innerHTML += `<div class="chat-bubble received">¡Genial! Parece que el sistema de escritorio funciona perfecto.</div>`;
-                hist.scrollTop = hist.scrollHeight;
-            }, 1000);
-        }
-
-        // INIT
-        window.onload = function() { 
-            initWindows(); 
-            initLaunchpad();
-        };
-
-    </script>
-</body>
-</html>
+                            <div class="list-item font-opt" data-font="system" onclick="applyFont('system')" role="button" tabindex="0"><div>Sistema (San Francisco)</div><i data-lucide="check" class="font-check" id="font-check-system" aria-hidden="true"></i></div>
+                            <div class="list-item font-opt" data-font="inter" onclick="applyFont('inter')" role="button" tabindex="0"><div>Inter</div><i data-lucide="check" class="font-check" id="font-check-inter" style="display:none;" aria-hidden="true"></i></div>
+                            <div class="list-item font-opt" data-font="dancing" onclick="applyFont('dancing')" role="button" tabindex="0"><div>Dancing Script</div><i data-lucide="check" class="font-check" id="font-check-dancing" style="display:none;" aria-hidden="true"></i></div>
+                            <div
