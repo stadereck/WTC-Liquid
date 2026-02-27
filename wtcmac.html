@@ -1,9 +1,1557 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>WTC Liquid</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="description" content="WTC Mac OS 1.1 - Un sistema operativo funcional basado en macOS con interfaz Liquid Glass">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <title>WTC Tahoe 26.2</title>
+    <link rel="icon" href="https://www.svgrepo.com/show/503173/apple-logo.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="https://www.svgrepo.com/show/503173/apple-logo.svg">
+    <script src="https://unpkg.com/lucide@latest" async defer></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;600;700&family=Roboto:wght@400;500;700&display=swap');
+
+        /* ============ ROOT & VARIABLES ============ */
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.2);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --app-bg: #f5f5f7;
+            --app-text: #1d1d1f;
+            --accent: #007aff;
+            --list-bg: #ffffff;
+            --border-color: #d2d2d7;
+            --menu-bar-bg: rgba(255, 255, 255, 0.3);
+            --menu-bar-text: #000;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.4);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 24px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        body.dark-mode {
+            --app-bg: #1e1e1e;
+            --app-text: #f5f5f7;
+            --glass-bg: rgba(30, 30, 30, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --list-bg: #2c2c2e;
+            --border-color: #38383a;
+            --menu-bar-bg: rgba(0, 0, 0, 0.3);
+            --menu-bar-text: #fff;
+        }
+
+        /* ============ RESET & GLOBAL ============ */
+        * { 
+            box-sizing: border-box; 
+            -webkit-user-select: none; 
+            user-select: none; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+
+        html { height: 100%; }
+        
+        body { 
+            margin: 0; 
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif; 
+            background: #000; 
+            height: 100vh; 
+            width: 100vw;
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column;
+            color: var(--app-text);
+        }
+
+        input, textarea, button { font-family: inherit; }
+
+        /* ============ FONDOS & WALLPAPER ============ */
+        .wallpaper-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: linear-gradient(135deg, #021B79, #0575E6, #00F260);
+            background-size: 400% 400%;
+            animation: gradientAnim 15s ease infinite;
+            pointer-events: none;
+        }
+
+        @keyframes gradientAnim {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ============ LOGIN SCREEN ============ */
+        #loginScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 9000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+            color: white;
+        }
+
+        #loginScreen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .login-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-md);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            animation: avatarFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes avatarFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .login-name {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-input {
+            padding: 12px 24px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            outline: none;
+            text-align: center;
+            font-size: 16px;
+            backdrop-filter: blur(10px);
+            width: 200px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .login-input:hover,
+        .login-input:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.7);
+        }
+
+        .login-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .login-time {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            font-size: 18px;
+            font-weight: 500;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            z-index: 9001;
+        }
+
+        /* ============ MENU BAR TOP ============ */
+        #menu-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 30px;
+            background: var(--menu-bar-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 5000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--menu-bar-text);
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+            gap: 20px;
+        }
+
+        .menu-left,
+        .menu-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .menu-item {
+            cursor: default;
+            padding: 0 8px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .menu-app-name {
+            font-weight: 700;
+            min-width: 80px;
+        }
+
+        /* ============ MACBOOK NOTCH ============ */
+        .notch {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 160px;
+            height: 32px;
+            background: #000;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            z-index: 6000;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: white;
+            overflow: visible;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            cursor: pointer;
+            box-shadow: 0 0 0 0px transparent;
+        }
+
+        .notch::before,
+        .notch::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle at 100% 100%, transparent 10px, #000 10px);
+        }
+
+        .notch::before {
+            left: -10px;
+            background: radial-gradient(circle at 0 100%, transparent 10px, #000 10px);
+        }
+
+        .notch::after {
+            right: -10px;
+        }
+
+        /* Notch States */
+        .notch.expanded-charge {
+            width: 320px;
+            height: 140px;
+            border-radius: 25px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            justify-content: center;
+            background: linear-gradient(135deg, #000, #1a1a2e, #000);
+            border: 2px solid #FFD700;
+            border-top: none;
+            flex-direction: column;
+            animation: superChargeGlow 2s infinite alternate;
+        }
+
+        @keyframes superChargeGlow {
+            0% {
+                box-shadow: 0 10px 20px 2px rgba(255, 215, 0, 0.6), inset 0 0 20px rgba(255, 215, 0, 0.2);
+            }
+            100% {
+                box-shadow: 0 20px 40px 4px rgba(255, 215, 0, 0.9), inset 0 0 30px rgba(255, 215, 0, 0.3);
+            }
+        }
+
+        .lightning {
+            position: absolute;
+            width: 3px;
+            height: 30px;
+            background: linear-gradient(to bottom, #FFD700, transparent);
+            opacity: 0;
+            animation: lightning 1.5s infinite;
+        }
+
+        @keyframes lightning {
+            0%, 100% { opacity: 0; transform: translateY(-10px) scaleY(0); }
+            10% { opacity: 1; transform: translateY(0) scaleY(1); }
+            20% { opacity: 0; transform: translateY(10px) scaleY(0.5); }
+        }
+
+        .notch.expanded-faceid {
+            width: 180px;
+            height: 180px;
+            border-radius: 25px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .notch.expanded-language {
+            width: 280px;
+            height: 80px;
+            border-radius: 25px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            justify-content: center;
+            background: linear-gradient(45deg, #000, #1a1a1a);
+            box-shadow: 0 10px 30px rgba(0, 122, 255, 0.5);
+        }
+
+        .notch-content {
+            display: none;
+            width: 100%;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .notch.expanded-charge .charge-ui,
+        .notch.expanded-faceid .faceid-ui,
+        .notch.expanded-language .lang-ui {
+            display: flex;
+            opacity: 1;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .charge-ui {
+            flex-direction: column;
+            gap: 8px !important;
+            position: relative;
+        }
+
+        .super-charge-badge {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 800;
+            color: #000;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.5);
+        }
+
+        .charge-percentage {
+            font-size: 48px;
+            font-weight: 700;
+            color: #FFD700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            line-height: 1;
+        }
+
+        .charge-watts {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            opacity: 0.9;
+        }
+
+        .globe-spin {
+            animation: spin 2s linear infinite;
+            color: var(--accent);
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        .scan-line {
+            width: 60px;
+            height: 60px;
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .scan-line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent);
+            animation: scan 1.5s infinite;
+        }
+
+        @keyframes scan {
+            0% { top: 0; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        /* ============ DESKTOP ICONS ============ */
+        #desktop-area {
+            position: fixed;
+            top: 30px;
+            left: 0;
+            right: 0;
+            bottom: 80px;
+            z-index: 10;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            gap: 20px;
+            overflow-y: auto;
+        }
+
+        .desktop-icon {
+            width: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            padding: 10px 5px;
+            transition: background var(--transition);
+        }
+
+        .desktop-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .desktop-icon img {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: var(--shadow-md);
+        }
+
+        .desktop-icon .icon-placeholder {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .desktop-icon span {
+            color: white;
+            font-size: 12px;
+            text-align: center;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        /* ============ LAUNCHPAD ============ */
+        #launchpad {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            z-index: 4000;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            padding: 50px;
+            overflow-y: auto;
+        }
+
+        #launchpad.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .launchpad-search {
+            margin: 20px auto 50px;
+            width: 300px;
+            padding: 10px 20px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            outline: none;
+            text-align: center;
+            font-size: 16px;
+            transition: width var(--transition);
+        }
+
+        .launchpad-search:focus {
+            width: 400px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .launchpad-search::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .launchpad-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 30px 20px;
+            justify-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* App Icon Styles */
+        .app-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+            color: white;
+            font-size: 28px;
+            position: relative;
+            overflow: hidden;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .app-icon:hover {
+            transform: scale(1.05);
+        }
+
+        .icon-cal { background: #fff; color: #ff3b30; flex-direction: column; font-size: 10px; font-weight: 800; gap: 2px; }
+        .icon-cal span { font-size: 26px; color: #000; }
+        .icon-maps { background: #4cd964; }
+        .icon-clock { background: #000; color: #fff; border: 1px solid #333; }
+        .icon-weather { background: #5ac8fa; }
+        .icon-phone { background: #34c759; }
+        .icon-messages { background: #34c759; }
+        .icon-wallet { background: #000; border: 1px solid #333; }
+        .icon-safari { background: white; color: var(--accent); }
+        .icon-music { background: #ff2d55; }
+        .icon-notes { background: #ffd60a; color: white; }
+
+        /* ============ DOCK ============ */
+        #dock-container {
+            position: fixed;
+            bottom: 10px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 5000;
+            pointer-events: none;
+        }
+
+        #dock {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+            box-shadow: var(--shadow-md);
+            pointer-events: auto;
+            max-width: 90vw;
+            overflow-x: auto;
+        }
+
+        body.dark-mode #dock {
+            background: rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .dock-item {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+        .dock-item:hover {
+            transform: scale(1.2) translateY(-10px);
+            z-index: 10;
+        }
+
+        .dock-item .app-icon {
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+        }
+
+        .dock-indicator {
+            width: 4px;
+            height: 4px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            display: none;
+            margin-top: 2px;
+        }
+
+        body.dark-mode .dock-indicator {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .dock-item.running .dock-indicator {
+            display: block;
+        }
+
+        .dock-separator {
+            width: 1px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.3);
+            margin: 5px;
+        }
+
+        /* ============ WINDOW SYSTEM ============ */
+        #window-manager {
+            position: fixed;
+            top: 30px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        .mac-window {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            width: 600px;
+            height: 400px;
+            background: var(--app-bg);
+            color: var(--app-text);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg), 0 0 0 1px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            pointer-events: auto;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            visibility: hidden;
+            user-select: text;
+        }
+
+        .mac-window.active {
+            opacity: 1;
+            transform: scale(1);
+            visibility: visible;
+        }
+
+        /* Title Bar & Traffic Lights */
+        .title-bar {
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--menu-bar-bg);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .title-bar:active {
+            cursor: grabbing;
+        }
+
+        .traffic-lights {
+            position: absolute;
+            left: 15px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .tl-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .tl-btn svg {
+            width: 8px;
+            height: 8px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            stroke: #000;
+            stroke-width: 3;
+        }
+
+        .traffic-lights:hover .tl-btn svg {
+            opacity: 0.5;
+        }
+
+        .tl-close { background: #ff5f56; }
+        .tl-min { background: #ffbd2e; }
+        .tl-max { background: #27c93f; }
+
+        .window-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--app-text);
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .window-content {
+            flex: 1;
+            overflow: auto;
+            position: relative;
+            background: var(--app-bg);
+            user-select: text;
+        }
+
+        /* ============ SETTINGS PANEL ============ */
+        .settings-layout {
+            display: flex;
+            height: 100%;
+        }
+
+        .settings-sidebar {
+            width: 220px;
+            border-right: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.03);
+            overflow-y: auto;
+        }
+
+        body.dark-mode .settings-sidebar {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .settings-main {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .set-nav-item {
+            padding: 10px 15px;
+            margin: 5px 10px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--app-text);
+            transition: var(--transition);
+        }
+
+        .set-nav-item:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        body.dark-mode .set-nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .set-nav-item.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .settings-panel {
+            display: none;
+        }
+
+        .settings-panel.active {
+            display: block;
+        }
+
+        /* ============ LIST COMPONENTS ============ */
+        .list-group {
+            background: var(--list-bg);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .list-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background var(--transition);
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-item:hover {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        body.dark-mode .list-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .toggle {
+            width: 44px;
+            height: 24px;
+            background: #e9e9ea;
+            border-radius: 12px;
+            position: relative;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            padding: 0;
+        }
+
+        body.dark-mode .toggle {
+            background: #39393d;
+        }
+
+        .toggle.active {
+            background: #34c759;
+        }
+
+        .toggle-handle {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: var(--transition);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle.active .toggle-handle {
+            transform: translateX(20px);
+        }
+
+        /* ============ THEMES & FONTS ============ */
+        .theme-picker {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 15px;
+        }
+
+        .theme-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .theme-btn.active {
+            border-color: var(--accent);
+            transform: scale(1.1);
+        }
+
+        .theme-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .font-check {
+            display: none;
+            color: var(--accent);
+        }
+
+        .list-item.font-selected .font-check {
+            display: block;
+        }
+
+        /* ============ CALCULATOR ============ */
+        #window-calculator {
+            width: 320px;
+            height: 450px;
+            background: #2c2c2e;
+            border-radius: var(--radius-md);
+        }
+
+        #window-calculator .title-bar {
+            background: transparent;
+            border: none;
+            position: absolute;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .calc-body {
+            background: #2c2c2e;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            height: 100%;
+            padding-top: 30px;
+        }
+
+        #calcRes {
+            text-align: right;
+            font-size: 60px;
+            padding: 20px;
+            font-weight: 300;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: #000;
+            padding: 1px;
+            border-bottom-left-radius: var(--radius-md);
+            border-bottom-right-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .calc-btn {
+            background: #505050;
+            color: white;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: background 0.1s ease;
+            border: none;
+            user-select: none;
+        }
+
+        .calc-btn:active {
+            background: #707070;
+        }
+
+        .calc-btn.op {
+            background: #ff9f0a;
+        }
+
+        .calc-btn.op:active {
+            background: #c27600;
+        }
+
+        .calc-btn.top {
+            background: #d4d4d2;
+            color: black;
+        }
+
+        .calc-btn.top:active {
+            background: #a5a5a5;
+        }
+
+        /* ============ CAMERA ============ */
+        .camera-app {
+            background: black !important;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .cam-controls {
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 100px;
+            gap: 15px;
+        }
+
+        #camFeed {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .shutter {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 4px solid white;
+            position: relative;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .shutter::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 48px;
+            height: 48px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.1s ease;
+        }
+
+        .shutter:active::after {
+            transform: translate(-50%, -50%) scale(0.9);
+        }
+
+        .cam-filter-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            border: none;
+            flex-shrink: 0;
+            transition: var(--transition);
+        }
+
+        .cam-filter-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* ============ WALLET ============ */
+        .credit-card {
+            background: linear-gradient(135deg, #1a1a1a, #444);
+            border-radius: 15px;
+            height: 200px;
+            color: white;
+            padding: 25px;
+            position: relative;
+            box-shadow: var(--shadow-md);
+            margin: 20px auto;
+            max-width: 400px;
+        }
+
+        .card-chip {
+            width: 50px;
+            height: 40px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border-radius: 8px;
+        }
+
+        .card-cvc-timer {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-items: flex-end;
+        }
+
+        .cvc-bar {
+            width: 60px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .cvc-progress {
+            width: 100%;
+            height: 100%;
+            background: #34c759;
+            transition: width 1s linear;
+        }
+
+        .card-number {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            margin: 30px 0 20px;
+        }
+
+        .balance-section {
+            padding: 30px;
+            text-align: center;
+            color: var(--app-text);
+        }
+
+        /* ============ PHONE / FACETIME ============ */
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            padding: 20px;
+            justify-items: center;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .key-btn {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: rgba(128, 128, 128, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--app-text);
+            border: none;
+            transition: var(--transition);
+        }
+
+        .key-btn:hover {
+            background: rgba(128, 128, 128, 0.3);
+        }
+
+        .key-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* ============ MESSAGES / CHAT ============ */
+        .chat-layout {
+            display: flex;
+            height: 100%;
+        }
+
+        .chat-list {
+            width: 250px;
+            border-right: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.02);
+            overflow-y: auto;
+        }
+
+        body.dark-mode .chat-list {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--app-bg);
+        }
+
+        .chat-history {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chat-bubble {
+            padding: 10px 14px;
+            border-radius: 18px;
+            max-width: 70%;
+            font-size: 15px;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .chat-bubble.received {
+            align-self: flex-start;
+            background: #e5e5ea;
+            color: #000;
+            border-bottom-left-radius: 4px;
+        }
+
+        body.dark-mode .chat-bubble.received {
+            background: #3a3a3c;
+            color: #fff;
+        }
+
+        .chat-bubble.sent {
+            align-self: flex-end;
+            background: var(--accent);
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-input-area {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
+            background: var(--app-bg);
+            gap: 10px;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            padding: 10px 15px;
+            outline: none;
+            background: var(--list-bg);
+            color: var(--app-text);
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .chat-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .chat-send {
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: var(--transition);
+        }
+
+        .chat-send:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-send:active {
+            transform: scale(0.95);
+        }
+
+        /* ============ MAIL ============ */
+        .mail-layout {
+            display: flex;
+            height: 100%;
+        }
+
+        .mail-list {
+            width: 300px;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            background: var(--list-bg);
+        }
+
+        .mail-detail {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--app-bg);
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .mail-item {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background var(--transition);
+        }
+
+        .mail-item:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        body.dark-mode .mail-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* ============ GLITCH EFFECT ============ */
+        .glitch-text {
+            animation: glitch-text-anim 0.4s infinite alternate;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        @keyframes glitch-text-anim {
+            0% { font-family: 'Roboto', sans-serif; filter: invert(0); transform: none; letter-spacing: normal; color: #fff; text-shadow: none; }
+            20% { font-family: 'Dancing Script', cursive; filter: invert(1); transform: scaleX(-1); letter-spacing: 2px; color: #ff0000; text-shadow: 2px 2px 0 #00ff00; }
+            40% { font-family: monospace; transform: skewX(-15deg); color: #00ff00; text-shadow: -2px -2px 0 #ff00ff; }
+            60% { font-family: 'Inter', sans-serif; transform: scaleY(-1); letter-spacing: -2px; filter: hue-rotate(180deg); color: #fff; }
+            80% { font-family: 'Courier New', Courier, monospace; transform: translate(2px, -2px) rotate(2deg); filter: invert(1) contrast(200%); color: #ff00ff; }
+            100% { font-family: 'Roboto', sans-serif; filter: invert(0); transform: none; letter-spacing: normal; color: #ff0000; }
+        }
+
+        @keyframes bg-glitch {
+            0% { background-position: 0 0; opacity: 0.3; }
+            25% { opacity: 0.8; filter: invert(1); }
+            50% { background-position: 20px 20px; opacity: 0.5; }
+            75% { transform: scale(1.05); }
+            100% { background-position: -20px -20px; opacity: 0.3; }
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 1024px) {
+            .mac-window { width: calc(100vw - 40px) !important; height: calc(100vh - 150px) !important; top: 70px !important; left: 20px !important; }
+            .settings-sidebar { width: 150px; }
+            .settings-main { padding: 15px; }
+            .launchpad-grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
+        }
+
+        @media (max-width: 768px) {
+            #menu-bar { font-size: 11px; padding: 0 8px; }
+            .menu-app-name { min-width: 60px; }
+            .menu-left, .menu-right { gap: 8px; }
+            .mac-window { width: calc(100vw - 20px) !important; height: calc(100vh - 120px) !important; }
+            #desktop-area { bottom: 100px; }
+            .chat-list { width: 150px; }
+            .desktop-icon { width: 70px; }
+            .settings-sidebar { width: 120px; font-size: 12px; }
+        }
+
+        @media (max-width: 480px) {
+            body { font-size: 14px; }
+            #menu-bar { height: 26px; font-size: 10px; }
+            .menu-item { padding: 0 4px; }
+            .mac-window { width: 100vw !important; height: 100vh !important; top: 26px !important; left: 0 !important; border-radius: 0; }
+            .mac-window.active { width: 100vw !important; height: calc(100vh - 26px) !important; }
+            .notch { display: none; }
+            .chat-list { display: none; }
+            .settings-sidebar { display: none; }
+            #launchpad { padding: 30px 10px; }
+            .launchpad-grid { grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        }
+
+        /* ============ SCROLLBAR STYLING ============ */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        body.dark-mode ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* ============ ACCESSIBILITY ============ */
+        :focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        button:focus-visible,
+        input:focus-visible,
+        select:focus-visible,
+        textarea:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body { background: #000; }
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to WTC Liquid</h1>
-</body>
-</html>
+    <!-- WALLPAPER -->
+    <div class="wallpaper-layer" id="wallpaper" aria-hidden="true"></div>
+
+    <!-- LOGIN SCREEN -->
+    <div id="loginScreen" onclick="focusPassword()" role="dialog" aria-label="Login Screen">
+        <div class="login-time" id="loginTime" aria-live="polite">--:--</div>
+        <div class="login-avatar" aria-hidden="true"><i data-lucide="user"></i></div>
+        <div class="login-name">Usuario</div>
+        <input type="password" id="loginInput" class="login-input" placeholder="Haz clic para iniciar" readonly onclick="unlockMac()" aria-label="Password Input">
+    </div>
+
+    <!-- NOTCH -->
+    <div class="notch" id="notch" role="status" aria-label="System Status Notch">
+        <div class="lightning" style="top: -10px;"></div><div class="lightning" style="top: -10px;"></div>
+        <div class="lightning" style="top: -10px;"></div><div class="lightning" style="top: -10px;"></div>
+        
+        <div class="notch-content charge-ui">
+            <div class="super-charge-badge">⚡ SUPER CHARGE 200W</div>
+            <div class="charge-percentage" id="chargePercent">100%</div>
+            <div class="charge-watts" id="chargeSpeed">Carga Completa</div>
+        </div>
+        <div class="notch-content faceid-ui">
+            <div class="scan-line"></div>
+            <span style="font-size:12px; margin-top:5px;" id="notchFaceIdText">Face ID</span>
+        </div>
+        <div class="notch-content lang-ui">
+            <i data-lucide="globe" class="globe-spin"></i> <span style="font-weight:600;" id="langNotchText">Cambiando Idioma...</span>
+        </div>
+    </div>
+
+    <!-- MENU BAR -->
+    <div id="menu-bar" role="menubar">
+        <div class="menu-left">
+            <div class="menu-item" role="none" aria-hidden="true"><i data-lucide="apple" size="16" fill="currentColor"></i></div>
+            <div class="menu-item menu-app-name" id="top-app-name" role="none">Finder</div>
+            <div class="menu-item" role="none">Archivo</div>
+            <div class="menu-item" role="none">Edición</div>
+            <div class="menu-item" role="none">Visualización</div>
+            <div class="menu-item" role="none">Ir</div>
+            <div class="menu-item" role="none">Ventana</div>
+            <div class="menu-item" role="none">Ayuda</div>
+        </div>
+        <div class="menu-right">
+            <div class="menu-item" role="none" aria-hidden="true"><i data-lucide="wifi" size="14"></i></div>
+            <div class="menu-item" role="none" aria-hidden="true"><i data-lucide="battery-full" size="16"></i></div>
+            <div class="menu-item" role="none" aria-hidden="true"><i data-lucide="search" size="14"></i></div>
+            <div class="menu-item" role="none" aria-hidden="true"><i data-lucide="sliders-horizontal" size="14"></i></div>
+            <div class="menu-item" id="top-time" style="font-variant-numeric: tabular-nums;" role="status" aria-live="polite">--:--</div>
+        </div>
+    </div>
+
+    <!-- DESKTOP -->
+    <div id="desktop-area" role="main">
+        <div class="desktop-icon" onclick="openWindow('settings')" role="button" tabindex="0" aria-label="Open System Settings">
+            <div class="icon-placeholder" style="background: #8e8e93;"><i data-lucide="settings-2" aria-hidden="true"></i></div>
+            <span data-key="settings">Ajustes del Sistema</span>
+        </div>
+        <div class="desktop-icon" onclick="openWindow('notes')" role="button" tabindex="0" aria-label="Open Notes">
+            <div class="icon-placeholder icon-notes"><i data-lucide="file-text" aria-hidden="true"></i></div>
+            <span data-key="notes">Notas</span>
+        </div>
+    </div>
+
+    <!-- WINDOWS -->
+    <div id="window-manager" role="region" aria-label="Applications">
+        
+        <!-- SETTINGS WINDOW -->
+        <div id="window-settings" class="mac-window" style="width: 700px; height: 500px;" role="dialog" aria-labelledby="settings-title">
+            <div class="title-bar">
+                <div class="traffic-lights">
+                    <button class="tl-btn tl-close" onclick="closeWindow('settings')" aria-label="Close Settings" title="Close">
+                        <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg>
+                    </button>
+                    <button class="tl-btn tl-min" aria-label="Minimize" title="Minimize">
+                        <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="3" y1="7" x2="11" y2="7"/></svg>
+                    </button>
+                    <button class="tl-btn tl-max" aria-label="Maximize" title="Maximize">
+                        <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="3" y1="7" x2="11" y2="3"/><line x1="11" y1="3" x2="7" y2="11"/><line x1="7" y1="11" x2="3" y2="7"/></svg>
+                    </button>
+                </div>
+                <div class="window-title" id="settings-title" data-key="settings">Ajustes del Sistema</div>
+            </div>
+            <div class="window-content settings-layout">
+                <div class="settings-sidebar" role="navigation">
+                    <div style="padding: 15px; font-weight: 600; font-size: 12px; color: gray;">GENERAL</div>
+                    <div class="set-nav-item active" onclick="switchSettingsPanel('general', this)" role="button" tabindex="0"><i data-lucide="settings" aria-hidden="true"></i> General</div>
+                    <div class="set-nav-item" onclick="switchSettingsPanel('personalize', this)" role="button" tabindex="0"><i data-lucide="palette" style="color:#ff6b6b" aria-hidden="true"></i> Personalización</div>
+                    <div class="set-nav-item" onclick="switchSettingsPanel('langs', this)" role="button" tabindex="0"><i data-lucide="globe" style="color: var(--accent)" aria-hidden="true"></i> <span data-key="lang_region">Idioma</span></div>
+                    <div style="padding: 15px; font-weight: 600; font-size: 12px; color: gray;">AVANZADO</div>
+                    <div class="set-nav-item" onclick="triggerSuperCharge()" role="button" tabindex="0"><i data-lucide="zap" style="color:#FFD700" aria-hidden="true"></i> Super Charge</div>
+                </div>
+                <div class="settings-main">
+                    <!-- General Panel -->
+                    <div id="set-panel-general" class="settings-panel active">
+                        <h2>General</h2>
+                        <div class="list-group">
+                            <div class="list-item"><div style="display:flex; gap:10px;"><i data-lucide="user" aria-hidden="true"></i> Usuario</div><div style="color:#888">Apple ID</div></div>
+                        </div>
+                        <div class="list-group">
+                            <div class="list-item"><div style="display:flex; gap:10px;"><i data-lucide="moon" style="color:#5856d6" aria-hidden="true"></i> <span data-key="dark_mode">Modo Oscuro</span></div><button class="toggle" id="darkToggle" onclick="toggleDark()" aria-label="Toggle Dark Mode" role="switch"><div class="toggle-handle"></div></button></div>
+                        </div>
+                        
+                        <!-- Admin Abuse -->
+                        <div class="list-group" style="margin-top: 30px;">
+                            <div class="list-item" onclick="alert('Iniciando entorno Admin Abuse...')" style="position: relative; overflow: hidden; background: #111; border: 1px solid #ff0000; cursor: pointer;">
+                                <div style="display:flex; gap:10px; z-index: 2; position: relative;" class="glitch-text">
+                                    <i data-lucide="skull" style="color:#ff0000" aria-hidden="true"></i> Ir al Admin Abuse
+                                </div>
+                                <div style="color:#ff0000; font-weight:800; display:flex; align-items:center; z-index: 2; position: relative;" class="glitch-text">
+                                    NUEVO <i data-lucide="chevron-right" size="16" aria-hidden="true"></i>
+                                </div>
+                                <div class="glitch-bg" style="position: absolute; top:0; left:0; width:100%; height:100%; background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,0,0,0.2) 10px, rgba(255,0,0,0.2) 20px); z-index: 1; pointer-events: none; mix-blend-mode: overlay; animation: bg-glitch 0.5s infinite linear;" aria-hidden="true"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Personalization Panel -->
+                    <div id="set-panel-personalize" class="settings-panel">
+                        <h2>Personalización</h2>
+                        <div class="list-group">
+                            <div style="padding:15px 20px; font-weight:600; border-bottom: 1px solid var(--border-color);">Fondo de Pantalla</div>
+                            <div class="theme-picker">
+                                <button class="theme-btn active" data-theme="0" style="background:linear-gradient(135deg, #021B79, #0575E6, #00F260);" onclick="applyTheme(0)" aria-label="Theme 1" title="Gradient Blue"></button>
+                                <button class="theme-btn" data-theme="1" style="background:linear-gradient(135deg, #0f5132, #198754, #20c997);" onclick="applyTheme(1)" aria-label="Theme 2" title="Gradient Green"></button>
+                                <button class="theme-btn" data-theme="2" style="background:linear-gradient(135deg, #2d1b69, #6f42c1, #e83e8c);" onclick="applyTheme(2)" aria-label="Theme 3" title="Gradient Purple"></button>
+                                <button class="theme-btn" data-theme="3" style="background:linear-gradient(135deg, #c2185b, #e91e63, #f48fb1);" onclick="applyTheme(3)" aria-label="Theme 4" title="Gradient Pink"></button>
+                                <button class="theme-btn" data-theme="4" style="background:linear-gradient(135deg, #e65100, #ff6f00, #ffab40);" onclick="applyTheme(4)" aria-label="Theme 5" title="Gradient Orange"></button>
+                                <button class="theme-btn" data-theme="5" style="background:linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);" onclick="applyTheme(5)" aria-label="Theme 6" title="Gradient Dark Blue"></button>
+                                <button class="theme-btn" data-theme="6" style="background:linear-gradient(135deg, #8b0000, #dc143c, #ff6347);" onclick="applyTheme(6)" aria-label="Theme 7" title="Gradient Red"></button>
+                                <button class="theme-btn" data-theme="7" style="background:linear-gradient(135deg, #000080, #0000cd, #4169e1);" onclick="applyTheme(7)" aria-label="Theme 8" title="Gradient Navy Blue"></button>
+                            </div>
+                        </div>
+                        <div class="list-group">
+                            <div style="padding:15px 20px; font-weight:600; border-bottom: 1px solid var(--border-color);">Fuente del Sistema</div>
+                            <div class="list-item font-opt" data-font="system" onclick="applyFont('system')" role="button" tabindex="0"><div>Sistema (San Francisco)</div><i data-lucide="check" class="font-check" id="font-check-system" aria-hidden="true"></i></div>
+                            <div class="list-item font-opt" data-font="inter" onclick="applyFont('inter')" role="button" tabindex="0"><div>Inter</div><i data-lucide="check" class="font-check" id="font-check-inter" style="display:none;" aria-hidden="true"></i></div>
+                            <div class="list-item font-opt" data-font="dancing" onclick="applyFont('dancing')" role="button" tabindex="0"><div>Dancing Script</div><i data-lucide="check" class="font-check" id="font-check-dancing" style="display:none;" aria-hidden="true"></i></div>
+                            <div
