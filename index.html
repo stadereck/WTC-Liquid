@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WTC Liquid 28.3</title>
+    <title>WTC X Assumptions</title>
     <link rel="icon" href="https://www.svgrepo.com/show/503173/apple-logo.svg" type="image/svg+xml">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -1190,6 +1190,11 @@
             if (display.innerText === '*#*#AI#*#*') {
                 triggerAiTerminal();
                 display.innerText = ''; // Reset
+            }
+
+            /* --- Easter Egg: "assumptions" (sin importar mayúsculas/minúsculas ni errores de tipeo) --- */
+            if (display.innerText.toLowerCase().replace(/[^a-z]/g, '') === 'assumptions') {
+                window.location.href = 'assumptions.html';
             }
         }
 
