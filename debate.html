@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeffrey Epstein X WTC </title>
+    <style>
+        /* Reiniciamos los márgenes y ocultamos el desbordamiento para una experiencia a pantalla completa */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #030303;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Cursor en forma de cruz para dar un toque más interactivo/técnico */
+            cursor: crosshair; 
+        }
+
+        /* Contenedor central desde donde nacen todos los cuadrados */
+        #canvas-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+        }
+
+        /* Estilo base para cada cuadrado del efecto Droste */
+        .cuadrado-droste {
+            position: absolute;
+            box-sizing: border-box;
+            /* Borde base sólido que luego colorearemos con JS */
+            border: 3px solid white;
+            /* Sombra interior y exterior para el efecto de resplandor RGB (Glow) */
+            box-shadow: 0 0 3vmin rgba(255, 255, 255, 0.5), inset 0 0 3vmin rgba(255, 255, 255, 0.5);
+            /* Tamaño base masivo para que los primeros cuadrados salgan de la pantalla */
+            width: 250vmax;
+            height: 250vmax;
+            /* Suavizamos ligeramente los bordes para un look más orgánico, opcional */
+            border-radius: 2%;
+            /* Utilizamos mix-blend-mode para que los colores se fusionen de forma psicodélica */
+            mix-blend-mode: screen;
+        }
+
+        /* Interfaz de usuario simple flotante */
+        #ui-instrucciones {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            pointer-events: none; /* Evita que bloquee el movimiento del ratón */
+            transition: opacity 0.5s;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Texto de instrucciones -->
+    <div id="ui-instrucciones">Proximo Debate en ∞ </div>
+
+    <!-- Contenedor principal de los cuadrados -->
+    <div id="canvas-container"></div>
+
+    <script>
+        /**
+         * LÓGICA DEL EFECTO DROSTE
+         * Para lograr un zoom infinito sin saltos visuales, no animamos las escalas
+         * de 0 a infinito. En su lugar, animamos el progreso de 0 a 1.
+         * Cuando el progreso llega a 1, el cuadrado N toma exactamente la posición,
+         * rotación y escala que tenía el cuadrado N-1. Así se crea un bucle perfecto.
+         */
+
+        const contenedor = document.getElementById('canvas-container');
+        const instrucciones = document.getElementById('ui-instrucciones');
+        
+        // Parámetros configurables del túnel
+        const numCuadrados = 65;         // Cantidad de capas de profundidad
+        const factorEscala = 0.82;       // Qué tan pequeño es el siguiente cuadrado (82% del anterior)
+        const pasoRotacion = 6;          // Grados de rotación de diferencia entre cada capa
+        const pasoTono = 15;             // Salto de color (Hue) en la rueda cromática entre capas
+        const velocidadZoom = 0.0006;    // Velocidad a la que avanzamos hacia adentro
+        const velocidadColor = 0.05;     // Velocidad de cambio de los colores RGB
+        
+        const cuadrados = [];
+
+        // Variables para la interacción del ratón
+        let objetivoRatonX = 0;
+        let objetivoRatonY = 0;
+        let ratonX = 0;
+        let ratonY = 0;
+
+        // 1. Crear los elementos en el DOM
+        for (let i = 0; i < numCuadrados; i++) {
+            const div = document.createElement('div');
+            div.className = 'cuadrado-droste';
+            contenedor.appendChild(div);
+            cuadrados.push(div);
+        }
+
+        // 2. Escuchar el movimiento del ratón para el efecto Parallax / Curva
+        document.addEventListener('mousemove', (e) => {
+            // Normalizar coordenadas del ratón de -1 a 1
+            objetivoRatonX = (e.clientX / window.innerWidth) * 2 - 1;
+            objetivoRatonY = (e.clientY / window.innerHeight) * 2 - 1;
+            
+            // Ocultar las instrucciones sutilmente al mover el ratón
+            instrucciones.style.opacity = '0.3';
+        });
+
+        // Manejo táctil para móviles
+        document.addEventListener('touchmove', (e) => {
+            if(e.touches.length > 0) {
+                objetivoRatonX = (e.touches[0].clientX / window.innerWidth) * 2 - 1;
+                objetivoRatonY = (e.touches[0].clientY / window.innerHeight) * 2 - 1;
+                instrucciones.style.opacity = '0.3';
+            }
+        });
+
+        // 3. Bucle de Animación Principal
+        let tiempoInicio = performance.now();
+
+        function animar(tiempoActual) {
+            let tiempoTranscurrido = tiempoActual - tiempoInicio;
+
+            // Suavizado del movimiento del ratón (Interpolación lineal)
+            ratonX += (objetivoRatonX - ratonX) * 0.05;
+            ratonY += (objetivoRatonY - ratonY) * 0.05;
+
+            // El progreso del zoom va de 0 a 1 y luego se reinicia (módulo 1)
+            let progresoZoom = (tiempoTranscurrido * velocidadZoom) % 1;
+
+            for (let i = 0; i < numCuadrados; i++) {
+                // Índice efectivo: Le restamos el progreso para crear el efecto de "acercamiento"
+                // Cuando progresoZoom llega a 1, effIndex de 'i' se convierte en el de 'i-1'.
+                let indiceEfectivo = i - progresoZoom;
+
+                // Cálculos matemáticos de Escala y Rotación
+                let escalaActual = Math.pow(factorEscala, indiceEfectivo);
+                let rotacionActual = indiceEfectivo * pasoRotacion;
+
+                // Rotación global continua para que todo el túnel gire lentamente
+                let rotacionGlobal = tiempoTranscurrido * 0.01;
+                rotacionActual += rotacionGlobal;
+
+                // Curvatura del túnel hacia el ratón basado en la profundidad del cuadrado
+                // A mayor índice (más profundo), mayor desplazamiento
+                let desplazamientoX = ratonX * indiceEfectivo * 1.5; // Unidades en vmin
+                let desplazamientoY = ratonY * indiceEfectivo * 1.5; // Unidades en vmin
+
+                // Cálculo del espectro RGB continuo e infinito
+                let tonoActual = (indiceEfectivo * pasoTono + tiempoTranscurrido * velocidadColor) % 360;
+                let colorBase = `hsl(${tonoActual}, 100%, 60%)`;
+
+                // Aplicar las transformaciones CSS (El orden importa: Traslación para centrar + Desplazamiento de curva -> Rotación -> Escala)
+                cuadrados[i].style.transform = `translate(calc(-50% + ${desplazamientoX}vmin), calc(-50% + ${desplazamientoY}vmin)) rotate(${rotacionActual}deg) scale(${escalaActual})`;
+                
+                // Aplicar el color dinámico al borde y las luces de neón
+                cuadrados[i].style.borderColor = colorBase;
+                // Modificamos dinámicamente el resplandor de la sombra
+                cuadrados[i].style.boxShadow = `0 0 2vmin ${colorBase}, inset 0 0 2vmin ${colorBase}`;
+
+                // Desvanecer el cuadrado más profundo (el más pequeño) para que nazca suavemente desde el centro invisible
+                // y evitar un "pop" abrupto en la pantalla cuando se reinicia el bucle.
+                let opacidad = 1;
+                if (indiceEfectivo > numCuadrados - 3) {
+                    opacidad = (numCuadrados - indiceEfectivo) / 3;
+                }
+                cuadrados[i].style.opacity = Math.max(0, Math.min(1, opacidad));
+            }
+
+            // Llamar al próximo fotograma
+            requestAnimationFrame(animar);
+        }
+
+        // Iniciar el bucle visual
+        requestAnimationFrame(animar);
+    </script>
+</body>
+</html>
