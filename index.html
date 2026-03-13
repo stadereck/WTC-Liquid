@@ -4,27 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WTC Liquid 28.5</title>
+    <title>WTC Liquid 28.6</title>
     <link rel="icon" href="https://www.svgrepo.com/show/503173/apple-logo.svg" type="image/svg+xml">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;600&family=Roboto:wght@400;500;700&display=swap');
 
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-bg: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.2);
-            --app-bg: rgba(255, 255, 255, 0.15);
+            --app-bg: rgba(255, 255, 255, 0.08);
             --app-text: #fff;
             --accent: #007aff;
-            --list-bg: rgba(255, 255, 255, 0.1);
+            --list-bg: rgba(255, 255, 255, 0.05);
             --border-color: rgba(255, 255, 255, 0.2);
         }
 
         .iphone-frame.dark-mode {
-            --app-bg: rgba(0, 0, 0, 0.25);
+            --app-bg: rgba(0, 0, 0, 0.15);
             --app-text: #fff;
-            --glass-bg: rgba(0, 0, 0, 0.3);
-            --list-bg: rgba(0, 0, 0, 0.2);
+            --glass-bg: rgba(0, 0, 0, 0.2);
+            --list-bg: rgba(0, 0, 0, 0.1);
             --border-color: rgba(255, 255, 255, 0.15);
         }
 
@@ -561,6 +561,16 @@
             transition: opacity 0.2s;
         }
 
+        .notch.expanded-charge {
+            width: 320px;
+            height: 160px;
+            border-radius: 40px;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+        }
+
         .notch.expanded-charge .charge-ui,
         .notch.expanded-faceid .faceid-ui,
         .notch.expanded-language .lang-ui {
@@ -647,6 +657,35 @@
                 top: 100%;
                 opacity: 0;
             }
+        }
+
+        /* WTC Intelligence Siri Effect */
+        .siri-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,0,127,0.4), rgba(127,0,255,0.4), rgba(0,212,255,0.4));
+            background-size: 200% 200%;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            z-index: 5500;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            animation: siriWave 3s ease infinite;
+        }
+
+        .siri-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        @keyframes siriWave {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         /* TUTORIAL MEJORADO */
@@ -917,8 +956,9 @@
             width: 100%;
             height: 95px;
             border-radius: 35px;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(30px);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(50px);
+            -webkit-backdrop-filter: blur(50px);
             display: flex;
             justify-content: space-evenly;
             align-items: center;
@@ -960,8 +1000,8 @@
             width: 100%;
             height: 100%;
             background: var(--app-bg);
-            backdrop-filter: blur(35px);
-            -webkit-backdrop-filter: blur(35px);
+            backdrop-filter: blur(50px);
+            -webkit-backdrop-filter: blur(50px);
             border: 1px solid var(--glass-border);
             color: var(--app-text);
             z-index: 1100;
@@ -1475,6 +1515,9 @@
                 <div class="swipe-hint-text" id="swipeText">Desliza para empezar</div>
             </div>
 
+            <!-- WTC INTELLIGENCE OVERLAY -->
+            <div id="siriOverlay" class="siri-overlay" onclick="closeSiri()"></div>
+
             <!-- ISLA DINÁMICA (Aura Welcome) -->
             <div class="notch welcome-aura" id="notch" ondblclick="toggleControlCenter()">
                 <!-- RAYOS ELÉCTRICOS -->
@@ -1646,6 +1689,15 @@
                         <div class="app-icon"><img src="https://i.ibb.co/JRPgZLNR/images-removebg-preview.png"
                                 style="width:100%;height:100%;object-fit:cover;"></div>
                         <span class="app-name" data-key="calculator">Calculadora</span>
+                    </div>
+
+                    <div class="app-item" data-app-id="chatgpt" onclick="openApp('chatgpt')">
+                        <div class="app-icon" style="background:#10a37f; color:white;"><i data-lucide="bot"></i></div>
+                        <span class="app-name">ChatGPT</span>
+                    </div>
+                    <div class="app-item" data-app-id="files" onclick="openApp('files')">
+                        <div class="app-icon" style="background:white; color:#007aff;"><i data-lucide="folder"></i></div>
+                        <span class="app-name">Archivos</span>
                     </div>
 
                     <div class="app-item" data-app-id="settings" onclick="openApp('settings')">
@@ -1958,8 +2010,8 @@
                     </div>
                     <div class="calc-grid">
                         <div class="calc-btn" onclick="calc('C')">AC</div>
-                        <div class="calc-btn">+/-</div>
-                        <div class="calc-btn">%</div>
+                        <div class="calc-btn" onclick="calc('+/-')">+/-</div>
+                        <div class="calc-btn" onclick="calc('%')">%</div>
                         <div class="calc-btn orange" onclick="calc('/')">÷</div>
                         <div class="calc-btn" onclick="calc(7)">7</div>
                         <div class="calc-btn" onclick="calc(8)">8</div>
@@ -2061,6 +2113,23 @@
                         style="width:100%; flex:1; border:none; background:transparent;"></iframe>
                 </div>
             </div>
+            <div id="app-chatgpt" class="app-window">
+                <div class="nav-bar">
+                    <div style="color:#10a37f" onclick="closeApp('chatgpt')">Atrás</div>
+                    <div>ChatGPT</div>
+                    <div onclick="closeApp('chatgpt')">Listo</div>
+                </div>
+                <div class="app-body" style="padding:20px;">Hola, ¿en qué te puedo ayudar hoy?</div>
+            </div>
+            <div id="app-files" class="app-window">
+                <div class="nav-bar">
+                    <div style="color:#007aff" onclick="closeApp('files')">Explorar</div>
+                    <div>Archivos</div>
+                    <div onclick="closeApp('files')">Listo</div>
+                </div>
+                <div class="app-body" style="padding:20px; text-align: center;"><i data-lucide="folder" size="40" style="color:#007aff; margin-bottom: 15px;"></i><br>Recientes</div>
+            </div>
+
             <div id="app-messages" class="app-window">
                 <div class="nav-bar">
                     <div>Editar</div>
@@ -2234,8 +2303,8 @@
             'linear-gradient(135deg, #1a1a2e, #16213e, #0f3460)'
         ];
         const FONTS = { system: '-apple-system, BlinkMacSystemFont, sans-serif', inter: "'Inter', sans-serif", dancing: "'Dancing Script', cursive", roboto: "'Roboto', sans-serif" };
-        const DEFAULT_APP_ORDER = ['mail', 'calendar', 'photos', 'camera', 'maps', 'clock', 'weather', 'wallet', 'notes', 'calculator', 'settings'];
-        const APP_NAMES = { mail: 'Mail', calendar: 'Calendario', photos: 'Fotos', camera: 'Cámara', maps: 'Mapas', clock: 'Reloj', weather: 'Clima', wallet: 'Cartera', notes: 'Notas', calculator: 'Calculadora', settings: 'Ajustes' };
+        const DEFAULT_APP_ORDER = ['mail', 'calendar', 'photos', 'camera', 'maps', 'clock', 'weather', 'wallet', 'notes', 'calculator', 'chatgpt', 'files', 'settings'];
+        const APP_NAMES = { mail: 'Mail', calendar: 'Calendario', photos: 'Fotos', camera: 'Cámara', maps: 'Mapas', clock: 'Reloj', weather: 'Clima', wallet: 'Cartera', notes: 'Notas', calculator: 'Calculadora', chatgpt: 'ChatGPT', files: 'Archivos', settings: 'Ajustes' };
         let appOrderEdit = [];
 
         function applyTheme(idx) {
@@ -2626,12 +2695,65 @@
                 } catch {
                     cVal = "Error";
                 }
+            } else if (v === '+/-') {
+                if (cVal !== "0" && cVal !== "Error") {
+                    if (cVal.startsWith("-")) cVal = cVal.substring(1);
+                    else cVal = "-" + cVal;
+                }
+            } else if (v === '%') {
+                if (cVal !== "0" && cVal !== "Error") {
+                    try {
+                        cVal = (parseFloat(safeMath(cVal)) / 100).toString();
+                    } catch { cVal = "Error"; }
+                }
             } else {
                 if (cVal === "0" && v !== '.') cVal = "";
                 cVal += v;
             }
             d.innerText = cVal;
         }
+
+        // WTC Intelligence / Siri
+        let siriTimer;
+        const siriOverlay = document.getElementById('siriOverlay');
+        const homeIndicatorEl = document.getElementById('homeIndicator');
+        const notchElement = document.getElementById('notch');
+
+        function startSiriHold() {
+            siriTimer = setTimeout(() => {
+                siriOverlay.classList.add('active');
+                if (navigator.vibrate) navigator.vibrate(50);
+            }, 600);
+        }
+        function cancelSiriHold() {
+            clearTimeout(siriTimer);
+        }
+        function closeSiri() {
+            siriOverlay.classList.remove('active');
+        }
+
+        [notchElement, homeIndicatorEl].forEach(el => {
+            if(el) {
+                el.addEventListener('mousedown', startSiriHold);
+                el.addEventListener('touchstart', startSiriHold);
+                el.addEventListener('mouseup', cancelSiriHold);
+                el.addEventListener('mouseleave', cancelSiriHold);
+                el.addEventListener('touchend', cancelSiriHold);
+            }
+        });
+
+        // Overwrite goHome to dismiss Siri if active
+        const originalGoHome = window.goHome || function() {};
+        window.goHome = function() {
+            if (siriOverlay.classList.contains('active')) {
+                closeSiri();
+                return;
+            }
+            if (typeof originalGoHome === 'function') originalGoHome();
+        };
+
+        // Redefine directly just in case it's in local scope
+        goHome = window.goHome;
 
     </script>
 </body>
