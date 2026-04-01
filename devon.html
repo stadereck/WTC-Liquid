@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WTC Liquid by Devon</title>
+    <title>Devon México</title>
     <!-- Ícono de la pestaña (Favicon) -->
     <link rel="icon" href="https://www.svgrepo.com/show/503173/apple-logo.svg" type="image/svg+xml">
     
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Agregamos 'Bodoni Moda' para el logo estilo Vogue y mantenemos 'Jost' para el resto -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,11 +20,13 @@
                 extend: {
                     fontFamily: {
                         sans: ['Jost', 'sans-serif'],
+                        serif: ['"Bodoni Moda"', 'serif'], /* Fuente estilo Vogue */
                     },
                     colors: {
                         brandPink: '#E8A5D6',
                         brandDark: '#0B1320',
                         brandGray: '#F2F2F2',
+                        vanCleefBg: '#E5F0E6' /* Verde suave del banner */
                     },
                     letterSpacing: {
                         widest: '.2em',
@@ -69,7 +71,6 @@
             pointer-events: none;
         }
         
-        /* Modos de la Isla */
         .island-container.active {
             width: 120px; height: 36px; opacity: 1;
             transform: scale(1) translateY(0); pointer-events: auto;
@@ -90,7 +91,6 @@
         .logo-hidden { opacity: 0; transform: scale(0.5) translateY(20px); pointer-events: none; }
         .island-text-fade { opacity: 0; transform: scale(0.5); }
 
-        /* Efecto de latido para los números */
         #views-counter {
             display: inline-block;
             transition: transform 0.1s ease-out;
@@ -106,7 +106,6 @@
             transform: translateX(0);
         }
 
-        /* Animación Escalonada del Menú Sidebar */
         .sidebar nav a {
             opacity: 0;
             transform: translateX(-20px);
@@ -124,61 +123,64 @@
         .sidebar.open nav a:nth-child(6) { transition-delay: 0.35s; }
         .sidebar.open nav a:nth-child(7) { transition-delay: 0.40s; }
         .sidebar.open nav a:nth-child(8) { transition-delay: 0.45s; }
+
+        /* --- Nueva Animación de Línea para los Enlaces (Botones convertidos a texto) --- */
+        .link-underline {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 2px; /* Separación de la línea */
+        }
+        .link-underline::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1.5px;
+            bottom: 0;
+            left: 0;
+            background-color: currentColor;
+            transition: width 0.3s ease-in-out;
+        }
+        .link-underline:hover::after {
+            width: 100%;
+        }
     </style>
 </head>
 <body class="bg-white text-black font-sans flex flex-col min-h-screen">
 
-    <!-- Pantalla de Introducción (Preloader Animado con Variaciones) -->
+    <!-- Pantalla de Introducción -->
     <div id="intro-container" class="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden pointer-events-auto transition-opacity duration-1000">
-        <!-- Fondo base que cambiará de color según la variación -->
         <div id="intro-bg" class="absolute inset-0 transition-colors duration-300"></div>
         
-        <div id="intro-text-wrapper" class="relative flex items-center text-5xl md:text-7xl font-bold tracking-widest z-10" style="font-family: 'Jost', sans-serif;">
+        <div id="intro-text-wrapper" class="relative flex items-center text-6xl md:text-8xl font-bold tracking-widest z-10 font-serif uppercase">
             <span id="intro-dev" class="relative z-20 transition-opacity duration-500">DEV</span>
-            <!-- Ajuste de tipografía: Dimensiones de la O calculadas para simular la fuente Jost Bold -->
-            <div class="relative flex items-center justify-center w-[0.72em] h-[0.75em] mx-[0.02em] z-20">
-                <!-- El Anillo O -->
-                <div id="intro-o-ring" class="absolute w-full h-full border-[0.13em] rounded-full transition-transform duration-[1.0s] ease-in-out"></div>
+            <div class="relative flex items-center justify-center mx-[0.02em] z-20">
+                <span id="intro-o-ring" class="relative z-20 inline-block transition-transform duration-[1.0s] ease-in-out origin-center">O</span>
             </div>
             <span id="intro-n" class="relative z-20 transition-opacity duration-500">N</span>
         </div>
     </div>
 
-    <!-- Script Inline para evitar parpadeos y aplicar la variación alternada al instante -->
+    <!-- Script de colores (Blanco/Negro alternado) -->
     <script>
         let isDarkTheme;
-        
         try {
-            // Utilizamos tanto sessionStorage como localStorage para mayor resistencia en la vista previa
             let lastTheme = sessionStorage.getItem('devon_intro_theme') || localStorage.getItem('devon_intro_theme');
+            if (lastTheme === 'dark') isDarkTheme = false; 
+            else if (lastTheme === 'light') isDarkTheme = true;  
+            else isDarkTheme = Math.random() > 0.5;
             
-            if (lastTheme === 'dark') {
-                isDarkTheme = false; // Si fue oscuro, ahora toca claro (blanco)
-            } else if (lastTheme === 'light') {
-                isDarkTheme = true;  // Si fue claro, ahora toca oscuro (negro)
-            } else {
-                // Si la memoria está vacía (o la vista previa la borró), lanzamos una moneda al azar 50/50
-                isDarkTheme = Math.random() > 0.5;
-            }
-            
-            // Guardamos el estado en ambas memorias
             sessionStorage.setItem('devon_intro_theme', isDarkTheme ? 'dark' : 'light');
             localStorage.setItem('devon_intro_theme', isDarkTheme ? 'dark' : 'light');
         } catch (e) {
-            // Respaldo por si el navegador bloquea el almacenamiento
             isDarkTheme = Math.random() > 0.5;
         }
         
-        // Aplicar los colores correspondientes de inmediato
         document.getElementById('intro-bg').style.backgroundColor = isDarkTheme ? '#000000' : '#ffffff';
         document.getElementById('intro-text-wrapper').style.color = isDarkTheme ? '#ffffff' : '#000000';
-        document.getElementById('intro-o-ring').style.borderColor = isDarkTheme ? '#ffffff' : '#000000';
     </script>
 
-    <!-- Overlay de oscurecimiento para Menú -->
+    <!-- Overlay y Sidebar -->
     <div id="overlay" class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity opacity-0" onclick="closeAll()"></div>
-
-    <!-- Menú Lateral (Sidebar) -->
     <aside id="sidebarMenu" class="sidebar fixed top-0 left-0 h-full w-64 bg-white z-50 shadow-2xl flex flex-col">
         <div class="p-5 flex justify-between items-center border-b border-gray-100">
             <h2 class="text-xl font-bold tracking-widest">MENÚ</h2>
@@ -198,8 +200,48 @@
         </nav>
     </aside>
 
-    <!-- Top Bar -->
-    <div class="hidden md:flex w-full justify-center gap-6 text-[10px] font-bold tracking-widest text-black uppercase py-4 bg-white border-b border-gray-100 overflow-x-auto whitespace-nowrap px-6">
+    <!-- Barra de Navegación Principal (DEVON con tipografía estilo Vogue) -->
+    <header class="w-full bg-white sticky top-0 z-30 border-b border-gray-100 md:border-none">
+        <div class="max-w-7xl mx-auto flex items-center justify-between px-5 h-16 md:h-20 relative">
+            <button onclick="toggleMenu()" class="text-black z-20 hover:scale-110 transition-transform">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                    <line x1="3" y1="16" x2="21" y2="16"></line>
+                </svg>
+            </button>
+            
+            <div id="interactive-header-center" class="absolute left-1/2 transform -translate-x-1/2 h-full flex items-center justify-center cursor-pointer select-none z-10 w-64">
+                
+                <h1 id="devon-text" class="text-4xl md:text-5xl font-bold tracking-widest text-black mt-1 transition-all duration-500 flex items-center font-serif uppercase">
+                    DEV
+                    <span class="relative inline-flex items-center justify-center group">
+                        O
+                        <span class="animated-slash group-hover:bg-brandPink group-hover:shadow-[0_0_8px_#E8A5D6] transition-colors duration-300"></span>
+                    </span>
+                    N
+                </h1>
+
+                <div id="dynamic-island" class="island-container absolute bg-black rounded-full flex items-center justify-center overflow-hidden shadow-xl">
+                    <div id="island-content" class="w-full flex items-center justify-center transition-all duration-300">
+                        <span class="text-white text-xs md:text-sm font-bold tracking-widest font-serif uppercase">DEVON</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-4 z-20">
+                <button id="person-icon-btn" class="text-black hover:scale-110 transition-transform">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 16a4 4 0 0 0-4-4h8a4 4 0 0 0-4 4z"></path>
+                        <circle cx="12" cy="9" r="2.5"></circle>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Top Bar (Textos Modas/Belleza con tipografía editorial) -->
+    <div class="hidden md:flex w-full justify-center gap-8 lg:gap-12 text-[11px] lg:text-xs font-medium tracking-[0.2em] text-black uppercase py-4 bg-white border-b border-gray-100 overflow-x-auto whitespace-nowrap px-6" style="font-family: 'Jost', sans-serif;">
         <span class="cursor-default hover:text-gray-500 transition-colors">MODA</span>
         <span class="cursor-default hover:text-gray-500 transition-colors">BELLEZA</span>
         <span class="cursor-default hover:text-gray-500 transition-colors">ESTILO DE VIDA</span>
@@ -220,102 +262,108 @@
         </button>
     </div>
 
-    <!-- Barra de Navegación Principal -->
-    <header class="w-full bg-white sticky top-0 z-30 border-b border-gray-100 md:border-none">
-        <div class="max-w-7xl mx-auto flex items-center justify-between px-5 h-16 md:h-20 relative">
+    <!-- BANNER NUEVO: Van Cleef & Arpels (Altura recortada) -->
+    <section class="w-full relative flex items-center justify-center overflow-hidden border-b border-gray-200 min-h-[220px] md:min-h-[280px]">
+        <img 
+            src="https://images.unsplash.com/photo-1611085583191-a3b181a88401?q=80&w=2000&auto=format&fit=crop" 
+            alt="Fondo Van Cleef" 
+            class="absolute inset-0 w-full h-full object-cover object-center z-0"
+        />
+        <div class="max-w-7xl w-full flex flex-col items-center md:items-start text-center md:text-left z-10 px-6 md:px-12 py-8 md:py-10 relative">
+            <h2 class="text-2xl md:text-4xl text-black mb-2" style="font-family: 'Georgia', 'Times New Roman', serif;">Van Cleef & Arpels</h2>
+            <p class="text-[10px] md:text-xs text-gray-800 mb-4" style="font-family: 'Georgia', 'Times New Roman', serif;">Haute Joaillerie, place Vendôme desde 1906</p>
             
-            <!-- Izquierda: Menú Hamburguesa -->
-            <button onclick="toggleMenu()" class="text-black z-20 hover:scale-110 transition-transform">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">
-                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                    <line x1="3" y1="16" x2="21" y2="16"></line>
+            <div class="mb-4 text-black opacity-90 flex items-center justify-center md:justify-start">
+                <svg width="30" height="20" viewBox="0 0 36 24">
+                    <polygon points="18,1 35,12 18,23 1,12" fill="none" stroke="currentColor" stroke-width="1.2"></polygon>
+                    <text x="18" y="15" font-size="7" font-family="serif" text-anchor="middle" fill="currentColor">VCA</text>
                 </svg>
-            </button>
-            
-            <!-- Centro: CONTENEDOR INTERACTIVO DEVON & ISLA -->
-            <div id="interactive-header-center" class="absolute left-1/2 transform -translate-x-1/2 h-full flex items-center justify-center cursor-pointer select-none z-10 w-64">
-                
-                <!-- Logo de Texto Normal -->
-                <h1 id="devon-text" class="text-3xl md:text-4xl font-bold tracking-widest text-black mt-1 transition-all duration-500 flex items-center">
-                    DEV
-                    <!-- La letra O con la línea animada -->
-                    <span class="relative inline-flex items-center justify-center group w-[0.8em] h-[1em]">
-                        O
-                        <span class="animated-slash group-hover:bg-brandPink group-hover:shadow-[0_0_8px_#E8A5D6] transition-colors duration-300"></span>
-                    </span>
-                    N
-                </h1>
-
-                <!-- Isla Dinámica Oculta por defecto -->
-                <div id="dynamic-island" class="island-container absolute bg-black rounded-full flex items-center justify-center overflow-hidden shadow-xl">
-                    <div id="island-content" class="w-full flex items-center justify-center transition-all duration-300">
-                        <!-- El contenido se inyecta por JS (Texto, Hora o Vistas) -->
-                        <span class="text-white text-xs md:text-sm font-bold tracking-widest">DEVON</span>
-                    </div>
-                </div>
             </div>
             
-            <!-- Derecha: Iconos (Sólo persona) -->
-            <div class="flex items-center gap-4 z-20">
-                <button id="person-icon-btn" class="text-black hover:scale-110 transition-transform">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <path d="M12 16a4 4 0 0 0-4-4h8a4 4 0 0 0-4 4z"></path>
-                        <circle cx="12" cy="9" r="2.5"></circle>
-                    </svg>
-                </button>
-            </div>
+            <a href="#" class="text-[9px] md:text-[10px] font-bold tracking-widest uppercase text-black border-b border-black pb-0.5 hover:text-gray-600 transition-colors">
+                DESCUBRE LA COLECCIÓN LUCKY SPRING
+            </a>
         </div>
-    </header>
+    </section>
 
     <!-- Contenido Principal -->
     <main class="w-full flex-1 pb-20">
-        <!-- Sección Hero (Con Carrusel Restaurado) -->
-        <section class="max-w-5xl mx-auto px-4 md:px-6 pt-6 md:pt-10 mb-8">
+
+        <!-- NUEVA SECCIÓN: Título EN PORTADA con líneas divisorias -->
+        <div class="w-full max-w-7xl mx-auto px-6 mt-8 md:mt-12 mb-4">
+            <div class="border-t border-b border-gray-200 py-3 md:py-4">
+                <h2 class="text-lg md:text-xl font-medium tracking-widest text-black uppercase" style="font-family: 'Jost', sans-serif;">
+                    EN PORTADA
+                </h2>
+            </div>
+        </div>
+
+        <!-- Sección Hero (Con Carrusel de 3 Imágenes y Textos Dinámicos) -->
+        <section class="max-w-5xl mx-auto px-4 md:px-6 pt-4 md:pt-6 mb-8">
             <div class="w-full md:w-[90%] lg:w-[800px] mx-auto overflow-hidden shadow-lg relative rounded-md bg-gray-200">
-                <div id="hero-anim-container" class="relative w-full aspect-[16/9] md:aspect-[21/9] transform origin-center will-change-transform">
+                <div id="hero-anim-container" class="relative w-full aspect-[16/9] md:aspect-[21/9] transform origin-center will-change-transform bg-black">
                     
-                    <!-- Slide 1: WTC Liquid Original -->
-                    <div class="hero-slide absolute inset-0 transition-opacity duration-1000 opacity-100 z-10">
+                    <!-- Slide 1: WTC Liquid -->
+                    <div class="hero-slide absolute inset-0 transition-opacity duration-700 opacity-100 z-10">
                         <img src="https://www.iclarified.com/images/news/100111/474353/474353-960.avif" alt="WTC Liquid" class="absolute inset-0 w-full h-full object-cover object-center"/>
-                        <div class="absolute inset-0 bg-black/20 flex items-center justify-center pointer-events-none">
-                            <h2 class="text-white text-4xl md:text-6xl font-bold tracking-widest opacity-80 mix-blend-overlay pointer-events-auto">WTC LIQUID</h2>
-                        </div>
                     </div>
 
                     <!-- Slide 2: Fer & Alonso -->
-                    <div class="hero-slide absolute inset-0 transition-opacity duration-1000 opacity-0 z-0">
-                        <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?q=80&w=1000&auto=format&fit=crop" alt="Fer & Alonso" class="absolute inset-0 w-full h-full object-cover object-center"/>
-                        <div class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center pointer-events-none">
-                            <h2 class="text-white text-3xl md:text-5xl font-bold tracking-widest text-center mb-6 pointer-events-auto leading-tight drop-shadow-xl">
-                                Fer & Alonso<br>
-                                <span class="text-xl md:text-2xl font-medium tracking-wider">¿podrás descubrirlo?</span>
-                            </h2>
-                            <button onclick="window.location.href='https://www.instagram.com/alonso_ia_alvarez'" class="bg-black text-white text-xs font-bold tracking-widest px-8 py-3.5 rounded-full transition-transform hover:scale-105 active:scale-95 uppercase shadow-2xl pointer-events-auto border border-gray-600">
-                                IR A VERLOS JUNTOS
-                            </button>
-                        </div>
+                    <div class="hero-slide absolute inset-0 transition-opacity duration-700 opacity-0 z-0">
+                        <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?q=80&w=1000&auto=format&fit=crop" alt="Fer & Alonso" class="absolute inset-0 w-full h-full object-cover object-center opacity-80"/>
+                    </div>
+
+                    <!-- Slide 3: Alonso Alvarez -->
+                    <div class="hero-slide absolute inset-0 transition-opacity duration-700 opacity-0 z-0">
+                        <img src="https://i.ibb.co/NchQM2g/b772fe23-6aca-47db-b91a-0ee4520e85e7.png" alt="Alonso Alvarez" class="absolute inset-0 w-full h-full object-cover object-center"/>
                     </div>
                 </div>
             </div>
 
-            <!-- Indicadores Dinámicos (Dots del Carrusel) -->
-            <div class="flex justify-center items-center gap-2.5 mt-6 mb-2">
+            <!-- Indicadores Dinámicos (Ahora son 3) -->
+            <div class="flex justify-center items-center gap-2.5 mt-6 mb-6">
                 <div class="hero-dot w-8 h-1.5 rounded-full bg-black cursor-pointer transition-all duration-300"></div>
+                <div class="hero-dot w-2 h-2 rounded-full bg-gray-300 cursor-pointer transition-all duration-300"></div>
                 <div class="hero-dot w-2 h-2 rounded-full bg-gray-300 cursor-pointer transition-all duration-300"></div>
             </div>
             
-            <!-- Contenido Hero Textual -->
-            <div class="mt-4 flex flex-col items-center justify-center text-center">
-                <h2 onclick="window.location.href='https://stadereck.github.io/WTC-Liquid/'" class="text-xl md:text-2xl font-bold uppercase tracking-widest leading-snug mb-2 text-black cursor-pointer hover:opacity-70 transition-opacity">
-                    WTC LIQUID<br>
-                    <span class="text-lg md:text-xl">(ACTUALIZACIÓN MAYOR)</span>
-                </h2>
-                <p class="text-xs font-semibold tracking-wider text-gray-500 mb-6 uppercase">DISPONIBLE AHORA</p>
+            <!-- Contenedor Grid para que los textos se apilen en el mismo lugar y se desvanezcan suavemente sin saltos -->
+            <div class="grid relative w-full md:w-[90%] lg:w-[800px] mx-auto text-left px-2 md:px-0">
                 
-                <button onclick="window.location.href='https://stadereck.github.io/WTC-Liquid/'" class="bg-brandPink text-white md:text-black text-xs font-bold tracking-widest px-10 py-3.5 rounded-full transition-transform hover:scale-105 active:scale-95 uppercase shadow-md z-10">
-                    DESCARGAR AHORA
-                </button>
+                <!-- Texto Slide 1 -->
+                <div class="hero-text col-start-1 row-start-1 transition-opacity duration-700 ease-in-out opacity-100 z-10 pointer-events-auto flex flex-col items-start justify-start">
+                    <h2 class="text-2xl md:text-3xl font-medium text-black mb-2" style="font-family: 'Jost', sans-serif;">
+                        WTC LIQUID <span class="text-lg md:text-xl text-gray-500 font-normal ml-1">(ACTUALIZACIÓN MAYOR)</span>
+                    </h2>
+                    <p class="text-[10px] md:text-xs font-semibold tracking-widest text-gray-500 mb-6 uppercase">DISPONIBLE AHORA</p>
+                    <a href="https://stadereck.github.io/WTC-Liquid/" class="link-underline text-xs font-bold tracking-widest uppercase text-black">
+                        DESCARGAR AHORA
+                    </a>
+                </div>
+
+                <!-- Texto Slide 2 -->
+                <div class="hero-text col-start-1 row-start-1 transition-opacity duration-700 ease-in-out opacity-0 z-0 pointer-events-none flex flex-col items-start justify-start">
+                    <h2 class="text-2xl md:text-3xl font-medium text-black mb-6" style="font-family: 'Jost', sans-serif;">
+                        Fer & Alonso, ¿podrás descubrirlo?
+                    </h2>
+                    <a href="https://www.instagram.com/alonso_ia_alvarez" class="link-underline text-xs font-bold tracking-widest uppercase text-black">
+                        IR A VERLOS JUNTOS
+                    </a>
+                </div>
+
+                <!-- Texto Slide 3 (Diseño Vogue) -->
+                <div class="hero-text col-start-1 row-start-1 transition-opacity duration-700 ease-in-out opacity-0 z-0 pointer-events-none flex flex-col items-start justify-start">
+                    <p class="text-[10px] md:text-[11px] font-medium tracking-[0.2em] uppercase text-black mb-3">MODA</p>
+                    <h2 class="text-2xl md:text-4xl lg:text-[2.5rem] font-medium text-black leading-tight mb-5" style="font-family: 'Jost', sans-serif; letter-spacing: -0.02em;">
+                        Alonso Alvarez, el coach modelo mexicano regresa a la portada de Devon
+                    </h2>
+                    <div class="text-[9px] md:text-[10px] font-medium tracking-[0.15em] uppercase text-black leading-relaxed">
+                        <p>POR DERECK J.</p>
+                        <p>FOTOGRAFÍA POR DEVON®</p>
+                        <p class="normal-case mt-1.5 text-[10px] md:text-[11px] text-gray-900 tracking-normal" style="font-family: 'Jost', sans-serif;">1 de abril de 2026</p>
+                    </div>
+                </div>
+
             </div>
         </section>
 
@@ -325,7 +373,7 @@
     <footer class="bg-brandDark text-white pt-16 pb-8 border-t-4 border-brandPink">
         <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10">
             <div class="flex flex-col items-start">
-                <h2 class="text-2xl font-bold tracking-widest mb-4">DEVON</h2>
+                <h2 class="text-3xl md:text-4xl font-bold tracking-widest mb-4 font-serif uppercase">DEVON</h2>
                 <p class="text-xs text-gray-400 font-medium">Plataforma central de actualizaciones y herramientas de renderizado.</p>
             </div>
             <div>
@@ -337,7 +385,7 @@
             </div>
         </div>
         <div class="max-w-7xl mx-auto px-6 mt-12 pt-10 pb-6 border-t border-gray-800 flex flex-col items-center justify-center gap-4">
-            <span class="text-3xl md:text-4xl font-bold tracking-widest text-white">DEVON</span>
+            <span class="text-4xl md:text-5xl font-bold tracking-widest text-white font-serif uppercase">DEVON</span>
             <span class="text-[10px] text-gray-500 uppercase tracking-widest">&copy; 2026. Todos los derechos reservados.</span>
         </div>
     </footer>
@@ -346,7 +394,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
-            // --- 0. Lógica de la Animación Inicial (Zoom a través de la O) ---
+            // --- 0. Animación Inicial ---
             const introContainer = document.getElementById('intro-container');
             const introDev = document.getElementById('intro-dev');
             const introN = document.getElementById('intro-n');
@@ -372,49 +420,42 @@
                 }, 1600); 
             }
 
-            // --- 1. Lógica Global del Contador de Vistas Constante ---
-            let viewsCount = 1000000; // Empezamos en 1 Millón
+            // --- 1. Contador de Vistas Constante ---
+            let viewsCount = 1000000; 
 
-            // La cantidad de vistas siempre sigue subiendo en segundo plano
             setInterval(() => {
-                // Aumenta aleatoriamente entre 1 y 6 personas por segundo
                 viewsCount += Math.floor(Math.random() * 6) + 1; 
-                
                 const counterElement = document.getElementById('views-counter');
                 if (counterElement) {
-                    counterElement.textContent = viewsCount.toLocaleString('en-US'); // Formato con comas: 1,000,000
-                    // Pequeño latido al subir el número
+                    counterElement.textContent = viewsCount.toLocaleString('en-US'); 
                     counterElement.style.transform = 'scale(1.08)';
                     setTimeout(() => counterElement.style.transform = 'scale(1)', 150);
                 }
             }, 1200);
 
-            // --- 2. Lógica Avanzada de la Isla Dinámica ---
+            // --- 2. Isla Dinámica ---
             const interactiveContainer = document.getElementById('interactive-header-center');
             const personBtn = document.getElementById('person-icon-btn');
             const devonText = document.getElementById('devon-text');
             const dynamicIsland = document.getElementById('dynamic-island');
             const islandContent = document.getElementById('island-content');
 
-            let islandMode = 'none'; // 'none', 'default', 'time', 'views'
+            let islandMode = 'none'; 
             let pressTimer;
             let isLongPress = false;
             let lastClickTime = 0;
 
-            // Función Maestra para abrir Isla
             function openIsland(mode) {
                 islandMode = mode;
                 devonText.classList.add('logo-hidden');
                 dynamicIsland.classList.add('active');
 
-                // Limpiar clases de estado previo
                 dynamicIsland.classList.remove('time-mode', 'views-mode');
                 islandContent.classList.add('island-text-fade');
 
                 setTimeout(() => {
-                    // Cargar contenido y aplicar nueva forma según el modo
                     if (mode === 'default') {
-                        islandContent.innerHTML = '<span class="text-white text-xs md:text-sm font-bold tracking-widest">DEVON</span>';
+                        islandContent.innerHTML = '<span class="text-white text-xs md:text-sm font-bold tracking-widest font-serif uppercase">DEVON</span>';
                         islandContent.className = 'w-full flex items-center justify-center transition-all duration-300';
                     } 
                     else if (mode === 'time') {
@@ -433,7 +474,6 @@
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                             </button>
                         `;
-                        // Evento para el botón X
                         document.getElementById('close-island-btn').addEventListener('click', (e) => {
                             e.stopPropagation();
                             closeIsland();
@@ -441,10 +481,9 @@
                     }
                     
                     islandContent.classList.remove('island-text-fade');
-                }, 150); // Tiempo de la transición de fade out
+                }, 150); 
             }
 
-            // Función Maestra para cerrar Isla
             function closeIsland() {
                 islandMode = 'none';
                 dynamicIsland.classList.remove('active', 'time-mode', 'views-mode');
@@ -453,7 +492,6 @@
                 }, 300);
             }
 
-            // Evento: Clic en el botón de Persona (Activar "Views")
             personBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 if (islandMode === 'views') {
@@ -463,7 +501,6 @@
                 }
             });
 
-            // Eventos: Interacción táctil/mouse sobre DEVON (Centro)
             const startPress = (e) => {
                 isLongPress = false;
                 if (navigator.vibrate) navigator.vibrate(20);
@@ -486,13 +523,10 @@
                 const currentTime = new Date().getTime();
                 const timeDiff = currentTime - lastClickTime;
                 
-                // Si es un doble click
                 if (timeDiff < 300 && timeDiff > 0) {
                     if (islandMode === 'views') {
-                        // Doble toque cierra la isla de vistas
                         closeIsland();
                     } else if (islandMode === 'none' || islandMode === 'default') {
-                        // Muestra la hora y auto-cierra después de 3s
                         openIsland('time');
                         setTimeout(() => {
                             if (islandMode === 'time') closeIsland();
@@ -512,18 +546,35 @@
                 interactiveContainer.addEventListener('click', handleClick);
             }
 
-            // --- 3. Lógica del Slider Hero ---
+            // --- 3. Slider Hero (Fotos y Textos Dinámicos Sincronizados) ---
             const slides = document.querySelectorAll('.hero-slide');
+            const texts = document.querySelectorAll('.hero-text');
             const dots = document.querySelectorAll('.hero-dot');
             let currentSlide = 0;
             let slideInterval;
 
             if (slides.length > 0) {
                 function showSlide(index) {
+                    // Actualizar imágenes
                     slides.forEach((slide, i) => {
                         slide.style.opacity = i === index ? '1' : '0';
                         slide.style.zIndex = i === index ? '10' : '0';
                     });
+                    
+                    // Actualizar textos suavemente
+                    texts.forEach((text, i) => {
+                        if (i === index) {
+                            text.style.opacity = '1';
+                            text.style.pointerEvents = 'auto';
+                            text.style.zIndex = '10';
+                        } else {
+                            text.style.opacity = '0';
+                            text.style.pointerEvents = 'none';
+                            text.style.zIndex = '0';
+                        }
+                    });
+
+                    // Actualizar Puntos
                     dots.forEach((dot, i) => {
                         if(i === index) {
                             dot.className = "hero-dot w-8 h-1.5 rounded-full bg-black cursor-pointer transition-all duration-300";
@@ -538,6 +589,7 @@
                     showSlide((currentSlide + 1) % slides.length);
                 }
 
+                // Cambia cada 4.5 segundos
                 slideInterval = setInterval(nextSlide, 4500);
 
                 dots.forEach((dot, index) => {
@@ -549,7 +601,7 @@
                 });
             }
 
-            // --- 4. Lógica de Scroll (Agrandar lentamente y desvanecer MUY ABAJO) ---
+            // --- 4. Lógica de Scroll ---
             const heroAnimContainer = document.getElementById('hero-anim-container');
             
             window.addEventListener('scroll', () => {
