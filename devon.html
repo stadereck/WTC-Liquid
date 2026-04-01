@@ -43,7 +43,7 @@
             scrollbar-width: none;
         }
 
-        /* --- Sincronización Animaciones (Letra O) --- */
+        /* --- Sincronización Animaciones (Letra O principal) --- */
         @keyframes slashAnim {
             0%, 20% { width: 0%; opacity: 0; transform: rotate(-45deg) scaleX(0); }
             30%, 70% { width: 140%; opacity: 1; transform: rotate(-45deg) scaleX(1); }
@@ -68,6 +68,8 @@
             transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             pointer-events: none;
         }
+        
+        /* Modos de la Isla */
         .island-container.active {
             width: 120px; height: 36px; opacity: 1;
             transform: scale(1) translateY(0); pointer-events: auto;
@@ -75,14 +77,27 @@
         .island-container.time-mode {
             width: 80px; border-radius: 12px;
         }
+        .island-container.views-mode {
+            width: 210px; border-radius: 24px; padding: 0 16px;
+        }
+        
         @media (min-width: 768px) {
             .island-container.active { width: 160px; height: 44px; }
             .island-container.time-mode { width: 100px; }
+            .island-container.views-mode { width: 240px; }
         }
+        
         .logo-hidden { opacity: 0; transform: scale(0.5) translateY(20px); pointer-events: none; }
         .island-text-fade { opacity: 0; transform: scale(0.5); }
 
-        /* --- Utilidades Extras (Sidebar y Buscador) --- */
+        /* Efecto de latido para los números */
+        #views-counter {
+            display: inline-block;
+            transition: transform 0.1s ease-out;
+            will-change: transform;
+        }
+
+        /* --- Utilidades Extras (Sidebar) --- */
         .sidebar {
             transform: translateX(-100%);
             transition: transform 0.3s ease-in-out;
@@ -90,22 +105,64 @@
         .sidebar.open {
             transform: translateX(0);
         }
-        .search-bar {
-            transform: translateY(-100%);
+
+        /* Animación Escalonada del Menú Sidebar */
+        .sidebar nav a {
             opacity: 0;
-            transition: all 0.3s ease-in-out;
-            pointer-events: none;
+            transform: translateX(-20px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
         }
-        .search-bar.open {
-            transform: translateY(0);
+        .sidebar.open nav a {
             opacity: 1;
-            pointer-events: auto;
+            transform: translateX(0);
         }
+        .sidebar.open nav a:nth-child(1) { transition-delay: 0.10s; }
+        .sidebar.open nav a:nth-child(2) { transition-delay: 0.15s; }
+        .sidebar.open nav a:nth-child(3) { transition-delay: 0.20s; }
+        .sidebar.open nav a:nth-child(4) { transition-delay: 0.25s; }
+        .sidebar.open nav a:nth-child(5) { transition-delay: 0.30s; }
+        .sidebar.open nav a:nth-child(6) { transition-delay: 0.35s; }
+        .sidebar.open nav a:nth-child(7) { transition-delay: 0.40s; }
+        .sidebar.open nav a:nth-child(8) { transition-delay: 0.45s; }
     </style>
 </head>
 <body class="bg-white text-black font-sans flex flex-col min-h-screen">
 
-    <!-- Overlay de oscurecimiento para Menú y Búsqueda -->
+    <!-- Pantalla de Introducción (Preloader Animado con Variaciones) -->
+    <div id="intro-container" class="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden pointer-events-auto transition-opacity duration-1000">
+        <!-- Fondo base que cambiará de color según la variación -->
+        <div id="intro-bg" class="absolute inset-0 transition-colors duration-300"></div>
+        
+        <div id="intro-text-wrapper" class="relative flex items-center text-5xl md:text-7xl font-bold tracking-widest z-10" style="font-family: 'Jost', sans-serif;">
+            <span id="intro-dev" class="relative z-20 transition-opacity duration-500">DEV</span>
+            <!-- Ajuste de tipografía: Dimensiones de la O calculadas para simular la fuente Jost Bold -->
+            <div class="relative flex items-center justify-center w-[0.72em] h-[0.75em] mx-[0.02em] z-20">
+                <!-- El Anillo O -->
+                <div id="intro-o-ring" class="absolute w-full h-full border-[0.13em] rounded-full transition-transform duration-[1.0s] ease-in-out"></div>
+            </div>
+            <span id="intro-n" class="relative z-20 transition-opacity duration-500">N</span>
+        </div>
+    </div>
+
+    <!-- Script Inline para evitar parpadeos y aplicar la variación alternada al instante -->
+    <script>
+        let lastTheme = localStorage.getItem('devon_intro_theme');
+        let isDarkTheme = true; // Por defecto empezamos en negro con letras blancas
+        
+        if (lastTheme === 'dark') {
+            isDarkTheme = false; // Si el anterior fue negro, ahora toca blanco
+        } else if (lastTheme === 'light') {
+            isDarkTheme = true;  // Si el anterior fue blanco, ahora toca negro
+        }
+        
+        localStorage.setItem('devon_intro_theme', isDarkTheme ? 'dark' : 'light');
+        
+        document.getElementById('intro-bg').style.backgroundColor = isDarkTheme ? '#000000' : '#ffffff';
+        document.getElementById('intro-text-wrapper').style.color = isDarkTheme ? '#ffffff' : '#000000';
+        document.getElementById('intro-o-ring').style.borderColor = isDarkTheme ? '#ffffff' : '#000000';
+    </script>
+
+    <!-- Overlay de oscurecimiento para Menú -->
     <div id="overlay" class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity opacity-0" onclick="closeAll()"></div>
 
     <!-- Menú Lateral (Sidebar) -->
@@ -128,18 +185,16 @@
         </nav>
     </aside>
 
-    <!-- Barra de Búsqueda Desplegable -->
-    <div id="searchContainer" class="search-bar fixed top-0 left-0 w-full bg-white z-50 shadow-md p-4 flex justify-center items-center gap-4">
-        <input type="text" placeholder="Buscar actualizaciones, parches..." class="w-full max-w-2xl border border-gray-300 rounded-full px-6 py-3 text-sm focus:outline-none focus:border-brandPink focus:ring-1 focus:ring-brandPink">
-        <button onclick="toggleSearch()" class="text-gray-500 hover:text-black p-2">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-        </button>
-    </div>
-
     <!-- Top Bar -->
-    <div class="hidden md:flex w-full justify-center gap-8 text-[10px] font-semibold tracking-widest text-gray-500 uppercase py-2 bg-white border-b border-gray-100">
-        <button class="hover:text-black transition-colors">ACTUALIZACIONES</button>
-        <button class="hover:text-black transition-colors">DESCUBRIR</button>
+    <div class="hidden md:flex w-full justify-center gap-6 text-[10px] font-bold tracking-widest text-black uppercase py-4 bg-white border-b border-gray-100 overflow-x-auto whitespace-nowrap px-6">
+        <span class="cursor-default hover:text-gray-500 transition-colors">MODA</span>
+        <span class="cursor-default hover:text-gray-500 transition-colors">BELLEZA</span>
+        <span class="cursor-default hover:text-gray-500 transition-colors">ESTILO DE VIDA</span>
+        <span class="cursor-default hover:text-gray-500 transition-colors">COMPRAS</span>
+        <span class="cursor-default hover:text-gray-500 transition-colors">(RE)DEVON</span>
+        <span class="cursor-default hover:text-gray-500 transition-colors">HOLLYWOOD</span>
+        <span class="cursor-default hover:text-gray-500 transition-colors">PODCAST</span>
+        <span class="cursor-default hover:text-gray-500 transition-colors">ESPACIO DEVON</span>
     </div>
 
     <!-- Pestañas Superiores (Solo Móvil) -->
@@ -165,7 +220,7 @@
             </button>
             
             <!-- Centro: CONTENEDOR INTERACTIVO DEVON & ISLA -->
-            <div id="interactive-header-center" class="absolute left-1/2 transform -translate-x-1/2 h-full flex items-center justify-center cursor-pointer select-none z-10 w-48">
+            <div id="interactive-header-center" class="absolute left-1/2 transform -translate-x-1/2 h-full flex items-center justify-center cursor-pointer select-none z-10 w-64">
                 
                 <!-- Logo de Texto Normal -->
                 <h1 id="devon-text" class="text-3xl md:text-4xl font-bold tracking-widest text-black mt-1 transition-all duration-500 flex items-center">
@@ -180,20 +235,16 @@
 
                 <!-- Isla Dinámica Oculta por defecto -->
                 <div id="dynamic-island" class="island-container absolute bg-black rounded-full flex items-center justify-center overflow-hidden shadow-xl">
-                    <span id="island-content" class="text-white text-xs md:text-sm font-bold tracking-widest transition-all duration-300">DEVON</span>
+                    <div id="island-content" class="w-full flex items-center justify-center transition-all duration-300">
+                        <!-- El contenido se inyecta por JS (Texto, Hora o Vistas) -->
+                        <span class="text-white text-xs md:text-sm font-bold tracking-widest">DEVON</span>
+                    </div>
                 </div>
             </div>
             
-            <!-- Derecha: Iconos -->
+            <!-- Derecha: Iconos (Sólo persona) -->
             <div class="flex items-center gap-4 z-20">
-                <!-- Botón Lupa Funcional -->
-                <button onclick="toggleSearch()" class="text-black hidden md:block hover:scale-110 transition-transform">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                </button>
-                <button class="text-black hover:scale-110 transition-transform">
+                <button id="person-icon-btn" class="text-black hover:scale-110 transition-transform">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="10"></circle>
                         <path d="M12 16a4 4 0 0 0-4-4h8a4 4 0 0 0-4 4z"></path>
@@ -206,34 +257,22 @@
 
     <!-- Contenido Principal -->
     <main class="w-full flex-1 pb-20">
-        <!-- Sección Hero -->
+        <!-- Sección Hero (Con Carrusel Restaurado) -->
         <section class="max-w-5xl mx-auto px-4 md:px-6 pt-6 md:pt-10 mb-8">
-            <!-- Contenedor con overflow hidden para animar el Scroll -->
             <div class="w-full md:w-[90%] lg:w-[800px] mx-auto overflow-hidden shadow-lg relative rounded-md bg-gray-200">
-                <!-- Contenedor interno que se animará con el Scroll (Agrandar lentamente y desvanecer al estar muy abajo) -->
                 <div id="hero-anim-container" class="relative w-full aspect-[16/9] md:aspect-[21/9] transform origin-center will-change-transform">
                     
                     <!-- Slide 1: WTC Liquid Original -->
                     <div class="hero-slide absolute inset-0 transition-opacity duration-1000 opacity-100 z-10">
-                        <img 
-                            src="https://www.iclarified.com/images/news/100111/474353/474353-960.avif" 
-                            alt="WTC Liquid" 
-                            class="absolute inset-0 w-full h-full object-cover object-center"
-                        />
+                        <img src="https://www.iclarified.com/images/news/100111/474353/474353-960.avif" alt="WTC Liquid" class="absolute inset-0 w-full h-full object-cover object-center"/>
                         <div class="absolute inset-0 bg-black/20 flex items-center justify-center pointer-events-none">
-                            <h2 class="text-white text-4xl md:text-6xl font-bold tracking-widest opacity-80 mix-blend-overlay pointer-events-auto">
-                                WTC LIQUID
-                            </h2>
+                            <h2 class="text-white text-4xl md:text-6xl font-bold tracking-widest opacity-80 mix-blend-overlay pointer-events-auto">WTC LIQUID</h2>
                         </div>
                     </div>
 
                     <!-- Slide 2: Fer & Alonso -->
                     <div class="hero-slide absolute inset-0 transition-opacity duration-1000 opacity-0 z-0">
-                        <img 
-                            src="https://images.unsplash.com/photo-1511895426328-dc8714191300?q=80&w=1000&auto=format&fit=crop" 
-                            alt="Fer & Alonso" 
-                            class="absolute inset-0 w-full h-full object-cover object-center"
-                        />
+                        <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?q=80&w=1000&auto=format&fit=crop" alt="Fer & Alonso" class="absolute inset-0 w-full h-full object-cover object-center"/>
                         <div class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center pointer-events-none">
                             <h2 class="text-white text-3xl md:text-5xl font-bold tracking-widest text-center mb-6 pointer-events-auto leading-tight drop-shadow-xl">
                                 Fer & Alonso<br>
@@ -267,73 +306,6 @@
             </div>
         </section>
 
-        <!-- Subnavegación Centrada (Basada en la nueva imagen) -->
-        <div class="max-w-4xl mx-auto border-b border-gray-200 mb-10">
-            <div class="flex justify-center gap-6 md:gap-12 px-6 overflow-x-auto no-scrollbar">
-                <button class="pb-3 text-xs md:text-sm font-bold uppercase tracking-wider border-b-2 border-brandPink text-black whitespace-nowrap">
-                    TODAS
-                </button>
-                <button class="pb-3 text-xs md:text-sm font-semibold uppercase tracking-wider text-gray-400 hover:text-black transition-colors whitespace-nowrap">
-                    DISPONIBLE AHORA
-                </button>
-                <button class="pb-3 text-xs md:text-sm font-semibold uppercase tracking-wider text-gray-400 hover:text-black transition-colors whitespace-nowrap">
-                    PRÓXIMAMENTE
-                </button>
-            </div>
-        </div>
-
-        <!-- Cuadrícula de Actualizaciones (Idéntica a la imagen) -->
-        <section class="max-w-6xl mx-auto px-4 md:px-6">
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
-                <!-- Tarjeta 1 -->
-                <div class="group" onclick="window.location.href='https://stadereck.github.io/WTC-Liquid/'">
-                    <div class="relative aspect-square lg:aspect-[4/5] bg-gray-200 overflow-hidden rounded-xl mb-3 cursor-pointer shadow-sm">
-                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="WTC Liquid 3.0">
-                        <span class="absolute top-3 right-3 bg-brandPink text-[10px] font-bold px-2 py-1 rounded text-white uppercase tracking-wider shadow-sm">NUEVO</span>
-                    </div>
-                    <h3 class="text-sm font-bold truncate cursor-pointer hover:text-brandPink">WTC Liquid 3.0</h3>
-                    <p class="text-[10px] text-gray-500 uppercase">Estable</p>
-                </div>
-
-                <!-- Tarjeta 2 -->
-                <div class="group" onclick="window.location.href='https://stadereck.github.io/WTC-Liquid/betaindex.html'">
-                    <div class="relative aspect-square lg:aspect-[4/5] bg-gray-200 overflow-hidden rounded-xl mb-3 cursor-pointer shadow-sm">
-                        <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Actualización 28.6 RC">
-                    </div>
-                    <h3 class="text-sm font-bold truncate cursor-pointer hover:text-brandPink">Actualización 28.6 RC</h3>
-                    <p class="text-[10px] text-gray-500 uppercase">Release Candidate</p>
-                </div>
-
-                <!-- Tarjeta 3 -->
-                <div class="group" onclick="window.location.href='https://stadereck.github.io/WTC-Liquid/betaindex.html'">
-                    <div class="relative aspect-square lg:aspect-[4/5] bg-gray-200 overflow-hidden rounded-xl mb-3 cursor-pointer shadow-sm">
-                        <img src="https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Parche 2.8.1">
-                        <span class="absolute top-3 right-3 bg-green-500 text-[10px] font-bold px-2 py-1 rounded text-white uppercase tracking-wider shadow-sm">ESTABLE</span>
-                    </div>
-                    <h3 class="text-sm font-bold truncate cursor-pointer hover:text-brandPink">Parche 2.8.1</h3>
-                    <p class="text-[10px] text-gray-500 uppercase">Animaciones</p>
-                </div>
-
-                <!-- Tarjeta 4 -->
-                <div class="group" onclick="window.location.href='https://stadereck.github.io/WTC-Liquid/betaindex.html'">
-                    <div class="relative aspect-square lg:aspect-[4/5] bg-gray-200 overflow-hidden rounded-xl mb-3 cursor-pointer shadow-sm">
-                        <img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Beta 29.0 Preview">
-                        <span class="absolute top-3 right-3 bg-blue-500 text-[10px] font-bold px-2 py-1 rounded text-white uppercase tracking-wider shadow-sm">BETA</span>
-                    </div>
-                    <h3 class="text-sm font-bold truncate cursor-pointer hover:text-brandPink">Beta 29.0 Preview</h3>
-                    <p class="text-[10px] text-gray-500 uppercase">Motor Gráfico</p>
-                </div>
-
-                <!-- Tarjeta 5 -->
-                <div class="group" onclick="window.location.href='https://stadereck.github.io/WTC-Liquid/betaindex.html'">
-                    <div class="relative aspect-square lg:aspect-[4/5] bg-gray-200 overflow-hidden rounded-xl mb-3 cursor-pointer shadow-sm">
-                        <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Renderización v2.0">
-                    </div>
-                    <h3 class="text-sm font-bold truncate cursor-pointer hover:text-brandPink">Renderización v2.0</h3>
-                    <p class="text-[10px] text-gray-500 uppercase">Core</p>
-                </div>
-            </div>
-        </section>
     </main>
 
     <!-- Footer -->
@@ -351,65 +323,227 @@
                 </ul>
             </div>
         </div>
-        <!-- Copyright Editado -->
-        <div class="max-w-7xl mx-auto px-6 mt-12 pt-6 border-t border-gray-800 text-center text-[10px] text-gray-500 uppercase tracking-widest flex items-center justify-center gap-1">
-            &copy; 2026 <span class="text-sm md:text-base font-bold tracking-widest text-white ml-1">DEVON</span>. Todos los derechos reservados.
+        <div class="max-w-7xl mx-auto px-6 mt-12 pt-10 pb-6 border-t border-gray-800 flex flex-col items-center justify-center gap-4">
+            <span class="text-3xl md:text-4xl font-bold tracking-widest text-white">DEVON</span>
+            <span class="text-[10px] text-gray-500 uppercase tracking-widest">&copy; 2026. Todos los derechos reservados.</span>
         </div>
     </footer>
 
     <!-- SCIPT DE INTERACCIONES GLOBALES -->
     <script>
-        // --- 1. Lógica del Slider Hero ---
         document.addEventListener('DOMContentLoaded', () => {
+
+            // --- 0. Lógica de la Animación Inicial (Zoom a través de la O) ---
+            const introContainer = document.getElementById('intro-container');
+            const introDev = document.getElementById('intro-dev');
+            const introN = document.getElementById('intro-n');
+            const introORing = document.getElementById('intro-o-ring');
+
+            if (introContainer) {
+                document.body.style.overflow = 'hidden';
+
+                setTimeout(() => {
+                    introDev.style.opacity = '0';
+                    introN.style.opacity = '0';
+
+                    setTimeout(() => {
+                        introORing.style.transform = 'scale(150)';
+                        introContainer.style.opacity = '0';
+                        document.body.style.overflow = '';
+
+                        setTimeout(() => {
+                            introContainer.remove();
+                        }, 1000); 
+
+                    }, 400); 
+                }, 1600); 
+            }
+
+            // --- 1. Lógica Global del Contador de Vistas Constante ---
+            let viewsCount = 1000000; // Empezamos en 1 Millón
+
+            // La cantidad de vistas siempre sigue subiendo en segundo plano
+            setInterval(() => {
+                // Aumenta aleatoriamente entre 1 y 6 personas por segundo
+                viewsCount += Math.floor(Math.random() * 6) + 1; 
+                
+                const counterElement = document.getElementById('views-counter');
+                if (counterElement) {
+                    counterElement.textContent = viewsCount.toLocaleString('en-US'); // Formato con comas: 1,000,000
+                    // Pequeño latido al subir el número
+                    counterElement.style.transform = 'scale(1.08)';
+                    setTimeout(() => counterElement.style.transform = 'scale(1)', 150);
+                }
+            }, 1200);
+
+            // --- 2. Lógica Avanzada de la Isla Dinámica ---
+            const interactiveContainer = document.getElementById('interactive-header-center');
+            const personBtn = document.getElementById('person-icon-btn');
+            const devonText = document.getElementById('devon-text');
+            const dynamicIsland = document.getElementById('dynamic-island');
+            const islandContent = document.getElementById('island-content');
+
+            let islandMode = 'none'; // 'none', 'default', 'time', 'views'
+            let pressTimer;
+            let isLongPress = false;
+            let lastClickTime = 0;
+
+            // Función Maestra para abrir Isla
+            function openIsland(mode) {
+                islandMode = mode;
+                devonText.classList.add('logo-hidden');
+                dynamicIsland.classList.add('active');
+
+                // Limpiar clases de estado previo
+                dynamicIsland.classList.remove('time-mode', 'views-mode');
+                islandContent.classList.add('island-text-fade');
+
+                setTimeout(() => {
+                    // Cargar contenido y aplicar nueva forma según el modo
+                    if (mode === 'default') {
+                        islandContent.innerHTML = '<span class="text-white text-xs md:text-sm font-bold tracking-widest">DEVON</span>';
+                        islandContent.className = 'w-full flex items-center justify-center transition-all duration-300';
+                    } 
+                    else if (mode === 'time') {
+                        dynamicIsland.classList.add('time-mode');
+                        islandContent.innerHTML = `<span class="text-white text-xs md:text-sm font-bold tracking-widest">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>`;
+                        islandContent.className = 'w-full flex items-center justify-center transition-all duration-300';
+                    } 
+                    else if (mode === 'views') {
+                        dynamicIsland.classList.add('views-mode');
+                        islandContent.className = 'w-full flex items-center justify-between transition-all duration-300';
+                        islandContent.innerHTML = `
+                            <span class="flex items-center gap-1.5 text-gray-300 font-normal text-xs md:text-sm whitespace-nowrap">
+                                Visto por <span id="views-counter" class="text-white font-bold tracking-widest">${viewsCount.toLocaleString('en-US')}</span>
+                            </span>
+                            <button id="close-island-btn" class="text-gray-400 hover:text-white ml-2 transition-colors shrink-0">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            </button>
+                        `;
+                        // Evento para el botón X
+                        document.getElementById('close-island-btn').addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            closeIsland();
+                        });
+                    }
+                    
+                    islandContent.classList.remove('island-text-fade');
+                }, 150); // Tiempo de la transición de fade out
+            }
+
+            // Función Maestra para cerrar Isla
+            function closeIsland() {
+                islandMode = 'none';
+                dynamicIsland.classList.remove('active', 'time-mode', 'views-mode');
+                setTimeout(() => {
+                    devonText.classList.remove('logo-hidden');
+                }, 300);
+            }
+
+            // Evento: Clic en el botón de Persona (Activar "Views")
+            personBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (islandMode === 'views') {
+                    closeIsland();
+                } else {
+                    openIsland('views');
+                }
+            });
+
+            // Eventos: Interacción táctil/mouse sobre DEVON (Centro)
+            const startPress = (e) => {
+                isLongPress = false;
+                if (navigator.vibrate) navigator.vibrate(20);
+
+                pressTimer = setTimeout(() => {
+                    isLongPress = true;
+                    if (navigator.vibrate) navigator.vibrate(50);
+                    
+                    if (islandMode !== 'none') closeIsland();
+                    else openIsland('default');
+                    
+                }, 500); 
+            };
+
+            const endPress = () => { clearTimeout(pressTimer); };
+
+            const handleClick = (e) => {
+                if (isLongPress) return; 
+                
+                const currentTime = new Date().getTime();
+                const timeDiff = currentTime - lastClickTime;
+                
+                // Si es un doble click
+                if (timeDiff < 300 && timeDiff > 0) {
+                    if (islandMode === 'views') {
+                        // Doble toque cierra la isla de vistas
+                        closeIsland();
+                    } else if (islandMode === 'none' || islandMode === 'default') {
+                        // Muestra la hora y auto-cierra después de 3s
+                        openIsland('time');
+                        setTimeout(() => {
+                            if (islandMode === 'time') closeIsland();
+                        }, 3000);
+                    }
+                }
+                lastClickTime = currentTime;
+            };
+
+            if(interactiveContainer) {
+                interactiveContainer.addEventListener('mousedown', startPress);
+                interactiveContainer.addEventListener('mouseup', endPress);
+                interactiveContainer.addEventListener('mouseleave', endPress);
+                interactiveContainer.addEventListener('touchstart', startPress);
+                interactiveContainer.addEventListener('touchend', endPress);
+                interactiveContainer.addEventListener('touchcancel', endPress);
+                interactiveContainer.addEventListener('click', handleClick);
+            }
+
+            // --- 3. Lógica del Slider Hero ---
             const slides = document.querySelectorAll('.hero-slide');
             const dots = document.querySelectorAll('.hero-dot');
             let currentSlide = 0;
             let slideInterval;
 
-            function showSlide(index) {
-                slides.forEach((slide, i) => {
-                    slide.style.opacity = i === index ? '1' : '0';
-                    slide.style.zIndex = i === index ? '10' : '0';
+            if (slides.length > 0) {
+                function showSlide(index) {
+                    slides.forEach((slide, i) => {
+                        slide.style.opacity = i === index ? '1' : '0';
+                        slide.style.zIndex = i === index ? '10' : '0';
+                    });
+                    dots.forEach((dot, i) => {
+                        if(i === index) {
+                            dot.className = "hero-dot w-8 h-1.5 rounded-full bg-black cursor-pointer transition-all duration-300";
+                        } else {
+                            dot.className = "hero-dot w-2 h-2 rounded-full bg-gray-300 cursor-pointer transition-all duration-300";
+                        }
+                    });
+                    currentSlide = index;
+                }
+
+                function nextSlide() {
+                    showSlide((currentSlide + 1) % slides.length);
+                }
+
+                slideInterval = setInterval(nextSlide, 4500);
+
+                dots.forEach((dot, index) => {
+                    dot.addEventListener('click', () => {
+                        clearInterval(slideInterval);
+                        showSlide(index);
+                        slideInterval = setInterval(nextSlide, 4500);
+                    });
                 });
-                dots.forEach((dot, i) => {
-                    if(i === index) {
-                        dot.className = "hero-dot w-8 h-1.5 rounded-full bg-black cursor-pointer transition-all duration-300";
-                    } else {
-                        dot.className = "hero-dot w-2 h-2 rounded-full bg-gray-300 cursor-pointer transition-all duration-300";
-                    }
-                });
-                currentSlide = index;
             }
 
-            function nextSlide() {
-                showSlide((currentSlide + 1) % slides.length);
-            }
-
-            // Iniciar animación del slider cada 4.5 segundos
-            slideInterval = setInterval(nextSlide, 4500);
-
-            // Control manual desde los puntos (dots)
-            dots.forEach((dot, index) => {
-                dot.addEventListener('click', () => {
-                    clearInterval(slideInterval);
-                    showSlide(index);
-                    slideInterval = setInterval(nextSlide, 4500);
-                });
-            });
-        });
-
-        // --- 2. Lógica de Scroll (Agrandar lentamente y desvanecer MUY ABAJO) ---
-        document.addEventListener('DOMContentLoaded', () => {
+            // --- 4. Lógica de Scroll (Agrandar lentamente y desvanecer MUY ABAJO) ---
             const heroAnimContainer = document.getElementById('hero-anim-container');
             
             window.addEventListener('scroll', () => {
                 if (!heroAnimContainer) return;
                 const scrollY = window.scrollY;
                 
-                // 1. Efecto Agrandar: Comienza desde el inicio muy sutilmente
                 const scale = 1 + (scrollY * 0.0004);
-                
-                // 2. Efecto Desvanecer: Solo comienza después de bajar 300px (muy abajo)
                 let opacity = 1;
                 const fadeStartPoint = 300; 
                 
@@ -422,34 +556,20 @@
             });
         });
 
-        // --- 3. Lógica del Menú Hamburguesa y Búsqueda ---
+        // --- 5. Funciones Globales (Menú Hamburguesa) ---
         const overlay = document.getElementById('overlay');
         const sidebar = document.getElementById('sidebarMenu');
-        const searchContainer = document.getElementById('searchContainer');
 
         function toggleMenu() {
             sidebar.classList.toggle('open');
             if (sidebar.classList.contains('open')) {
                 showOverlay();
-                closeSearch(); 
-            } else {
-                hideOverlay();
-            }
-        }
-
-        function toggleSearch() {
-            searchContainer.classList.toggle('open');
-            if (searchContainer.classList.contains('open')) {
-                showOverlay();
-                closeMenu(); 
-                searchContainer.querySelector('input').focus();
             } else {
                 hideOverlay();
             }
         }
 
         function closeMenu() { sidebar.classList.remove('open'); }
-        function closeSearch() { searchContainer.classList.remove('open'); }
         
         function showOverlay() {
             overlay.classList.remove('hidden');
@@ -459,88 +579,9 @@
             overlay.classList.add('opacity-0');
             setTimeout(() => overlay.classList.add('hidden'), 300);
             closeMenu();
-            closeSearch();
         }
         function closeAll() { hideOverlay(); }
 
-        // --- 4. Lógica de la Isla Dinámica ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const interactiveContainer = document.getElementById('interactive-header-center');
-            const devonText = document.getElementById('devon-text');
-            const dynamicIsland = document.getElementById('dynamic-island');
-            const islandContent = document.getElementById('island-content');
-
-            let pressTimer;
-            let isLongPress = false;
-            let isIslandActive = false;
-            let lastClickTime = 0;
-
-            const startPress = (e) => {
-                isLongPress = false;
-                if (navigator.vibrate) navigator.vibrate(20);
-
-                pressTimer = setTimeout(() => {
-                    isLongPress = true;
-                    if (navigator.vibrate) navigator.vibrate(50);
-                    toggleIsland();
-                }, 500); 
-            };
-
-            const endPress = () => { clearTimeout(pressTimer); };
-
-            const handleClick = (e) => {
-                if (isLongPress) return; 
-                
-                const currentTime = new Date().getTime();
-                const timeDiff = currentTime - lastClickTime;
-                
-                if (timeDiff < 300 && timeDiff > 0) {
-                    if (isIslandActive) showTime();
-                }
-                lastClickTime = currentTime;
-            };
-
-            interactiveContainer.addEventListener('mousedown', startPress);
-            interactiveContainer.addEventListener('mouseup', endPress);
-            interactiveContainer.addEventListener('mouseleave', endPress);
-            interactiveContainer.addEventListener('touchstart', startPress);
-            interactiveContainer.addEventListener('touchend', endPress);
-            interactiveContainer.addEventListener('touchcancel', endPress);
-            interactiveContainer.addEventListener('click', handleClick);
-
-            function toggleIsland() {
-                if (!isIslandActive) {
-                    isIslandActive = true;
-                    devonText.classList.add('logo-hidden');
-                    setTimeout(() => dynamicIsland.classList.add('active'), 100);
-                } else {
-                    isIslandActive = false;
-                    dynamicIsland.classList.remove('active');
-                    setTimeout(() => devonText.classList.remove('logo-hidden'), 300);
-                }
-            }
-
-            function showTime() {
-                islandContent.classList.add('island-text-fade');
-                dynamicIsland.classList.add('time-mode');
-                
-                setTimeout(() => {
-                    const now = new Date();
-                    islandContent.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    islandContent.classList.remove('island-text-fade');
-                    
-                    setTimeout(() => {
-                        if (!isIslandActive) return; 
-                        islandContent.classList.add('island-text-fade');
-                        dynamicIsland.classList.remove('time-mode');
-                        setTimeout(() => {
-                            islandContent.textContent = 'DEVON';
-                            islandContent.classList.remove('island-text-fade');
-                        }, 300);
-                    }, 3000);
-                }, 300); 
-            }
-        });
     </script>
 </body>
 </html>
