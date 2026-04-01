@@ -124,7 +124,7 @@
         .sidebar.open nav a:nth-child(7) { transition-delay: 0.40s; }
         .sidebar.open nav a:nth-child(8) { transition-delay: 0.45s; }
 
-        /* --- Nueva Animación de Línea para los Enlaces (Botones convertidos a texto) --- */
+        /* --- Animación de Línea para los Enlaces --- */
         .link-underline {
             position: relative;
             display: inline-block;
@@ -190,13 +190,14 @@
         </div>
         <nav class="flex flex-col p-4 gap-4 text-sm font-semibold tracking-wider text-gray-600 uppercase overflow-y-auto no-scrollbar pb-20">
             <a href="#" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Inicio</a>
-            <a href="https://stadereck.github.io/WTC-Liquid/" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">WTC Liquid Base</a>
-            <a href="https://stadereck.github.io/WTC-Liquid/betaindex.html" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Versiones Beta</a>
-            <a href="https://stadereck.github.io/WTC-Liquid/assumptions.html" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Assumptions</a>
-            <a href="https://stadereck.github.io/WTC-Liquid/reservadminabuse.html" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Admin Abuse</a>
-            <a href="https://stadereck.github.io/WTC-Liquid/lite.html" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">LITE</a>
-            <a href="https://stadereck.github.io/WTC-Liquid/ultra.html" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Ultra</a>
-            <a href="#" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Soporte</a>
+            <a href="#" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Moda</a>
+            <a href="#" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Belleza</a>
+            <a href="#" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Estilo de Vida</a>
+            <a href="#" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Compras</a>
+            <a href="#" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">(Re)Devon</a>
+            <a href="#" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Hollywood</a>
+            <a href="#" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Podcast</a>
+            <a href="#" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Espacio Devon</a>
         </nav>
     </aside>
 
@@ -255,10 +256,10 @@
     <!-- Pestañas Superiores (Solo Móvil) -->
     <div class="flex md:hidden w-full text-[11px] font-semibold tracking-wider text-gray-500 uppercase">
         <button class="w-1/2 py-4 flex items-center justify-center bg-white text-black border-b-2 border-black">
-            ACTUALIZACIONES
+            LO ÚLTIMO
         </button>
-        <button onclick="window.location.href='https://stadereck.github.io/WTC-Liquid/'" class="w-1/2 py-4 flex items-center justify-center bg-[#f0f0f0] border-l border-gray-200 hover:bg-gray-200 transition-colors cursor-pointer">
-            WTC LIQUID
+        <button class="w-1/2 py-4 flex items-center justify-center bg-[#f0f0f0] border-l border-gray-200 hover:bg-gray-200 transition-colors cursor-pointer">
+            TENDENCIAS
         </button>
     </div>
 
@@ -289,7 +290,7 @@
     <!-- Contenido Principal -->
     <main class="w-full flex-1 pb-20">
 
-        <!-- NUEVA SECCIÓN: Título EN PORTADA con líneas divisorias -->
+        <!-- Título EN PORTADA con líneas divisorias -->
         <div class="w-full max-w-7xl mx-auto px-6 mt-8 md:mt-12 mb-4">
             <div class="border-t border-b border-gray-200 py-3 md:py-4">
                 <h2 class="text-lg md:text-xl font-medium tracking-widest text-black uppercase" style="font-family: 'Jost', sans-serif;">
@@ -298,51 +299,35 @@
             </div>
         </div>
 
-        <!-- Sección Hero (Con Carrusel de 3 Imágenes y Textos Dinámicos) -->
-        <section class="max-w-5xl mx-auto px-4 md:px-6 pt-4 md:pt-6 mb-8">
-            <div class="w-full md:w-[90%] lg:w-[800px] mx-auto overflow-hidden shadow-lg relative rounded-md bg-gray-200">
-                <div id="hero-anim-container" class="relative w-full aspect-[16/9] md:aspect-[21/9] transform origin-center will-change-transform bg-black">
+        <!-- Sección Hero (Carrusel Deslizante) -->
+        <section class="max-w-7xl w-full mx-auto px-4 md:px-6 pt-4 md:pt-6 mb-4">
+            <!-- Contenedor del Carrusel -->
+            <div class="w-full mx-auto overflow-hidden shadow-lg relative bg-gray-200 rounded-2xl md:rounded-[2rem]">
+                <div id="hero-anim-container" class="relative w-full aspect-[4/3] md:aspect-[16/9] transform origin-center will-change-transform bg-black">
                     
-                    <!-- Slide 1: WTC Liquid -->
-                    <div class="hero-slide absolute inset-0 transition-opacity duration-700 opacity-100 z-10">
-                        <img src="https://www.iclarified.com/images/news/100111/474353/474353-960.avif" alt="WTC Liquid" class="absolute inset-0 w-full h-full object-cover object-center"/>
-                    </div>
-
-                    <!-- Slide 2: Fer & Alonso -->
-                    <div class="hero-slide absolute inset-0 transition-opacity duration-700 opacity-0 z-0">
+                    <!-- Slide 1: Fer & Alonso -->
+                    <div class="hero-slide absolute inset-0 transition-transform duration-500 ease-in-out transform translate-x-0 z-10">
                         <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?q=80&w=1000&auto=format&fit=crop" alt="Fer & Alonso" class="absolute inset-0 w-full h-full object-cover object-center opacity-80"/>
                     </div>
 
-                    <!-- Slide 3: Alonso Alvarez -->
-                    <div class="hero-slide absolute inset-0 transition-opacity duration-700 opacity-0 z-0">
-                        <img src="https://i.ibb.co/NchQM2g/b772fe23-6aca-47db-b91a-0ee4520e85e7.png" alt="Alonso Alvarez" class="absolute inset-0 w-full h-full object-cover object-center"/>
+                    <!-- Slide 2: Alonso Alvarez -->
+                    <div class="hero-slide absolute inset-0 transition-transform duration-500 ease-in-out transform translate-x-full z-0">
+                        <img src="https://i.ibb.co/NchQM2g/b772fe23-6aca-47db-b91a-0ee4520e85e7.png" alt="Alonso Alvarez" class="absolute inset-0 w-full h-full object-cover object-top md:object-[center_15%]"/>
                     </div>
                 </div>
             </div>
 
-            <!-- Indicadores Dinámicos (Ahora son 3) -->
+            <!-- Indicadores Dinámicos -->
             <div class="flex justify-center items-center gap-2.5 mt-6 mb-6">
                 <div class="hero-dot w-8 h-1.5 rounded-full bg-black cursor-pointer transition-all duration-300"></div>
                 <div class="hero-dot w-2 h-2 rounded-full bg-gray-300 cursor-pointer transition-all duration-300"></div>
-                <div class="hero-dot w-2 h-2 rounded-full bg-gray-300 cursor-pointer transition-all duration-300"></div>
             </div>
             
-            <!-- Contenedor Grid para que los textos se apilen en el mismo lugar y se desvanezcan suavemente sin saltos -->
-            <div class="grid relative w-full md:w-[90%] lg:w-[800px] mx-auto text-left px-2 md:px-0">
+            <!-- Contenedor Wrapper para Animación de Altura (Eliminamos espacio vacío) -->
+            <div id="text-wrapper" class="relative w-full mx-auto overflow-hidden transition-[height] duration-500 ease-in-out px-2 md:px-4">
                 
                 <!-- Texto Slide 1 -->
-                <div class="hero-text col-start-1 row-start-1 transition-opacity duration-700 ease-in-out opacity-100 z-10 pointer-events-auto flex flex-col items-start justify-start">
-                    <h2 class="text-2xl md:text-3xl font-medium text-black mb-2" style="font-family: 'Jost', sans-serif;">
-                        WTC LIQUID <span class="text-lg md:text-xl text-gray-500 font-normal ml-1">(ACTUALIZACIÓN MAYOR)</span>
-                    </h2>
-                    <p class="text-[10px] md:text-xs font-semibold tracking-widest text-gray-500 mb-6 uppercase">DISPONIBLE AHORA</p>
-                    <a href="https://stadereck.github.io/WTC-Liquid/" class="link-underline text-xs font-bold tracking-widest uppercase text-black">
-                        DESCARGAR AHORA
-                    </a>
-                </div>
-
-                <!-- Texto Slide 2 -->
-                <div class="hero-text col-start-1 row-start-1 transition-opacity duration-700 ease-in-out opacity-0 z-0 pointer-events-none flex flex-col items-start justify-start">
+                <div class="hero-text absolute top-0 left-0 w-full px-2 md:px-4 transition-opacity duration-500 ease-in-out opacity-100 z-10 pointer-events-auto flex flex-col items-start justify-start">
                     <h2 class="text-2xl md:text-3xl font-medium text-black mb-6" style="font-family: 'Jost', sans-serif;">
                         Fer & Alonso, ¿podrás descubrirlo?
                     </h2>
@@ -351,42 +336,123 @@
                     </a>
                 </div>
 
-                <!-- Texto Slide 3 (Diseño Vogue) -->
-                <div class="hero-text col-start-1 row-start-1 transition-opacity duration-700 ease-in-out opacity-0 z-0 pointer-events-none flex flex-col items-start justify-start">
-                    <p class="text-[10px] md:text-[11px] font-medium tracking-[0.2em] uppercase text-black mb-3">MODA</p>
-                    <h2 class="text-2xl md:text-4xl lg:text-[2.5rem] font-medium text-black leading-tight mb-5" style="font-family: 'Jost', sans-serif; letter-spacing: -0.02em;">
+                <!-- Texto Slide 2 (Alonso) -->
+                <div class="hero-text absolute top-0 left-0 w-full px-2 md:px-4 transition-opacity duration-500 ease-in-out opacity-0 z-0 pointer-events-none flex flex-col items-start justify-start">
+                    <p class="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-black mb-3 md:mb-4">MODA</p>
+                    <h2 class="text-3xl md:text-5xl lg:text-[3.2rem] font-medium text-black leading-[1.15] mb-6 md:mb-8 max-w-5xl" style="font-family: 'Jost', sans-serif; letter-spacing: -0.02em;">
                         Alonso Alvarez, el coach modelo mexicano regresa a la portada de Devon
                     </h2>
-                    <div class="text-[9px] md:text-[10px] font-medium tracking-[0.15em] uppercase text-black leading-relaxed">
+                    <div class="text-[10px] md:text-[11px] font-medium tracking-[0.15em] uppercase text-black leading-loose">
                         <p>POR DERECK J.</p>
                         <p>FOTOGRAFÍA POR DEVON®</p>
-                        <p class="normal-case mt-1.5 text-[10px] md:text-[11px] text-gray-900 tracking-normal" style="font-family: 'Jost', sans-serif;">1 de abril de 2026</p>
+                        <p class="normal-case mt-2 text-[11px] md:text-[13px] text-gray-800 tracking-normal leading-none" style="font-family: 'Jost', sans-serif;">1 de abril de 2026</p>
                     </div>
                 </div>
 
             </div>
         </section>
 
+        <!-- Título ÚLTIMAS TENDENCIAS -->
+        <div class="w-full max-w-7xl mx-auto px-6 mt-16 md:mt-24 mb-4">
+            <div class="border-t border-b border-gray-200 py-3 md:py-4">
+                <h2 class="text-lg md:text-xl font-medium tracking-widest text-black uppercase" style="font-family: 'Jost', sans-serif;">
+                    ÚLTIMAS TENDENCIAS
+                </h2>
+            </div>
+        </div>
+
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-brandDark text-white pt-16 pb-8 border-t-4 border-brandPink">
-        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10">
-            <div class="flex flex-col items-start">
-                <h2 class="text-3xl md:text-4xl font-bold tracking-widest mb-4 font-serif uppercase">DEVON</h2>
-                <p class="text-xs text-gray-400 font-medium">Plataforma central de actualizaciones y herramientas de renderizado.</p>
+    <!-- FOOTER: Diseño estilo Vogue -->
+    <footer class="bg-black text-white pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8">
+            
+            <!-- Columna Izquierda: Logo y Redes -->
+            <div class="md:col-span-4 flex flex-col items-start">
+                <h2 class="text-5xl md:text-6xl font-bold tracking-widest mb-8 font-serif uppercase">DEVON</h2>
+                
+                <div class="flex gap-3">
+                    <!-- FB -->
+                    <a href="#" class="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-white transition-colors text-white">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.04-1.557-.14-2.857-.14C11.928 2 10 3.657 10 6.7v2.8H7.5v4H10v9.5h4v-9.5z"/></svg>
+                    </a>
+                    <!-- Instagram -->
+                    <a href="#" class="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-white transition-colors text-white">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                    </a>
+                    <!-- X -->
+                    <a href="#" class="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-white transition-colors text-white">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                    <!-- YouTube -->
+                    <a href="#" class="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-white transition-colors text-white">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.377.55a3.016 3.016 0 0 0-2.122 2.136C0 8.07 0 12 0 12s0 3.93.501 5.814a3.016 3.016 0 0 0 2.122 2.136c1.872.55 9.377.55 9.377.55s7.505 0 9.377-.55a3.016 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                    </a>
+                    <!-- Pinterest -->
+                    <a href="#" class="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-white transition-colors text-white">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-3.957 1.406-3.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345l-.288 1.183c-.053.189-.168.223-.332.149-1.229-.556-1.996-2.311-1.996-3.719 0-3.037 2.203-5.834 6.368-5.834 3.346 0 5.952 2.385 5.952 5.568 0 3.325-2.096 6.002-5.008 6.002-1.024 0-1.99-.533-2.321-1.164l-.634 2.417c-.229.873-.853 1.96-1.272 2.624 1.139.317 2.339.489 3.585.489 6.621 0 11.988-5.367 11.988-11.987C24.005 5.367 18.638 0 12.017 0z"/></svg>
+                    </a>
+                    <!-- TikTok -->
+                    <a href="#" class="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-white transition-colors text-white">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12.525.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93v7.2c0 1.63-.52 3.26-1.5 4.54-1.15 1.5-2.9 2.45-4.81 2.76-1.89.31-3.88.08-5.59-.83-1.69-.9-2.99-2.43-3.6-4.18-.62-1.78-.6-3.72.07-5.48.68-1.79 2.08-3.25 3.8-4.05 1.7-.8 3.65-1.05 5.5-.72v4.06c-.85-.11-1.74-.03-2.52.33-.78.36-1.42 1-1.8 1.75-.38.75-.46 1.64-.22 2.42.24.78.78 1.45 1.49 1.83.71.39 1.57.48 2.35.26.78-.22 1.44-.75 1.84-1.47.4-.73.53-1.6.36-2.42v-14z"/></svg>
+                    </a>
+                </div>
             </div>
-            <div>
-                <h4 class="text-xs font-bold tracking-widest uppercase mb-6">Enlaces Rápidos</h4>
-                <ul class="text-xs text-gray-400 space-y-3 font-medium">
-                    <li><a href="#" class="hover:text-white transition-colors">Inicio</a></li>
-                    <li><a href="https://stadereck.github.io/WTC-Liquid/" class="hover:text-white transition-colors">Actualizaciones</a></li>
+
+            <!-- Columna Central: MÁS EN DEVON -->
+            <div class="md:col-span-4 md:pl-8">
+                <h4 class="text-[10px] font-bold tracking-[0.2em] uppercase mb-8 text-gray-100 font-sans">MÁS EN DEVON</h4>
+                <ul class="text-[10px] font-medium tracking-[0.15em] text-gray-300 space-y-5 uppercase font-sans">
+                    <li><a href="#" class="hover:text-white transition-colors">Moda</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Belleza</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Estilo de Vida</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Compras</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">(Re)Devon</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Red Carpet</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Pasarelas</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Videos</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Espacio Devon</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">PhotoDevon</a></li>
+                </ul>
+            </div>
+
+            <!-- Columna Derecha: CONDÉ NAST MÉXICO -->
+            <div class="md:col-span-4">
+                <h4 class="text-[10px] font-bold tracking-[0.2em] uppercase mb-8 text-gray-100 font-sans">CONDÉ NAST MÉXICO</h4>
+                <ul class="text-[10px] font-medium tracking-[0.15em] text-gray-300 space-y-5 uppercase font-sans">
+                    <li><a href="#" class="hover:text-white transition-colors">AD</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Glamour</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Devon</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">GQ</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Wired</a></li>
                 </ul>
             </div>
         </div>
-        <div class="max-w-7xl mx-auto px-6 mt-12 pt-10 pb-6 border-t border-gray-800 flex flex-col items-center justify-center gap-4">
-            <span class="text-4xl md:text-5xl font-bold tracking-widest text-white font-serif uppercase">DEVON</span>
-            <span class="text-[10px] text-gray-500 uppercase tracking-widest">&copy; 2026. Todos los derechos reservados.</span>
+
+        <!-- Línea separadora inferior y Links Legales -->
+        <div class="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-gray-800 flex flex-col md:flex-row items-center justify-between gap-8 font-sans">
+            
+            <div class="flex flex-wrap items-center justify-center md:justify-start gap-x-4 gap-y-3 text-[9px] font-medium tracking-[0.15em] text-gray-400 uppercase">
+                <a href="#" class="hover:text-white transition-colors">Convenio del Usuario</a>
+                <span class="text-gray-700">|</span>
+                <a href="#" class="hover:text-white transition-colors">Aviso de Privacidad</a>
+                <span class="text-gray-700">|</span>
+                <a href="#" class="hover:text-white transition-colors">Quiénes Somos</a>
+                <span class="text-gray-700">|</span>
+                <a href="#" class="hover:text-white transition-colors">Media Kit</a>
+                <span class="text-gray-700">|</span>
+                <a href="#" class="hover:text-white transition-colors">Newsletter</a>
+                <span class="text-gray-700">|</span>
+                <a href="#" class="hover:text-white transition-colors">Suscripción</a>
+                <span class="text-gray-700">|</span>
+                <a href="#" class="hover:text-white transition-colors">Site Map</a>
+            </div>
+
+            <!-- Botón México -->
+            <button class="flex items-center gap-2 border border-gray-700 px-4 py-2 text-xs font-normal hover:border-gray-400 transition-colors text-white tracking-wide shrink-0">
+                México
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
         </div>
     </footer>
 
@@ -546,22 +612,50 @@
                 interactiveContainer.addEventListener('click', handleClick);
             }
 
-            // --- 3. Slider Hero (Fotos y Textos Dinámicos Sincronizados) ---
+            // --- 3. Slider Hero (Deslizamiento de Fotos y Ajuste de Altura de Texto) ---
             const slides = document.querySelectorAll('.hero-slide');
             const texts = document.querySelectorAll('.hero-text');
             const dots = document.querySelectorAll('.hero-dot');
+            const textWrapper = document.getElementById('text-wrapper');
             let currentSlide = 0;
             let slideInterval;
 
+            // Función para actualizar la altura del contenedor de texto
+            function updateTextHeight(index) {
+                if (textWrapper && texts[index]) {
+                    textWrapper.style.height = texts[index].offsetHeight + 'px';
+                }
+            }
+
             if (slides.length > 0) {
+                
+                // Set initial height based on first slide
+                document.fonts.ready.then(() => {
+                    setTimeout(() => updateTextHeight(0), 100);
+                });
+                
+                // Recalculate on window resize
+                window.addEventListener('resize', () => {
+                    updateTextHeight(currentSlide);
+                });
+
                 function showSlide(index) {
-                    // Actualizar imágenes
+                    
+                    // 1. Fotos Deslizantes Horizontalmente (Sin Desvanecimiento)
                     slides.forEach((slide, i) => {
-                        slide.style.opacity = i === index ? '1' : '0';
-                        slide.style.zIndex = i === index ? '10' : '0';
+                        if (i === index) {
+                            slide.style.transform = 'translateX(0)';
+                            slide.style.zIndex = '10';
+                        } else if (i < index) {
+                            slide.style.transform = 'translateX(-100%)';
+                            slide.style.zIndex = '0';
+                        } else {
+                            slide.style.transform = 'translateX(100%)';
+                            slide.style.zIndex = '0';
+                        }
                     });
                     
-                    // Actualizar textos suavemente
+                    // 2. Textos Opacidad y Ajuste de Altura
                     texts.forEach((text, i) => {
                         if (i === index) {
                             text.style.opacity = '1';
@@ -573,8 +667,9 @@
                             text.style.zIndex = '0';
                         }
                     });
+                    updateTextHeight(index);
 
-                    // Actualizar Puntos
+                    // 3. Indicadores (Dots)
                     dots.forEach((dot, i) => {
                         if(i === index) {
                             dot.className = "hero-dot w-8 h-1.5 rounded-full bg-black cursor-pointer transition-all duration-300";
@@ -582,6 +677,7 @@
                             dot.className = "hero-dot w-2 h-2 rounded-full bg-gray-300 cursor-pointer transition-all duration-300";
                         }
                     });
+                    
                     currentSlide = index;
                 }
 
@@ -589,7 +685,6 @@
                     showSlide((currentSlide + 1) % slides.length);
                 }
 
-                // Cambia cada 4.5 segundos
                 slideInterval = setInterval(nextSlide, 4500);
 
                 dots.forEach((dot, index) => {
@@ -609,15 +704,8 @@
                 const scrollY = window.scrollY;
                 
                 const scale = 1 + (scrollY * 0.0004);
-                let opacity = 1;
-                const fadeStartPoint = 300; 
-                
-                if (scrollY > fadeStartPoint) {
-                    opacity = Math.max(0, 1 - ((scrollY - fadeStartPoint) / 250));
-                }
                 
                 heroAnimContainer.style.transform = `scale(${scale})`;
-                heroAnimContainer.style.opacity = opacity;
             });
         });
 
