@@ -146,17 +146,30 @@
 
     <!-- Script Inline para evitar parpadeos y aplicar la variación alternada al instante -->
     <script>
-        let lastTheme = localStorage.getItem('devon_intro_theme');
-        let isDarkTheme = true; // Por defecto empezamos en negro con letras blancas
+        let isDarkTheme;
         
-        if (lastTheme === 'dark') {
-            isDarkTheme = false; // Si el anterior fue negro, ahora toca blanco
-        } else if (lastTheme === 'light') {
-            isDarkTheme = true;  // Si el anterior fue blanco, ahora toca negro
+        try {
+            // Utilizamos tanto sessionStorage como localStorage para mayor resistencia en la vista previa
+            let lastTheme = sessionStorage.getItem('devon_intro_theme') || localStorage.getItem('devon_intro_theme');
+            
+            if (lastTheme === 'dark') {
+                isDarkTheme = false; // Si fue oscuro, ahora toca claro (blanco)
+            } else if (lastTheme === 'light') {
+                isDarkTheme = true;  // Si fue claro, ahora toca oscuro (negro)
+            } else {
+                // Si la memoria está vacía (o la vista previa la borró), lanzamos una moneda al azar 50/50
+                isDarkTheme = Math.random() > 0.5;
+            }
+            
+            // Guardamos el estado en ambas memorias
+            sessionStorage.setItem('devon_intro_theme', isDarkTheme ? 'dark' : 'light');
+            localStorage.setItem('devon_intro_theme', isDarkTheme ? 'dark' : 'light');
+        } catch (e) {
+            // Respaldo por si el navegador bloquea el almacenamiento
+            isDarkTheme = Math.random() > 0.5;
         }
         
-        localStorage.setItem('devon_intro_theme', isDarkTheme ? 'dark' : 'light');
-        
+        // Aplicar los colores correspondientes de inmediato
         document.getElementById('intro-bg').style.backgroundColor = isDarkTheme ? '#000000' : '#ffffff';
         document.getElementById('intro-text-wrapper').style.color = isDarkTheme ? '#ffffff' : '#000000';
         document.getElementById('intro-o-ring').style.borderColor = isDarkTheme ? '#ffffff' : '#000000';
