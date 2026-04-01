@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WTC by Devon</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Jost', 'sans-serif'],
+                    },
+                    colors: {
+                        brandPink: '#E8A5D6',
+                        brandDark: '#0B1320',
+                        brandGray: '#F2F2F2',
+                    },
+                    letterSpacing: {
+                        widest: '.2em',
+                        wider: '.1em'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* --- Sincronización Animaciones (O y C) --- */
+        /*
+           El ciclo es de 4 segundos con porcentajes exactamente iguales para sincronización perfecta:
+           0% a 20%: Ocultos
+           30% a 70%: Totalmente visibles
+           80% a 100%: Ocultos de nuevo
+        */
+        @keyframes slashAnim {
+            0%, 20% { width: 0%; opacity: 0; transform: rotate(-45deg) scaleX(0); }
+            30%, 70% { width: 140%; opacity: 1; transform: rotate(-45deg) scaleX(1); }
+            80%, 100% { width: 0%; opacity: 0; transform: rotate(-45deg) scaleX(0); }
+        }
+        
+        .animated-slash {
+            position: absolute;
+            height: 3px;
+            background-color: black;
+            border-radius: 2px;
+            transform-origin: center;
+            animation: slashAnim 4s infinite ease-in-out;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* --- Estilos de la Isla Dinámica --- */
+        .island-container {
+            width: 0px; height: 0px; opacity: 0;
+            transform: scale(0.5) translateY(-20px);
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            pointer-events: none;
+        }
+        .island-container.active {
+            width: 120px; height: 36px; opacity: 1;
+            transform: scale(1) translateY(0); pointer-events: auto;
+        }
+        .island-container.time-mode {
+            width: 80px; border-radius: 12px;
+        }
+        @media (min-width: 768px) {
+            .island-container.active { width: 160px; height: 44px; }
+            .island-container.time-mode { width: 100px; }
+        }
+        .logo-hidden { opacity: 0; transform: scale(0.5) translateY(20px); pointer-events: none; }
+        .island-text-fade { opacity: 0; transform: scale(0.5); }
+
+        /* --- Utilidades Extras (Sidebar y Buscador) --- */
+        .sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        .sidebar.open {
+            transform: translateX(0);
+        }
+        .search-bar {
+            transform: translateY(-100%);
+            opacity: 0;
+            transition: all 0.3s ease-in-out;
+            pointer-events: none;
+        }
+        .search-bar.open {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="bg-white text-black font-sans flex flex-col min-h-screen">
+
+    <!-- Overlay de oscurecimiento para Menú y Búsqueda -->
+    <div id="overlay" class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity opacity-0" onclick="closeAll()"></div>
+
+    <!-- Menú Lateral (Sidebar) -->
+    <aside id="sidebarMenu" class="sidebar fixed top-0 left-0 h-full w-64 bg-white z-50 shadow-2xl flex flex-col">
+        <div class="p-5 flex justify-between items-center border-b border-gray-100">
+            <h2 class="text-xl font-bold tracking-widest">MENÚ</h2>
+            <button onclick="toggleMenu()" class="text-gray-500 hover:text-black p-2">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <nav class="flex flex-col p-4 gap-4 text-sm font-semibold tracking-wider text-gray-600 uppercase overflow-y-auto no-scrollbar pb-20">
+            <a href="#" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Inicio</a>
+            <a href="https://stadereck.github.io/WTC-Liquid/" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">WTC Liquid Base</a>
+            <a href="https://stadereck.github.io/WTC-Liquid/betaindex.html" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Versiones Beta</a>
+            <a href="https://stadereck.github.io/WTC-Liquid/assumptions.html" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Assumptions</a>
+            <a href="https://stadereck.github.io/WTC-Liquid/reservadminabuse.html" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Admin Abuse</a>
+            <a href="https://stadereck.github.io/WTC-Liquid/lite.html" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">LITE</a>
+            <a href="https://stadereck.github.io/WTC-Liquid/ultra.html" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Ultra</a>
+            <a href="#" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Soporte</a>
+        </nav>
+    </aside>
+
+    <!-- Barra de Búsqueda Desplegable -->
+    <div id="searchContainer" class="search-bar fixed top-0 left-0 w-full bg-white z-50 shadow-md p-4 flex justify-center items-center gap-4">
+        <input type="text" placeholder="Buscar actualizaciones, parches..." class="w-full max-w-2xl border border-gray-300 rounded-full px-6 py-3 text-sm focus:outline-none focus:border-brandPink focus:ring-1 focus:ring-brandPink">
+        <button onclick="toggleSearch()" class="text-gray-500 hover:text-black p-2">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+    </div>
+
+    <!-- Top Bar -->
+    <div class="hidden md:flex w-full justify-center gap-8 text-[10px] font-semibold tracking-widest text-gray-500 uppercase py-2 bg-white border-b border-gray-100">
+        <button class="hover:text-black transition-colors">ACTUALIZACIONES</button>
+        <button class="hover:text-black transition-colors">DESCUBRIR</button>
+    </div>
+
+    <!-- Pestañas Superiores (Solo Móvil) -->
+    <div class="flex md:hidden w-full text-[11px] font-semibold tracking-wider text-gray-500 uppercase">
+        <button class="w-1/2 py-4 flex items-center justify-center bg-white text-black border-b-2 border-black">
+            ACTUALIZACIONES
+        </button>
+        <button onclick="window.location.href='https://stadereck.github.io/WTC-Liquid/'" class="w-1/2 py-4 flex items-center justify-center bg-[#f0f0f0] border-l border-gray-200 hover:bg-gray-200 transition-colors cursor-pointer">
+            WTC LIQUID
+        </button>
+    </div>
+
+    <!-- Barra de Navegación Principal -->
+    <header class="w-full bg-white sticky top-0 z-30 border-b border-gray-100 md:border-none">
+        <div class="max-w-7xl mx-auto flex items-center justify-between px-5 h-16 md:h-20 relative">
+            
+            <!-- Izquierda: Menú Hamburguesa -->
+            <button onclick="toggleMenu()" class="text-black z-20 hover:scale-110 transition-transform">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                    <line x1="3" y1="16" x2="21" y2="16"></line>
+                </svg>
+            </button>
+            
+            <!-- Centro: CONTENEDOR INTERACTIVO DEVON & ISLA -->
+            <div id="interactive-header-center" class="absolute left-1/2 transform -translate-x-1/2 h-full flex items-center justify-center cursor-pointer select-none z-10 w-48">
+                
+                <!-- Logo de Texto Normal -->
+                <h1 id="devon-text" class="text-3xl md:text-4xl font-bold tracking-widest text-black mt-1 transition-all duration-500 flex items-center">
+                    DEV
+                    <!-- La letra O con la línea animada -->
+                    <span class="relative inline-flex items-center justify-center group w-[0.8em] h-[1em]">
+                        O
+                        <span class="animated-slash group-hover:bg-brandPink group-hover:shadow-[0_0_8px_#E8A5D6] transition-colors duration-300"></span>
+                    </span>
+                    N
+                </h1>
+
+                <!-- Isla Dinámica Oculta por defecto -->
+                <div id="dynamic-island" class="island-container absolute bg-black rounded-full flex items-center justify-center overflow-hidden shadow-xl">
+                    <span id="island-content" class="text-white text-xs md:text-sm font-bold tracking-widest transition-all duration-300">DEVON</span>
+                </div>
+            </div>
+            
+            <!-- Derecha: Iconos -->
+            <div class="flex items-center gap-4 z-20">
+                <!-- Botón Lupa Funcional -->
+                <button onclick="toggleSearch()" class="text-black hidden md:block hover:scale-110 transition-transform">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+                <button class="text-black hover:scale-110 transition-transform">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 16a4 4 0 0 0-4-4h8a4 4 0 0 0-4 4z"></path>
+                        <circle cx="12" cy="9" r="2.5"></circle>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="w-full flex-1 pb-20">
+        <!-- Sección Hero -->
+        <section class="max-w-5xl mx-auto px-4 md:px-6 pt-6 md:pt-10">
+            <!-- Imagen Hero -->
+            <div class="w-full md:w-[90%] lg:w-[800px] mx-auto aspect-[16/9] md:aspect-[21/9] bg-gray-200 relative overflow-hidden shadow-lg">
+                <img 
+                    src="https://www.iclarified.com/images/news/100111/474353/474353-960.avif" 
+                    alt="WTC Liquid" 
+                    class="absolute inset-0 w-full h-full object-cover object-center"
+                />
+                <!-- Superposición de texto -->
+                <div class="absolute inset-0 bg-black/20 flex items-center justify-center pointer-events-none">
+                    <h2 class="text-white text-4xl md:text-6xl font-bold tracking-widest opacity-80 mix-blend-overlay pointer-events-auto">
+                        WTC LIQUID
+                    </h2>
+                </div>
+            </div>
+            
+            <!-- Contenido Hero: WTC LIQUID SIN las líneas de la C y Clickable -->
+            <div class="mt-8 flex flex-col items-center justify-center text-center">
+                <!-- Se eliminó omega-c y se agregó el evento onclick -->
+                <h2 onclick="window.location.href='https://stadereck.github.io/WTC-Liquid/'" class="text-xl md:text-2xl font-bold uppercase tracking-widest leading-snug mb-2 text-black cursor-pointer hover:opacity-70 transition-opacity">
+                    WTC LIQUID<br>
+                    <span class="text-lg md:text-xl">(ACTUALIZACIÓN MAYOR)</span>
+                </h2>
+                <p class="text-xs font-semibold tracking-wider text-gray-500 mb-6 uppercase">DISPONIBLE AHORA</p>
+                
+                <button onclick="window.location.href='https://stadereck.github.io/WTC-Liquid/'" class="bg-brandPink text-white md:text-black text-xs font-bold tracking-widest px-10 py-3.5 rounded-full transition-transform hover:scale-105 active:scale-95 uppercase shadow-md z-10">
+                    DESCARGAR AHORA
+                </button>
+            </div>
+
+            <!-- Indicadores -->
+            <div class="flex justify-center items-center gap-2.5 py-8">
+                <div class="w-8 h-1.5 rounded-full bg-black cursor-pointer"></div>
+                <div class="w-2 h-2 rounded-full bg-gray-300 cursor-pointer"></div>
+                <div class="w-2 h-2 rounded-full bg-gray-300 cursor-pointer"></div>
+            </div>
+        </section>
+
+        <!-- Subnavegación -->
+        <div class="max-w-4xl mx-auto border-b border-gray-200 mb-8">
+            <div class="flex justify-start md:justify-center gap-6 md:gap-12 px-6 overflow-x-auto no-scrollbar">
+                <button class="pb-3 text-xs md:text-sm font-bold uppercase tracking-wider border-b-2 border-brandPink text-black whitespace-nowrap">
+                    TODAS
+                </button>
+                <button class="pb-3 text-xs md:text-sm font-semibold uppercase tracking-wider text-gray-400 hover:text-black transition-colors whitespace-nowrap">
+                    DISPONIBLE AHORA
+                </button>
+                <button class="pb-3 text-xs md:text-sm font-semibold uppercase tracking-wider text-gray-400 hover:text-black transition-colors whitespace-nowrap">
+                    PRÓXIMAMENTE
+                </button>
+            </div>
+        </div>
+
+        <!-- Cuadrícula de Actualizaciones -->
+        <section class="max-w-6xl mx-auto px-4 md:px-6">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+                <!-- Tarjetas -->
+                <div class="group" onclick="window.location.href='https://stadereck.github.io/WTC-Liquid/'">
+                    <div class="relative aspect-[3/4] bg-gray-200 overflow-hidden rounded-md mb-3 cursor-pointer">
+                        <img src="https://www.iclarified.com/images/news/97554/465546/465546-500.avif" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Update">
+                        <span class="absolute top-2 right-2 bg-brandPink text-[9px] font-bold px-2 py-1 rounded text-white uppercase tracking-wider">NUEVO</span>
+                    </div>
+                    <h3 class="text-sm font-bold truncate cursor-pointer hover:text-brandPink">WTC Liquid 3.0</h3>
+                    <p class="text-[10px] text-gray-500 uppercase">Estable</p>
+                </div>
+
+                <div class="group" onclick="window.location.href='https://stadereck.github.io/WTC-Liquid/betaindex.html'">
+                    <div class="relative aspect-[3/4] bg-gray-200 overflow-hidden rounded-md mb-3 cursor-pointer">
+                        <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Update">
+                    </div>
+                    <h3 class="text-sm font-bold truncate cursor-pointer hover:text-brandPink">Actualización 28.6 RC</h3>
+                    <p class="text-[10px] text-gray-500 uppercase">Release Candidate</p>
+                </div>
+
+                <div class="group" onclick="window.location.href='https://stadereck.github.io/WTC-Liquid/betaindex.html'">
+                    <div class="relative aspect-[3/4] bg-gray-200 overflow-hidden rounded-md mb-3 cursor-pointer">
+                        <img src="https://images.unsplash.com/photo-1614729939124-032f0b56c9ce?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Update">
+                        <span class="absolute top-2 right-2 bg-green-500 text-[9px] font-bold px-2 py-1 rounded text-white uppercase tracking-wider">ESTABLE</span>
+                    </div>
+                    <h3 class="text-sm font-bold truncate cursor-pointer hover:text-brandPink">Parche 2.8.1</h3>
+                    <p class="text-[10px] text-gray-500 uppercase">Animaciones</p>
+                </div>
+
+                <div class="group" onclick="window.location.href='https://stadereck.github.io/WTC-Liquid/betaindex.html'">
+                    <div class="relative aspect-[3/4] bg-gray-200 overflow-hidden rounded-md mb-3 cursor-pointer">
+                        <img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Update">
+                        <span class="absolute top-2 right-2 bg-blue-500 text-[9px] font-bold px-2 py-1 rounded text-white uppercase tracking-wider">BETA</span>
+                    </div>
+                    <h3 class="text-sm font-bold truncate cursor-pointer hover:text-brandPink">Beta 29.0 Preview</h3>
+                    <p class="text-[10px] text-gray-500 uppercase">Motor Gráfico</p>
+                </div>
+
+                <div class="group" onclick="window.location.href='https://stadereck.github.io/WTC-Liquid/betaindex.html'">
+                    <div class="relative aspect-[3/4] bg-gray-200 overflow-hidden rounded-md mb-3 cursor-pointer">
+                        <img src="https://images.unsplash.com/photo-1627398242454-45a1465c2479?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Update">
+                    </div>
+                    <h3 class="text-sm font-bold truncate cursor-pointer hover:text-brandPink">Renderización v2.0</h3>
+                    <p class="text-[10px] text-gray-500 uppercase">Core</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-brandDark text-white pt-16 pb-8 border-t-4 border-brandPink">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10">
+            <div class="flex flex-col items-start">
+                <h2 class="text-2xl font-bold tracking-widest mb-4">DEVON</h2>
+                <p class="text-xs text-gray-400 font-medium">Plataforma central de actualizaciones y herramientas de renderizado.</p>
+            </div>
+            <div>
+                <h4 class="text-xs font-bold tracking-widest uppercase mb-6">Enlaces Rápidos</h4>
+                <ul class="text-xs text-gray-400 space-y-3 font-medium">
+                    <li><a href="#" class="hover:text-white transition-colors">Inicio</a></li>
+                    <li><a href="https://stadereck.github.io/WTC-Liquid/" class="hover:text-white transition-colors">Actualizaciones</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-6 mt-12 pt-6 border-t border-gray-800 text-center text-[10px] text-gray-500 uppercase tracking-widest">
+            &copy; 2026 Devon Tech. Todos los derechos reservados.
+        </div>
+    </footer>
+
+    <!-- SCIPT DE INTERACCIONES GLOBALES -->
+    <script>
+        // --- Lógica del Menú Hamburguesa y Búsqueda ---
+        const overlay = document.getElementById('overlay');
+        const sidebar = document.getElementById('sidebarMenu');
+        const searchContainer = document.getElementById('searchContainer');
+
+        function toggleMenu() {
+            sidebar.classList.toggle('open');
+            if (sidebar.classList.contains('open')) {
+                showOverlay();
+                closeSearch(); // Cierra búsqueda si está abierta
+            } else {
+                hideOverlay();
+            }
+        }
+
+        function toggleSearch() {
+            searchContainer.classList.toggle('open');
+            if (searchContainer.classList.contains('open')) {
+                showOverlay();
+                closeMenu(); // Cierra menú si está abierto
+                searchContainer.querySelector('input').focus();
+            } else {
+                hideOverlay();
+            }
+        }
+
+        function closeMenu() { sidebar.classList.remove('open'); }
+        function closeSearch() { searchContainer.classList.remove('open'); }
+        
+        function showOverlay() {
+            overlay.classList.remove('hidden');
+            // Pequeño delay para la transición de opacidad
+            setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+        }
+        function hideOverlay() {
+            overlay.classList.add('opacity-0');
+            setTimeout(() => overlay.classList.add('hidden'), 300);
+            closeMenu();
+            closeSearch();
+        }
+        function closeAll() { hideOverlay(); }
+
+        // --- Lógica de la Isla Dinámica ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const interactiveContainer = document.getElementById('interactive-header-center');
+            const devonText = document.getElementById('devon-text');
+            const dynamicIsland = document.getElementById('dynamic-island');
+            const islandContent = document.getElementById('island-content');
+
+            let pressTimer;
+            let isLongPress = false;
+            let isIslandActive = false;
+            let lastClickTime = 0;
+
+            const startPress = (e) => {
+                isLongPress = false;
+                if (navigator.vibrate) navigator.vibrate(20);
+
+                pressTimer = setTimeout(() => {
+                    isLongPress = true;
+                    if (navigator.vibrate) navigator.vibrate(50);
+                    toggleIsland();
+                }, 500); 
+            };
+
+            const endPress = () => { clearTimeout(pressTimer); };
+
+            const handleClick = (e) => {
+                if (isLongPress) return; 
+                
+                const currentTime = new Date().getTime();
+                const timeDiff = currentTime - lastClickTime;
+                
+                if (timeDiff < 300 && timeDiff > 0) {
+                    if (isIslandActive) showTime();
+                }
+                lastClickTime = currentTime;
+            };
+
+            interactiveContainer.addEventListener('mousedown', startPress);
+            interactiveContainer.addEventListener('mouseup', endPress);
+            interactiveContainer.addEventListener('mouseleave', endPress);
+            interactiveContainer.addEventListener('touchstart', startPress);
+            interactiveContainer.addEventListener('touchend', endPress);
+            interactiveContainer.addEventListener('touchcancel', endPress);
+            interactiveContainer.addEventListener('click', handleClick);
+
+            function toggleIsland() {
+                if (!isIslandActive) {
+                    isIslandActive = true;
+                    devonText.classList.add('logo-hidden');
+                    setTimeout(() => dynamicIsland.classList.add('active'), 100);
+                } else {
+                    isIslandActive = false;
+                    dynamicIsland.classList.remove('active');
+                    setTimeout(() => devonText.classList.remove('logo-hidden'), 300);
+                }
+            }
+
+            function showTime() {
+                islandContent.classList.add('island-text-fade');
+                dynamicIsland.classList.add('time-mode');
+                
+                setTimeout(() => {
+                    const now = new Date();
+                    islandContent.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    islandContent.classList.remove('island-text-fade');
+                    
+                    setTimeout(() => {
+                        if (!isIslandActive) return; 
+                        islandContent.classList.add('island-text-fade');
+                        dynamicIsland.classList.remove('time-mode');
+                        setTimeout(() => {
+                            islandContent.textContent = 'DEVON';
+                            islandContent.classList.remove('island-text-fade');
+                        }, 300);
+                    }, 3000);
+                }, 300); 
+            }
+        });
+    </script>
+</body>
+</html>
