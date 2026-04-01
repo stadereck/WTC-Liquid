@@ -43,13 +43,7 @@
             scrollbar-width: none;
         }
 
-        /* --- Sincronización Animaciones (O y C) --- */
-        /*
-           El ciclo es de 4 segundos con porcentajes exactamente iguales para sincronización perfecta:
-           0% a 20%: Ocultos
-           30% a 70%: Totalmente visibles
-           80% a 100%: Ocultos de nuevo
-        */
+        /* --- Sincronización Animaciones (Letra O) --- */
         @keyframes slashAnim {
             0%, 20% { width: 0%; opacity: 0; transform: rotate(-45deg) scaleX(0); }
             30%, 70% { width: 140%; opacity: 1; transform: rotate(-45deg) scaleX(1); }
@@ -213,25 +207,54 @@
     <!-- Contenido Principal -->
     <main class="w-full flex-1 pb-20">
         <!-- Sección Hero -->
-        <section class="max-w-5xl mx-auto px-4 md:px-6 pt-6 md:pt-10">
-            <!-- Imagen Hero -->
-            <div class="w-full md:w-[90%] lg:w-[800px] mx-auto aspect-[16/9] md:aspect-[21/9] bg-gray-200 relative overflow-hidden shadow-lg">
-                <img 
-                    src="https://www.iclarified.com/images/news/100111/474353/474353-960.avif" 
-                    alt="WTC Liquid" 
-                    class="absolute inset-0 w-full h-full object-cover object-center"
-                />
-                <!-- Superposición de texto -->
-                <div class="absolute inset-0 bg-black/20 flex items-center justify-center pointer-events-none">
-                    <h2 class="text-white text-4xl md:text-6xl font-bold tracking-widest opacity-80 mix-blend-overlay pointer-events-auto">
-                        WTC LIQUID
-                    </h2>
+        <section class="max-w-5xl mx-auto px-4 md:px-6 pt-6 md:pt-10 mb-8">
+            <!-- Contenedor con overflow hidden para animar el Scroll -->
+            <div class="w-full md:w-[90%] lg:w-[800px] mx-auto overflow-hidden shadow-lg relative rounded-md bg-gray-200">
+                <!-- Contenedor interno que se animará con el Scroll (Agrandar lentamente y desvanecer al estar muy abajo) -->
+                <div id="hero-anim-container" class="relative w-full aspect-[16/9] md:aspect-[21/9] transform origin-center will-change-transform">
+                    
+                    <!-- Slide 1: WTC Liquid Original -->
+                    <div class="hero-slide absolute inset-0 transition-opacity duration-1000 opacity-100 z-10">
+                        <img 
+                            src="https://www.iclarified.com/images/news/100111/474353/474353-960.avif" 
+                            alt="WTC Liquid" 
+                            class="absolute inset-0 w-full h-full object-cover object-center"
+                        />
+                        <div class="absolute inset-0 bg-black/20 flex items-center justify-center pointer-events-none">
+                            <h2 class="text-white text-4xl md:text-6xl font-bold tracking-widest opacity-80 mix-blend-overlay pointer-events-auto">
+                                WTC LIQUID
+                            </h2>
+                        </div>
+                    </div>
+
+                    <!-- Slide 2: Fer & Alonso -->
+                    <div class="hero-slide absolute inset-0 transition-opacity duration-1000 opacity-0 z-0">
+                        <img 
+                            src="https://images.unsplash.com/photo-1511895426328-dc8714191300?q=80&w=1000&auto=format&fit=crop" 
+                            alt="Fer & Alonso" 
+                            class="absolute inset-0 w-full h-full object-cover object-center"
+                        />
+                        <div class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center pointer-events-none">
+                            <h2 class="text-white text-3xl md:text-5xl font-bold tracking-widest text-center mb-6 pointer-events-auto leading-tight drop-shadow-xl">
+                                Fer & Alonso<br>
+                                <span class="text-xl md:text-2xl font-medium tracking-wider">¿podrás descubrirlo?</span>
+                            </h2>
+                            <button onclick="window.location.href='https://www.instagram.com/alonso_ia_alvarez'" class="bg-black text-white text-xs font-bold tracking-widest px-8 py-3.5 rounded-full transition-transform hover:scale-105 active:scale-95 uppercase shadow-2xl pointer-events-auto border border-gray-600">
+                                IR A VERLOS JUNTOS
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <!-- Indicadores Dinámicos (Dots del Carrusel) -->
+            <div class="flex justify-center items-center gap-2.5 mt-6 mb-2">
+                <div class="hero-dot w-8 h-1.5 rounded-full bg-black cursor-pointer transition-all duration-300"></div>
+                <div class="hero-dot w-2 h-2 rounded-full bg-gray-300 cursor-pointer transition-all duration-300"></div>
+            </div>
             
-            <!-- Contenido Hero: WTC LIQUID SIN las líneas de la C y Clickable -->
-            <div class="mt-8 flex flex-col items-center justify-center text-center">
-                <!-- Se eliminó omega-c y se agregó el evento onclick -->
+            <!-- Contenido Hero Textual -->
+            <div class="mt-4 flex flex-col items-center justify-center text-center">
                 <h2 onclick="window.location.href='https://stadereck.github.io/WTC-Liquid/'" class="text-xl md:text-2xl font-bold uppercase tracking-widest leading-snug mb-2 text-black cursor-pointer hover:opacity-70 transition-opacity">
                     WTC LIQUID<br>
                     <span class="text-lg md:text-xl">(ACTUALIZACIÓN MAYOR)</span>
@@ -242,18 +265,11 @@
                     DESCARGAR AHORA
                 </button>
             </div>
-
-            <!-- Indicadores -->
-            <div class="flex justify-center items-center gap-2.5 py-8">
-                <div class="w-8 h-1.5 rounded-full bg-black cursor-pointer"></div>
-                <div class="w-2 h-2 rounded-full bg-gray-300 cursor-pointer"></div>
-                <div class="w-2 h-2 rounded-full bg-gray-300 cursor-pointer"></div>
-            </div>
         </section>
 
-        <!-- Subnavegación -->
-        <div class="max-w-4xl mx-auto border-b border-gray-200 mb-8">
-            <div class="flex justify-start md:justify-center gap-6 md:gap-12 px-6 overflow-x-auto no-scrollbar">
+        <!-- Subnavegación Centrada (Basada en la nueva imagen) -->
+        <div class="max-w-4xl mx-auto border-b border-gray-200 mb-10">
+            <div class="flex justify-center gap-6 md:gap-12 px-6 overflow-x-auto no-scrollbar">
                 <button class="pb-3 text-xs md:text-sm font-bold uppercase tracking-wider border-b-2 border-brandPink text-black whitespace-nowrap">
                     TODAS
                 </button>
@@ -266,48 +282,52 @@
             </div>
         </div>
 
-        <!-- Cuadrícula de Actualizaciones -->
+        <!-- Cuadrícula de Actualizaciones (Idéntica a la imagen) -->
         <section class="max-w-6xl mx-auto px-4 md:px-6">
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
-                <!-- Tarjetas -->
+                <!-- Tarjeta 1 -->
                 <div class="group" onclick="window.location.href='https://stadereck.github.io/WTC-Liquid/'">
-                    <div class="relative aspect-[3/4] bg-gray-200 overflow-hidden rounded-md mb-3 cursor-pointer">
-                        <img src="https://www.iclarified.com/images/news/97554/465546/465546-500.avif" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Update">
-                        <span class="absolute top-2 right-2 bg-brandPink text-[9px] font-bold px-2 py-1 rounded text-white uppercase tracking-wider">NUEVO</span>
+                    <div class="relative aspect-square lg:aspect-[4/5] bg-gray-200 overflow-hidden rounded-xl mb-3 cursor-pointer shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="WTC Liquid 3.0">
+                        <span class="absolute top-3 right-3 bg-brandPink text-[10px] font-bold px-2 py-1 rounded text-white uppercase tracking-wider shadow-sm">NUEVO</span>
                     </div>
                     <h3 class="text-sm font-bold truncate cursor-pointer hover:text-brandPink">WTC Liquid 3.0</h3>
                     <p class="text-[10px] text-gray-500 uppercase">Estable</p>
                 </div>
 
+                <!-- Tarjeta 2 -->
                 <div class="group" onclick="window.location.href='https://stadereck.github.io/WTC-Liquid/betaindex.html'">
-                    <div class="relative aspect-[3/4] bg-gray-200 overflow-hidden rounded-md mb-3 cursor-pointer">
-                        <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Update">
+                    <div class="relative aspect-square lg:aspect-[4/5] bg-gray-200 overflow-hidden rounded-xl mb-3 cursor-pointer shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Actualización 28.6 RC">
                     </div>
                     <h3 class="text-sm font-bold truncate cursor-pointer hover:text-brandPink">Actualización 28.6 RC</h3>
                     <p class="text-[10px] text-gray-500 uppercase">Release Candidate</p>
                 </div>
 
+                <!-- Tarjeta 3 -->
                 <div class="group" onclick="window.location.href='https://stadereck.github.io/WTC-Liquid/betaindex.html'">
-                    <div class="relative aspect-[3/4] bg-gray-200 overflow-hidden rounded-md mb-3 cursor-pointer">
-                        <img src="https://images.unsplash.com/photo-1614729939124-032f0b56c9ce?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Update">
-                        <span class="absolute top-2 right-2 bg-green-500 text-[9px] font-bold px-2 py-1 rounded text-white uppercase tracking-wider">ESTABLE</span>
+                    <div class="relative aspect-square lg:aspect-[4/5] bg-gray-200 overflow-hidden rounded-xl mb-3 cursor-pointer shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Parche 2.8.1">
+                        <span class="absolute top-3 right-3 bg-green-500 text-[10px] font-bold px-2 py-1 rounded text-white uppercase tracking-wider shadow-sm">ESTABLE</span>
                     </div>
                     <h3 class="text-sm font-bold truncate cursor-pointer hover:text-brandPink">Parche 2.8.1</h3>
                     <p class="text-[10px] text-gray-500 uppercase">Animaciones</p>
                 </div>
 
+                <!-- Tarjeta 4 -->
                 <div class="group" onclick="window.location.href='https://stadereck.github.io/WTC-Liquid/betaindex.html'">
-                    <div class="relative aspect-[3/4] bg-gray-200 overflow-hidden rounded-md mb-3 cursor-pointer">
-                        <img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Update">
-                        <span class="absolute top-2 right-2 bg-blue-500 text-[9px] font-bold px-2 py-1 rounded text-white uppercase tracking-wider">BETA</span>
+                    <div class="relative aspect-square lg:aspect-[4/5] bg-gray-200 overflow-hidden rounded-xl mb-3 cursor-pointer shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Beta 29.0 Preview">
+                        <span class="absolute top-3 right-3 bg-blue-500 text-[10px] font-bold px-2 py-1 rounded text-white uppercase tracking-wider shadow-sm">BETA</span>
                     </div>
                     <h3 class="text-sm font-bold truncate cursor-pointer hover:text-brandPink">Beta 29.0 Preview</h3>
                     <p class="text-[10px] text-gray-500 uppercase">Motor Gráfico</p>
                 </div>
 
+                <!-- Tarjeta 5 -->
                 <div class="group" onclick="window.location.href='https://stadereck.github.io/WTC-Liquid/betaindex.html'">
-                    <div class="relative aspect-[3/4] bg-gray-200 overflow-hidden rounded-md mb-3 cursor-pointer">
-                        <img src="https://images.unsplash.com/photo-1627398242454-45a1465c2479?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Update">
+                    <div class="relative aspect-square lg:aspect-[4/5] bg-gray-200 overflow-hidden rounded-xl mb-3 cursor-pointer shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Renderización v2.0">
                     </div>
                     <h3 class="text-sm font-bold truncate cursor-pointer hover:text-brandPink">Renderización v2.0</h3>
                     <p class="text-[10px] text-gray-500 uppercase">Core</p>
@@ -331,14 +351,78 @@
                 </ul>
             </div>
         </div>
-        <div class="max-w-7xl mx-auto px-6 mt-12 pt-6 border-t border-gray-800 text-center text-[10px] text-gray-500 uppercase tracking-widest">
-            &copy; 2026 Devon Tech. Todos los derechos reservados.
+        <!-- Copyright Editado -->
+        <div class="max-w-7xl mx-auto px-6 mt-12 pt-6 border-t border-gray-800 text-center text-[10px] text-gray-500 uppercase tracking-widest flex items-center justify-center gap-1">
+            &copy; 2026 <span class="text-sm md:text-base font-bold tracking-widest text-white ml-1">DEVON</span>. Todos los derechos reservados.
         </div>
     </footer>
 
     <!-- SCIPT DE INTERACCIONES GLOBALES -->
     <script>
-        // --- Lógica del Menú Hamburguesa y Búsqueda ---
+        // --- 1. Lógica del Slider Hero ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.hero-slide');
+            const dots = document.querySelectorAll('.hero-dot');
+            let currentSlide = 0;
+            let slideInterval;
+
+            function showSlide(index) {
+                slides.forEach((slide, i) => {
+                    slide.style.opacity = i === index ? '1' : '0';
+                    slide.style.zIndex = i === index ? '10' : '0';
+                });
+                dots.forEach((dot, i) => {
+                    if(i === index) {
+                        dot.className = "hero-dot w-8 h-1.5 rounded-full bg-black cursor-pointer transition-all duration-300";
+                    } else {
+                        dot.className = "hero-dot w-2 h-2 rounded-full bg-gray-300 cursor-pointer transition-all duration-300";
+                    }
+                });
+                currentSlide = index;
+            }
+
+            function nextSlide() {
+                showSlide((currentSlide + 1) % slides.length);
+            }
+
+            // Iniciar animación del slider cada 4.5 segundos
+            slideInterval = setInterval(nextSlide, 4500);
+
+            // Control manual desde los puntos (dots)
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    clearInterval(slideInterval);
+                    showSlide(index);
+                    slideInterval = setInterval(nextSlide, 4500);
+                });
+            });
+        });
+
+        // --- 2. Lógica de Scroll (Agrandar lentamente y desvanecer MUY ABAJO) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const heroAnimContainer = document.getElementById('hero-anim-container');
+            
+            window.addEventListener('scroll', () => {
+                if (!heroAnimContainer) return;
+                const scrollY = window.scrollY;
+                
+                // 1. Efecto Agrandar: Comienza desde el inicio muy sutilmente
+                const scale = 1 + (scrollY * 0.0004);
+                
+                // 2. Efecto Desvanecer: Solo comienza después de bajar 300px (muy abajo)
+                let opacity = 1;
+                const fadeStartPoint = 300; 
+                
+                if (scrollY > fadeStartPoint) {
+                    opacity = Math.max(0, 1 - ((scrollY - fadeStartPoint) / 250));
+                }
+                
+                heroAnimContainer.style.transform = `scale(${scale})`;
+                heroAnimContainer.style.opacity = opacity;
+            });
+        });
+
+        // --- 3. Lógica del Menú Hamburguesa y Búsqueda ---
         const overlay = document.getElementById('overlay');
         const sidebar = document.getElementById('sidebarMenu');
         const searchContainer = document.getElementById('searchContainer');
@@ -347,7 +431,7 @@
             sidebar.classList.toggle('open');
             if (sidebar.classList.contains('open')) {
                 showOverlay();
-                closeSearch(); // Cierra búsqueda si está abierta
+                closeSearch(); 
             } else {
                 hideOverlay();
             }
@@ -357,7 +441,7 @@
             searchContainer.classList.toggle('open');
             if (searchContainer.classList.contains('open')) {
                 showOverlay();
-                closeMenu(); // Cierra menú si está abierto
+                closeMenu(); 
                 searchContainer.querySelector('input').focus();
             } else {
                 hideOverlay();
@@ -369,7 +453,6 @@
         
         function showOverlay() {
             overlay.classList.remove('hidden');
-            // Pequeño delay para la transición de opacidad
             setTimeout(() => overlay.classList.remove('opacity-0'), 10);
         }
         function hideOverlay() {
@@ -380,7 +463,7 @@
         }
         function closeAll() { hideOverlay(); }
 
-        // --- Lógica de la Isla Dinámica ---
+        // --- 4. Lógica de la Isla Dinámica ---
         document.addEventListener('DOMContentLoaded', () => {
             const interactiveContainer = document.getElementById('interactive-header-center');
             const devonText = document.getElementById('devon-text');
