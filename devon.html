@@ -314,6 +314,11 @@
                     <div class="hero-slide absolute inset-0 transition-transform duration-500 ease-in-out transform translate-x-full z-0">
                         <img src="https://i.ibb.co/NchQM2g/b772fe23-6aca-47db-b91a-0ee4520e85e7.png" alt="Alonso Alvarez" class="absolute inset-0 w-full h-full object-cover object-top md:object-[center_15%]"/>
                     </div>
+
+                    <!-- Slide 3: Espacio Devon -->
+                    <div class="hero-slide absolute inset-0 transition-transform duration-500 ease-in-out transform translate-x-full z-0">
+                        <img src="https://res.cloudinary.com/dhx58lnzb/image/upload/v1775094004/656410068-927276343609067-1256087780943380654-n_zjxxnt.jpg" alt="Alonso Alvarez & Fernanda en Espacio Devon" class="absolute inset-0 w-full h-full object-cover object-top md:object-[center_15%]"/>
+                    </div>
                 </div>
             </div>
 
@@ -321,6 +326,16 @@
             <div class="flex justify-center items-center gap-2.5 mt-6 mb-6">
                 <div class="hero-dot w-8 h-1.5 rounded-full bg-black cursor-pointer transition-all duration-300"></div>
                 <div class="hero-dot w-2 h-2 rounded-full bg-gray-300 cursor-pointer transition-all duration-300"></div>
+                <div class="hero-dot w-2 h-2 rounded-full bg-gray-300 cursor-pointer transition-all duration-300"></div>
+                
+                <!-- Indicador de Tiempo Circular -->
+                <div class="relative w-7 h-7 flex items-center justify-center ml-3">
+                    <svg class="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                        <circle cx="18" cy="18" r="14" fill="none" stroke="#E5E7EB" stroke-width="2.5"></circle>
+                        <circle id="hero-progress-circle" cx="18" cy="18" r="14" fill="none" stroke="#000000" stroke-width="2.5" stroke-dasharray="88" stroke-dashoffset="88" stroke-linecap="round"></circle>
+                    </svg>
+                    <span id="hero-progress-text" class="text-[9px] font-bold text-black font-sans z-10" style="padding-top: 1px;">5</span>
+                </div>
             </div>
             
             <!-- Contenedor Wrapper para Animación de Altura (Eliminamos espacio vacío) -->
@@ -346,6 +361,25 @@
                         <p>POR DERECK J.</p>
                         <p>FOTOGRAFÍA POR DEVON®</p>
                         <p class="normal-case mt-2 text-[11px] md:text-[13px] text-gray-800 tracking-normal leading-none" style="font-family: 'Jost', sans-serif;">1 de abril de 2026</p>
+                    </div>
+                </div>
+
+                <!-- Texto Slide 3 (Espacio Devon) -->
+                <div class="hero-text absolute top-0 left-0 w-full px-2 md:px-4 transition-opacity duration-500 ease-in-out opacity-0 z-0 pointer-events-none flex flex-col items-start justify-start">
+                    <p class="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-black mb-3 md:mb-4">Espacio Devon</p>
+                    <h2 class="text-3xl md:text-5xl lg:text-[3.2rem] font-medium text-black leading-[1.15] mb-6 md:mb-8 max-w-5xl" style="font-family: 'Jost', sans-serif; letter-spacing: -0.02em;">
+                        Alonso Alvarez, el coach modelo mexicano & su date Fernanda hacen una aparición en Espacio Devon
+                    </h2>
+                    <div class="text-[10px] md:text-[11px] font-medium tracking-[0.15em] uppercase text-black leading-loose">
+                        <p>POR Dereck J.</p>
+                        <p>Fotografia Por Devon®</p>
+                        <div class="normal-case mt-2 text-[11px] md:text-[13px] text-gray-800 tracking-normal leading-none flex items-center gap-3" style="font-family: 'Jost', sans-serif;">
+                            <span>1 de abril de 2026</span>
+                            <a href="#" class="link-underline flex items-center gap-1 text-black font-medium transition-colors hover:text-black">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                Acuatica Samil
+                            </a>
+                        </div>
                     </div>
                 </div>
 
@@ -620,6 +654,37 @@
             let currentSlide = 0;
             let slideInterval;
 
+            // Variables para el indicador circular
+            const progressCircle = document.getElementById('hero-progress-circle');
+            const progressText = document.getElementById('hero-progress-text');
+            const slideDuration = 4500;
+            let slideStartTime;
+            let progressAnimFrame;
+
+            // Función para animar el círculo y el tiempo
+            function updateProgress() {
+                if (!slideStartTime) return;
+                const elapsed = Date.now() - slideStartTime;
+                let remaining = slideDuration - elapsed;
+                if (remaining < 0) remaining = 0;
+
+                // Actualizar texto (segundos restantes)
+                if (progressText) {
+                    progressText.textContent = Math.ceil(remaining / 1000);
+                }
+
+                // Actualizar progreso del borde circular (llenando de 88 a 0)
+                if (progressCircle) {
+                    const circumference = 88;
+                    const progress = Math.min(elapsed / slideDuration, 1);
+                    progressCircle.style.strokeDashoffset = circumference - (progress * circumference);
+                }
+
+                if (elapsed < slideDuration) {
+                    progressAnimFrame = requestAnimationFrame(updateProgress);
+                }
+            }
+
             // Función para actualizar la altura del contenedor de texto
             function updateTextHeight(index) {
                 if (textWrapper && texts[index]) {
@@ -679,6 +744,11 @@
                     });
                     
                     currentSlide = index;
+
+                    // 4. Reiniciar el temporizador circular
+                    slideStartTime = Date.now();
+                    if (progressAnimFrame) cancelAnimationFrame(progressAnimFrame);
+                    updateProgress();
                 }
 
                 function nextSlide() {
