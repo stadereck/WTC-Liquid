@@ -87,6 +87,19 @@
             .island-container.time-mode { width: 100px; }
             .island-container.views-mode { width: 240px; }
         }
+
+        /* --- Animación de "Negación" (Shake) para la Isla --- */
+        @keyframes islandShakeAnim {
+            0%, 100% { transform: scale(1) translateY(0) translateX(0); }
+            20% { transform: scale(1) translateY(0) translateX(-12px); }
+            40% { transform: scale(1) translateY(0) translateX(12px); }
+            60% { transform: scale(1) translateY(0) translateX(-6px); }
+            80% { transform: scale(1) translateY(0) translateX(6px); }
+        }
+        .island-shake {
+            animation: islandShakeAnim 0.4s ease-in-out;
+            transition: none !important; /* Esto evita que la animación rápida se mezcle con la apertura */
+        }
         
         .logo-hidden { opacity: 0; transform: scale(0.5) translateY(20px); pointer-events: none; }
         .island-text-fade { opacity: 0; transform: scale(0.5); }
@@ -243,14 +256,14 @@
 
     <!-- Top Bar (Textos Modas/Belleza con tipografía editorial) -->
     <div class="hidden md:flex w-full justify-center gap-8 lg:gap-12 text-[11px] lg:text-xs font-medium tracking-[0.2em] text-black uppercase py-4 bg-white border-b border-gray-100 overflow-x-auto whitespace-nowrap px-6" style="font-family: 'Jost', sans-serif;">
-        <span class="cursor-default hover:text-gray-500 transition-colors">MODA</span>
-        <span class="cursor-default hover:text-gray-500 transition-colors">BELLEZA</span>
-        <span class="cursor-default hover:text-gray-500 transition-colors">ESTILO DE VIDA</span>
-        <span class="cursor-default hover:text-gray-500 transition-colors">COMPRAS</span>
-        <span class="cursor-default hover:text-gray-500 transition-colors">(RE)DEVON</span>
-        <span class="cursor-default hover:text-gray-500 transition-colors">HOLLYWOOD</span>
-        <span class="cursor-default hover:text-gray-500 transition-colors">PODCAST</span>
-        <span class="cursor-default hover:text-gray-500 transition-colors">ESPACIO DEVON</span>
+        <span class="cursor-pointer hover:text-gray-500 transition-colors">MODA</span>
+        <span class="cursor-pointer hover:text-gray-500 transition-colors">BELLEZA</span>
+        <span class="cursor-pointer hover:text-gray-500 transition-colors">ESTILO DE VIDA</span>
+        <span class="cursor-pointer hover:text-gray-500 transition-colors">COMPRAS</span>
+        <span class="cursor-pointer hover:text-gray-500 transition-colors">(RE)DEVON</span>
+        <span class="cursor-pointer hover:text-gray-500 transition-colors">HOLLYWOOD</span>
+        <span class="cursor-pointer hover:text-gray-500 transition-colors">PODCAST</span>
+        <span class="cursor-pointer hover:text-gray-500 transition-colors">ESPACIO DEVON</span>
     </div>
 
     <!-- Pestañas Superiores (Solo Móvil) -->
@@ -550,7 +563,7 @@
                 devonText.classList.add('logo-hidden');
                 dynamicIsland.classList.add('active');
 
-                dynamicIsland.classList.remove('time-mode', 'views-mode');
+                dynamicIsland.classList.remove('time-mode', 'views-mode', 'island-shake');
                 islandContent.classList.add('island-text-fade');
 
                 setTimeout(() => {
@@ -578,6 +591,24 @@
                             e.stopPropagation();
                             closeIsland();
                         });
+                    }
+                    else if (mode === 'unavailable') {
+                        dynamicIsland.classList.add('views-mode'); // Usamos este modo para darle suficiente ancho
+                        islandContent.className = 'w-full flex items-center justify-center transition-all duration-300';
+                        islandContent.innerHTML = `<span class="text-white text-xs md:text-sm font-bold tracking-widest uppercase">No Disponible</span>`;
+                        
+                        // Retrasar el temblor hasta que la isla esté completamente abierta
+                        setTimeout(() => {
+                            dynamicIsland.classList.add('island-shake'); // Agregamos la animación del temblor
+                            
+                            // Quitamos la clase del shake después de que termine la animación (400ms)
+                            setTimeout(() => dynamicIsland.classList.remove('island-shake'), 400);
+                        }, 350);
+
+                        // Auto-cerramos después de 2.5 segundos
+                        setTimeout(() => {
+                            if (islandMode === 'unavailable') closeIsland();
+                        }, 2500);
                     }
                     
                     islandContent.classList.remove('island-text-fade');
@@ -777,9 +808,28 @@
                 
                 heroAnimContainer.style.transform = `scale(${scale})`;
             });
+
+            // --- 5. Interacción de Elementos "No Disponibles" ---
+            const unavailableElements = document.querySelectorAll('a[href="#"], div.hidden.md\\:flex span, div.flex.md\\:hidden button');
+            unavailableElements.forEach(el => {
+                el.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    // Si el menú lateral está abierto, lo cerramos
+                    if (sidebar && sidebar.classList.contains('open')) {
+                        hideOverlay(); // Llamamos a la función global para cerrar
+                    }
+
+                    // Hacemos scroll suave hacia arriba para asegurarnos de que el usuario vea la Isla Dinámica
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                    openIsland('unavailable');
+                });
+            });
+
         });
 
-        // --- 5. Funciones Globales (Menú Hamburguesa) ---
+        // --- 6. Funciones Globales (Menú Hamburguesa) ---
         const overlay = document.getElementById('overlay');
         const sidebar = document.getElementById('sidebarMenu');
 
