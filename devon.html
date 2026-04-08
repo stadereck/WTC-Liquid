@@ -173,14 +173,37 @@
 
     <!-- Overlay de Mudanza (Blur) -->
     <div id="migration-overlay" class="fixed inset-0 z-[9998] flex items-center justify-center bg-black/60 backdrop-blur-xl opacity-0 pointer-events-none transition-opacity duration-1000">
-        <div id="migration-content" class="text-center px-6 max-w-3xl transform translate-y-10 opacity-0 transition-all duration-1000 ease-out flex flex-col items-center">
-            <h2 class="text-2xl md:text-4xl lg:text-5xl font-medium text-white mb-8 leading-snug" style="font-family: 'Jost', sans-serif;">
+        
+        <!-- Pantalla 1: Mensaje Inicial -->
+        <div id="migration-content" class="absolute w-full px-6 max-w-3xl transform translate-y-10 opacity-0 transition-all duration-700 ease-out flex flex-col items-center">
+            <h2 class="text-2xl md:text-4xl lg:text-5xl font-medium text-white mb-8 leading-snug text-center" style="font-family: 'Jost', sans-serif;">
                 Hola, <br> Nos estamos mudando. <br> Nuestra nueva página es:
             </h2>
-            <a href="https://stadereck.github.io/devonrevista/" class="link-underline text-sm md:text-lg font-bold tracking-[0.2em] uppercase text-white transition-colors pb-1">
+            <a href="https://stadereck.github.io/devonrevista/" class="link-underline text-sm md:text-lg font-bold tracking-[0.2em] uppercase text-white transition-colors pb-1 mb-10 md:mb-14">
                 Ir a nueva página
             </a>
+            
+            <button id="stay-init-btn" class="text-xs md:text-sm font-medium tracking-[0.1em] text-gray-400 hover:text-white transition-colors uppercase relative group">
+                ¿Quieres seguir en esta página?
+                <span class="absolute -bottom-1 left-0 w-0 h-[1px] bg-white transition-all duration-300 group-hover:w-full"></span>
+            </button>
         </div>
+
+        <!-- Pantalla 2: Advertencia (Oculta Inicialmente) -->
+        <div id="warning-content" class="absolute w-full px-6 max-w-3xl transform translate-y-10 opacity-0 pointer-events-none transition-all duration-700 ease-out flex flex-col items-center">
+            <h2 class="text-xl md:text-3xl font-medium text-white mb-10 leading-snug text-center" style="font-family: 'Jost', sans-serif;">
+                Esta página ya no se actualizará, pero nuestra nueva página sí.<br>¿Quieres continuar?
+            </h2>
+            <div class="flex items-center gap-8 md:gap-14">
+                <button id="stay-yes-btn" class="link-underline text-sm md:text-lg font-bold tracking-[0.2em] uppercase text-white transition-colors pb-1">
+                    SÍ
+                </button>
+                <a href="https://stadereck.github.io/devonrevista/" class="link-underline text-sm md:text-lg font-bold tracking-[0.2em] uppercase text-white transition-colors pb-1">
+                    NO
+                </a>
+            </div>
+        </div>
+
     </div>
 
     <!-- Overlay y Sidebar -->
@@ -586,9 +609,15 @@
             const introLogo = document.getElementById('intro-logo');
             const migrationOverlay = document.getElementById('migration-overlay');
             const migrationContent = document.getElementById('migration-content');
+            const warningContent = document.getElementById('warning-content');
+            const stayInitBtn = document.getElementById('stay-init-btn');
+            const stayYesBtn = document.getElementById('stay-yes-btn');
+
+            // Verificar si el usuario ya decidió quedarse para siempre
+            const hideMigrationPermanently = localStorage.getItem('hideDevonMigration') === 'true';
 
             if (introContainer) {
-                // Mantenemos el scroll bloqueado porque queremos que el usuario haga clic en la redirección
+                // Mantenemos el scroll bloqueado al iniciar
                 document.body.style.overflow = 'hidden';
 
                 // Espera de 5 segundos antes de hacer el zoom y desaparecer
@@ -601,8 +630,8 @@
                         introContainer.style.transition = 'opacity 0.5s ease';
                         introContainer.style.opacity = '0';
                         
-                        // Aparece la pantalla de mudanza con Blur
-                        if (migrationOverlay && migrationContent) {
+                        // Si NO ha elegido quedarse para siempre, mostramos el aviso
+                        if (!hideMigrationPermanently && migrationOverlay && migrationContent) {
                             migrationOverlay.classList.remove('opacity-0', 'pointer-events-none');
                             migrationOverlay.classList.add('opacity-100', 'pointer-events-auto');
                             
@@ -611,6 +640,9 @@
                                 migrationContent.classList.remove('translate-y-10', 'opacity-0');
                                 migrationContent.classList.add('translate-y-0', 'opacity-100');
                             }, 300);
+                        } else {
+                            // Si ya había elegido quedarse antes, liberamos el scroll de la página inmediatamente
+                            document.body.style.overflow = '';
                         }
 
                         setTimeout(() => {
@@ -621,6 +653,40 @@
 
                 }, 5000); // 5000 milisegundos = 5 segundos
             }
+
+            // --- Lógica de los Botones de la Pantalla de Mudanza ---
+            if (stayInitBtn) {
+                stayInitBtn.addEventListener('click', () => {
+                    // Ocultamos la pantalla 1
+                    migrationContent.classList.remove('translate-y-0', 'opacity-100');
+                    migrationContent.classList.add('-translate-y-10', 'opacity-0', 'pointer-events-none');
+                    
+                    // Mostramos la pantalla 2 (Advertencia)
+                    setTimeout(() => {
+                        warningContent.classList.remove('pointer-events-none', 'translate-y-10', 'opacity-0');
+                        warningContent.classList.add('pointer-events-auto', 'translate-y-0', 'opacity-100');
+                    }, 500);
+                });
+            }
+
+            if (stayYesBtn) {
+                stayYesBtn.addEventListener('click', () => {
+                    // Guardamos la decisión para que nunca más aparezca
+                    localStorage.setItem('hideDevonMigration', 'true');
+                    
+                    // Ocultamos el overlay (quitamos el blur)
+                    migrationOverlay.classList.remove('opacity-100', 'pointer-events-auto');
+                    migrationOverlay.classList.add('opacity-0', 'pointer-events-none');
+                    
+                    // Restauramos el scroll de la página
+                    document.body.style.overflow = '';
+                    
+                    setTimeout(() => {
+                        migrationOverlay.remove();
+                    }, 1000);
+                });
+            }
+
 
             // --- 1. Contador de Vistas Constante ---
             let viewsCount = 1000000; 
