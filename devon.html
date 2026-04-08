@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Devon México</title>
+    <title>A24 | Devon</title>
     <!-- Ícono de la pestaña (Favicon) -->
     <link rel="icon" href="https://i.ibb.co/h191t3k2/Devon-Title-logo.png" type="image/png">
     
-    <!-- Google Fonts: Agregamos 'Bodoni Moda' para el logo estilo Vogue y mantenemos 'Jost' para el resto -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -15,18 +15,19 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
+        window.tailwind = window.tailwind || {};
+        window.tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
                         sans: ['Jost', 'sans-serif'],
-                        serif: ['"Bodoni Moda"', 'serif'], /* Fuente estilo Vogue */
+                        serif: ['"Bodoni Moda"', 'serif'],
                     },
                     colors: {
                         brandPink: '#E8A5D6',
                         brandDark: '#0B1320',
                         brandGray: '#F2F2F2',
-                        vanCleefBg: '#E5F0E6' /* Verde suave del banner */
+                        vanCleefBg: '#E5F0E6'
                     },
                     letterSpacing: {
                         widest: '.2em',
@@ -45,7 +46,7 @@
             scrollbar-width: none;
         }
 
-        /* --- Sincronización Animaciones (Letra O principal) --- */
+        /* --- Sincronización Animaciones (Línea) --- */
         @keyframes slashAnim {
             0%, 20% { width: 0%; opacity: 0; transform: rotate(-45deg) scaleX(0); }
             30%, 70% { width: 140%; opacity: 1; transform: rotate(-45deg) scaleX(1); }
@@ -55,7 +56,7 @@
         .animated-slash {
             position: absolute;
             height: 3px;
-            background-color: black;
+            background-color: white;
             border-radius: 2px;
             transform-origin: center;
             animation: slashAnim 4s infinite ease-in-out;
@@ -63,12 +64,14 @@
             z-index: 10;
         }
 
-        /* --- Estilos de la Isla Dinámica --- */
+        /* --- Estilos de la Isla Dinámica (Adaptado Modo Oscuro) --- */
         .island-container {
             width: 0px; height: 0px; opacity: 0;
             transform: scale(0.5) translateY(-20px);
             transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             pointer-events: none;
+            background-color: #1a1a1a; /* Gris muy oscuro para contrastar con el fondo negro */
+            border: 1px solid #333;
         }
         
         .island-container.active {
@@ -98,7 +101,7 @@
         }
         .island-shake {
             animation: islandShakeAnim 0.4s ease-in-out;
-            transition: none !important; /* Esto evita que la animación rápida se mezcle con la apertura */
+            transition: none !important;
         }
         
         .logo-hidden { opacity: 0; transform: scale(0.5) translateY(20px); pointer-events: none; }
@@ -136,12 +139,14 @@
         .sidebar.open nav a:nth-child(6) { transition-delay: 0.35s; }
         .sidebar.open nav a:nth-child(7) { transition-delay: 0.40s; }
         .sidebar.open nav a:nth-child(8) { transition-delay: 0.45s; }
+        .sidebar.open nav a:nth-child(9) { transition-delay: 0.50s; }
+        .sidebar.open nav a:nth-child(10) { transition-delay: 0.55s; }
 
         /* --- Animación de Línea para los Enlaces --- */
         .link-underline {
             position: relative;
             display: inline-block;
-            padding-bottom: 2px; /* Separación de la línea */
+            padding-bottom: 2px;
         }
         .link-underline::after {
             content: '';
@@ -158,84 +163,72 @@
         }
     </style>
 </head>
-<body class="bg-white text-black font-sans flex flex-col min-h-screen">
+<body class="bg-black text-white font-sans flex flex-col min-h-screen">
 
-    <!-- Pantalla de Introducción -->
-    <div id="intro-container" class="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden pointer-events-auto transition-opacity duration-1000">
-        <div id="intro-bg" class="absolute inset-0 transition-colors duration-300"></div>
-        
-        <div id="intro-text-wrapper" class="relative flex items-center text-6xl md:text-8xl font-bold tracking-widest z-10 font-serif uppercase">
-            <span id="intro-dev" class="relative z-20 transition-opacity duration-500">DEV</span>
-            <div class="relative flex items-center justify-center mx-[0.02em] z-20">
-                <span id="intro-o-ring" class="relative z-20 inline-block transition-transform duration-[1.0s] ease-in-out origin-center">O</span>
-            </div>
-            <span id="intro-n" class="relative z-20 transition-opacity duration-500">N</span>
+    <!-- Pantalla de Introducción A24 -->
+    <div id="intro-container" class="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden pointer-events-auto bg-black transition-opacity duration-700">
+        <!-- Se aumentó el tamaño base de h-24 a h-40 en móviles y h-64 en escritorio -->
+        <img id="intro-logo" src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/e94e7d1f-3328-48d3-b11a-45e835c32fcb/dhvgkbm-ea7c097b-28b8-421d-9517-808ca4874cf0.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi9lOTRlN2QxZi0zMzI4LTQ4ZDMtYjExYS00NWU4MzVjMzJmY2IvZGh2Z2tibS1lYTdjMDk3Yi0yOGI4LTQyMWQtOTUxNy04MDhjYTQ4NzRjZjAuZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.clS1Az05Pd-Bwh-3uZzyIZFNcJC3Q6dlwSwVI2riTaU" alt="A24 Intro" class="h-40 md:h-64 object-contain relative z-20 transition-all duration-[0.8s] ease-in-out origin-center">
+    </div>
+
+    <!-- Overlay de Mudanza (Blur) -->
+    <div id="migration-overlay" class="fixed inset-0 z-[9998] flex items-center justify-center bg-black/60 backdrop-blur-xl opacity-0 pointer-events-none transition-opacity duration-1000">
+        <div id="migration-content" class="text-center px-6 max-w-3xl transform translate-y-10 opacity-0 transition-all duration-1000 ease-out flex flex-col items-center">
+            <h2 class="text-2xl md:text-4xl lg:text-5xl font-medium text-white mb-8 leading-snug" style="font-family: 'Jost', sans-serif;">
+                Hola, <br> Nos estamos mudando. <br> Nuestra nueva página es:
+            </h2>
+            <a href="https://stadereck.github.io/devonrevista/" class="link-underline text-sm md:text-lg font-bold tracking-[0.2em] uppercase text-white transition-colors pb-1">
+                Ir a nueva página
+            </a>
         </div>
     </div>
 
-    <!-- Script de colores (Blanco/Negro alternado) -->
-    <script>
-        let isDarkTheme;
-        try {
-            let lastTheme = sessionStorage.getItem('devon_intro_theme') || localStorage.getItem('devon_intro_theme');
-            if (lastTheme === 'dark') isDarkTheme = false; 
-            else if (lastTheme === 'light') isDarkTheme = true;  
-            else isDarkTheme = Math.random() > 0.5;
-            
-            sessionStorage.setItem('devon_intro_theme', isDarkTheme ? 'dark' : 'light');
-            localStorage.setItem('devon_intro_theme', isDarkTheme ? 'dark' : 'light');
-        } catch (e) {
-            isDarkTheme = Math.random() > 0.5;
-        }
-        
-        document.getElementById('intro-bg').style.backgroundColor = isDarkTheme ? '#000000' : '#ffffff';
-        document.getElementById('intro-text-wrapper').style.color = isDarkTheme ? '#ffffff' : '#000000';
-    </script>
-
     <!-- Overlay y Sidebar -->
-    <div id="overlay" class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity opacity-0" onclick="closeAll()"></div>
-    <aside id="sidebarMenu" class="sidebar fixed top-0 left-0 h-full w-64 bg-white z-50 shadow-2xl flex flex-col">
-        <div class="p-5 flex justify-between items-center border-b border-gray-100">
-            <h2 class="text-xl font-bold tracking-widest">MENÚ</h2>
-            <button onclick="toggleMenu()" class="text-gray-500 hover:text-black p-2">
+    <div id="overlay" class="fixed inset-0 bg-black/70 z-40 hidden transition-opacity opacity-0" onclick="closeAll()"></div>
+    <aside id="sidebarMenu" class="sidebar fixed top-0 left-0 h-full w-64 bg-[#0a0a0a] border-r border-gray-900 z-50 shadow-2xl flex flex-col">
+        <div class="p-5 flex justify-between items-center border-b border-gray-800">
+            <h2 class="text-xl font-bold tracking-widest text-white">MENÚ</h2>
+            <button onclick="toggleMenu()" class="text-gray-400 hover:text-white p-2 transition-colors">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
             </button>
         </div>
-        <nav class="flex flex-col p-4 gap-4 text-sm font-semibold tracking-wider text-gray-600 uppercase overflow-y-auto no-scrollbar pb-20">
-            <a href="#" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Inicio</a>
-            <a href="#" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Moda</a>
-            <a href="#" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Belleza</a>
-            <a href="#" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Estilo de Vida</a>
-            <a href="#" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Compras</a>
-            <a href="#" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">(Re)Devon</a>
-            <a href="#" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Hollywood</a>
-            <a href="#" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Podcast</a>
-            <a href="#" class="hover:text-black hover:bg-gray-50 p-3 rounded transition-colors">Espacio Devon</a>
+        <nav class="flex flex-col p-4 gap-4 text-sm font-semibold tracking-wider text-gray-400 uppercase overflow-y-auto no-scrollbar pb-20">
+            <a href="suscripcion.html" class="text-white hover:bg-gray-900 p-3 rounded transition-colors">Suscripción</a>
+            <a href="index.html" class="hover:text-white hover:bg-gray-900 p-3 rounded transition-colors">Inicio</a>
+            <a href="moda.html" class="hover:text-white hover:bg-gray-900 p-3 rounded transition-colors">Moda</a>
+            <a href="belleza.html" class="hover:text-white hover:bg-gray-900 p-3 rounded transition-colors">Belleza</a>
+            <a href="estilodevida.html" class="hover:text-white hover:bg-gray-900 p-3 rounded transition-colors">Estilo de Vida</a>
+            <a href="compras.html" class="hover:text-white hover:bg-gray-900 p-3 rounded transition-colors">Compras</a>
+            <a href="redevon.html" class="hover:text-white hover:bg-gray-900 p-3 rounded transition-colors">(Re)Devon</a>
+            <a href="hollywood.html" class="hover:text-white hover:bg-gray-900 p-3 rounded transition-colors">Hollywood</a>
+            <a href="podcast.html" class="hover:text-white hover:bg-gray-900 p-3 rounded transition-colors">Podcast</a>
+            <a href="espaciodevon.html" class="hover:text-white hover:bg-gray-900 p-3 rounded transition-colors">Espacio Devon</a>
         </nav>
     </aside>
 
-    <!-- Barra de Navegación Principal (DEVON con tipografía estilo Vogue) -->
-    <header class="w-full bg-white sticky top-0 z-30 border-b border-gray-100 md:border-none">
+    <!-- Barra de Navegación Principal -->
+    <header class="w-full bg-black sticky top-0 z-30 border-b border-gray-900 md:border-none">
         <div class="max-w-7xl mx-auto flex items-center justify-between px-5 h-16 md:h-20 relative">
-            <button onclick="toggleMenu()" class="text-black z-20 hover:scale-110 transition-transform">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">
-                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                    <line x1="3" y1="16" x2="21" y2="16"></line>
-                </svg>
-            </button>
             
-            <div id="interactive-header-center" class="absolute left-1/2 transform -translate-x-1/2 h-full flex items-center justify-center cursor-pointer select-none z-10 w-64">
+            <!-- Izquierda: Menú -->
+            <div class="flex items-center gap-4 z-20">
+                <button onclick="toggleMenu()" class="text-white hover:scale-110 transition-transform">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                        <line x1="3" y1="16" x2="21" y2="16"></line>
+                    </svg>
+                </button>
+            </div>
+            
+            <div id="interactive-header-center" class="absolute left-1/2 transform -translate-x-1/2 h-full flex items-center justify-center cursor-pointer select-none z-10 w-auto px-2 md:px-4 whitespace-nowrap">
                 
-                <h1 id="devon-text" class="text-4xl md:text-5xl font-bold tracking-widest text-black mt-1 transition-all duration-500 flex items-center font-serif uppercase">
-                    DEV
-                    <span class="relative inline-flex items-center justify-center group">
-                        O
-                        <span class="animated-slash group-hover:bg-brandPink group-hover:shadow-[0_0_8px_#E8A5D6] transition-colors duration-300"></span>
-                    </span>
-                    N
-                </h1>
+                <!-- Logo cambiado por el GIF y | Devon (Mejor ajustado para móvil) -->
+                <div id="devon-text" class="flex items-center justify-center gap-2 md:gap-3 transition-all duration-500">
+                    <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/e94e7d1f-3328-48d3-b11a-45e835c32fcb/dhvgkbm-ea7c097b-28b8-421d-9517-808ca4874cf0.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi9lOTRlN2QxZi0zMzI4LTQ4ZDMtYjExYS00NWU4MzVjMzJmY2IvZGh2Z2tibS1lYTdjMDk3Yi0yOGI4LTQyMWQtOTUxNy04MDhjYTQ4NzRjZjAuZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.clS1Az05Pd-Bwh-3uZzyIZFNcJC3Q6dlwSwVI2riTaU" alt="A24 Logo GIF" class="h-8 sm:h-10 md:h-12 object-contain">
+                    <span class="text-xl sm:text-2xl md:text-3xl font-bold tracking-widest text-white font-serif uppercase">| DEVON</span>
+                </div>
 
-                <div id="dynamic-island" class="island-container absolute bg-black rounded-full flex items-center justify-center overflow-hidden shadow-xl">
+                <div id="dynamic-island" class="island-container absolute rounded-full flex items-center justify-center overflow-hidden shadow-xl">
                     <div id="island-content" class="w-full flex items-center justify-center transition-all duration-300">
                         <span class="text-white text-xs md:text-sm font-bold tracking-widest font-serif uppercase">DEVON</span>
                     </div>
@@ -243,58 +236,63 @@
             </div>
             
             <div class="flex items-center gap-4 z-20">
-                <button id="person-icon-btn" class="text-black hover:scale-110 transition-transform">
+                <a href="suscripcion.html" class="hidden md:block text-[11px] md:text-xs font-medium tracking-[0.25em] uppercase text-white hover:text-gray-400 transition-colors mr-1" style="font-family: 'Jost', sans-serif;">
+                    SUSCRIPCIÓN
+                </a>
+                
+                <!-- Ícono de usuario -->
+                <a href="usuario.html" class="text-white hover:scale-110 transition-transform">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="10"></circle>
                         <path d="M12 16a4 4 0 0 0-4-4h8a4 4 0 0 0-4 4z"></path>
                         <circle cx="12" cy="9" r="2.5"></circle>
                     </svg>
-                </button>
+                </a>
             </div>
         </div>
     </header>
 
-    <!-- Top Bar (Textos Modas/Belleza con tipografía editorial) -->
-    <div class="hidden md:flex w-full justify-center gap-8 lg:gap-12 text-[11px] lg:text-xs font-medium tracking-[0.2em] text-black uppercase py-4 bg-white border-b border-gray-100 overflow-x-auto whitespace-nowrap px-6" style="font-family: 'Jost', sans-serif;">
-        <span class="cursor-pointer hover:text-gray-500 transition-colors">MODA</span>
-        <span class="cursor-pointer hover:text-gray-500 transition-colors">BELLEZA</span>
-        <span class="cursor-pointer hover:text-gray-500 transition-colors">ESTILO DE VIDA</span>
-        <span class="cursor-pointer hover:text-gray-500 transition-colors">COMPRAS</span>
-        <span class="cursor-pointer hover:text-gray-500 transition-colors">(RE)DEVON</span>
-        <span class="cursor-pointer hover:text-gray-500 transition-colors">HOLLYWOOD</span>
-        <span class="cursor-pointer hover:text-gray-500 transition-colors">PODCAST</span>
-        <span class="cursor-pointer hover:text-gray-500 transition-colors">ESPACIO DEVON</span>
+    <!-- Top Bar -->
+    <div class="hidden md:flex w-full justify-center gap-8 lg:gap-12 text-[11px] lg:text-xs font-medium tracking-[0.2em] text-white uppercase py-4 bg-black border-b border-gray-900 overflow-x-auto whitespace-nowrap px-6" style="font-family: 'Jost', sans-serif;">
+        <a href="moda.html" class="cursor-pointer hover:text-gray-400 transition-colors">MODA</a>
+        <a href="belleza.html" class="cursor-pointer hover:text-gray-400 transition-colors">BELLEZA</a>
+        <a href="estilodevida.html" class="cursor-pointer hover:text-gray-400 transition-colors">ESTILO DE VIDA</a>
+        <a href="compras.html" class="cursor-pointer hover:text-gray-400 transition-colors">COMPRAS</a>
+        <a href="redevon.html" class="cursor-pointer hover:text-gray-400 transition-colors">(RE)DEVON</a>
+        <a href="hollywood.html" class="cursor-pointer hover:text-gray-400 transition-colors">HOLLYWOOD</a>
+        <a href="podcast.html" class="cursor-pointer hover:text-gray-400 transition-colors">PODCAST</a>
+        <a href="espaciodevon.html" class="cursor-pointer hover:text-gray-400 transition-colors">ESPACIO DEVON</a>
     </div>
 
     <!-- Pestañas Superiores (Solo Móvil) -->
-    <div class="flex md:hidden w-full text-[11px] font-semibold tracking-wider text-gray-500 uppercase">
-        <button class="w-1/2 py-4 flex items-center justify-center bg-white text-black border-b-2 border-black">
+    <div class="flex md:hidden w-full text-[11px] font-semibold tracking-wider text-gray-400 uppercase">
+        <a href="loultimo.html" class="w-1/2 py-4 flex items-center justify-center bg-black text-white border-b-2 border-white">
             LO ÚLTIMO
-        </button>
-        <button class="w-1/2 py-4 flex items-center justify-center bg-[#f0f0f0] border-l border-gray-200 hover:bg-gray-200 transition-colors cursor-pointer">
+        </a>
+        <a href="tendencias.html" class="w-1/2 py-4 flex items-center justify-center bg-gray-900 border-l border-gray-800 hover:bg-gray-800 transition-colors cursor-pointer">
             TENDENCIAS
-        </button>
+        </a>
     </div>
 
-    <!-- BANNER NUEVO: Van Cleef & Arpels (Altura recortada) -->
-    <section class="w-full relative flex items-center justify-center overflow-hidden border-b border-gray-200 min-h-[220px] md:min-h-[280px]">
+    <!-- BANNER: Van Cleef & Arpels -->
+    <section class="w-full relative flex items-center justify-center overflow-hidden border-b border-gray-800 min-h-[220px] md:min-h-[280px]">
         <img 
             src="https://images.unsplash.com/photo-1611085583191-a3b181a88401?q=80&w=2000&auto=format&fit=crop" 
             alt="Fondo Van Cleef" 
-            class="absolute inset-0 w-full h-full object-cover object-center z-0"
+            class="absolute inset-0 w-full h-full object-cover object-center z-0 brightness-75"
         />
         <div class="max-w-7xl w-full flex flex-col items-center md:items-start text-center md:text-left z-10 px-6 md:px-12 py-8 md:py-10 relative">
-            <h2 class="text-2xl md:text-4xl text-black mb-2" style="font-family: 'Georgia', 'Times New Roman', serif;">Van Cleef & Arpels</h2>
-            <p class="text-[10px] md:text-xs text-gray-800 mb-4" style="font-family: 'Georgia', 'Times New Roman', serif;">Haute Joaillerie, place Vendôme desde 1906</p>
+            <h2 class="text-2xl md:text-4xl text-white mb-2" style="font-family: 'Georgia', 'Times New Roman', serif;">Van Cleef & Arpels</h2>
+            <p class="text-[10px] md:text-xs text-gray-200 mb-4" style="font-family: 'Georgia', 'Times New Roman', serif;">Haute Joaillerie, place Vendôme desde 1906</p>
             
-            <div class="mb-4 text-black opacity-90 flex items-center justify-center md:justify-start">
+            <div class="mb-4 text-white opacity-90 flex items-center justify-center md:justify-start">
                 <svg width="30" height="20" viewBox="0 0 36 24">
                     <polygon points="18,1 35,12 18,23 1,12" fill="none" stroke="currentColor" stroke-width="1.2"></polygon>
                     <text x="18" y="15" font-size="7" font-family="serif" text-anchor="middle" fill="currentColor">VCA</text>
                 </svg>
             </div>
             
-            <a href="#" class="text-[9px] md:text-[10px] font-bold tracking-widest uppercase text-black border-b border-black pb-0.5 hover:text-gray-600 transition-colors">
+            <a href="coleccionlucky.html" class="text-[9px] md:text-[10px] font-bold tracking-widest uppercase text-white border-b border-white pb-0.5 hover:text-gray-300 transition-colors">
                 DESCUBRE LA COLECCIÓN LUCKY SPRING
             </a>
         </div>
@@ -305,8 +303,8 @@
 
         <!-- Título EN PORTADA con líneas divisorias -->
         <div class="w-full max-w-7xl mx-auto px-6 mt-8 md:mt-12 mb-4">
-            <div class="border-t border-b border-gray-200 py-3 md:py-4">
-                <h2 class="text-lg md:text-xl font-medium tracking-widest text-black uppercase" style="font-family: 'Jost', sans-serif;">
+            <div class="border-t border-b border-gray-800 py-3 md:py-4">
+                <h2 class="text-lg md:text-xl font-medium tracking-widest text-white uppercase" style="font-family: 'Jost', sans-serif;">
                     EN PORTADA
                 </h2>
             </div>
@@ -315,7 +313,7 @@
         <!-- Sección Hero (Carrusel Deslizante) -->
         <section class="max-w-7xl w-full mx-auto px-4 md:px-6 pt-4 md:pt-6 mb-4">
             <!-- Contenedor del Carrusel -->
-            <div class="w-full mx-auto overflow-hidden shadow-lg relative bg-gray-200 rounded-2xl md:rounded-[2rem]">
+            <div class="w-full mx-auto overflow-hidden shadow-2xl relative bg-gray-900 rounded-2xl md:rounded-[2rem]">
                 <div id="hero-anim-container" class="relative w-full aspect-[4/3] md:aspect-[16/9] transform origin-center will-change-transform bg-black">
                     
                     <!-- Slide 1: Fer & Alonso -->
@@ -332,63 +330,95 @@
                     <div class="hero-slide absolute inset-0 transition-transform duration-500 ease-in-out transform translate-x-full z-0">
                         <img src="https://res.cloudinary.com/dhx58lnzb/image/upload/v1775094004/656410068-927276343609067-1256087780943380654-n_zjxxnt.jpg" alt="Alonso Alvarez & Fernanda en Espacio Devon" class="absolute inset-0 w-full h-full object-cover object-top md:object-[center_15%]"/>
                     </div>
+
+                    <!-- Slide 4: Billie Eilish -->
+                    <div class="hero-slide absolute inset-0 transition-transform duration-500 ease-in-out transform translate-x-full z-0">
+                        <img src="https://res.cloudinary.com/dhx58lnzb/image/upload/v1775161656/3707dfabae83ff6afafbedeb78928728_tlfxrk.webp" alt="Billie Eilish en Espacio Devon" class="absolute inset-0 w-full h-full object-cover object-top md:object-[center_15%]"/>
+                    </div>
+
+                    <!-- Slide 5: Salma -->
+                    <div class="hero-slide absolute inset-0 transition-transform duration-500 ease-in-out transform translate-x-full z-0">
+                        <img src="https://acuaticasamil.com/wp-content/uploads/2025/08/2.jpg" alt="Salma Acuatica Samil" class="absolute inset-0 w-full h-full object-cover object-top md:object-[center_15%]"/>
+                    </div>
+
+                    <!-- Slide 6: Backrooms -->
+                    <div class="hero-slide absolute inset-0 transition-transform duration-500 ease-in-out transform translate-x-full z-0">
+                        <img src="https://hips.hearstapps.com/hmg-prod/images/screenshot-2026-02-26-at-10-18-37-am-69a0645189464.png?crop=0.9555555555555556xw:1xh;0,0.0179xh" alt="The Backrooms Movie" class="absolute inset-0 w-full h-full object-cover object-center"/>
+                        <!-- Efecto transparente Backrooms sobre la imagen (Más chico y solo B mayúscula) -->
+                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-20 bg-black/10">
+                            <span class="text-white/60 font-medium tracking-widest drop-shadow-2xl" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: clamp(2.5rem, 6vw, 5.5rem); text-shadow: 0 4px 30px rgba(0,0,0,0.6);">Backrooms</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Indicadores Dinámicos -->
             <div class="flex justify-center items-center gap-2.5 mt-6 mb-6">
-                <div class="hero-dot w-8 h-1.5 rounded-full bg-black cursor-pointer transition-all duration-300"></div>
-                <div class="hero-dot w-2 h-2 rounded-full bg-gray-300 cursor-pointer transition-all duration-300"></div>
-                <div class="hero-dot w-2 h-2 rounded-full bg-gray-300 cursor-pointer transition-all duration-300"></div>
+                <div class="hero-dot w-8 h-1.5 rounded-full bg-white cursor-pointer transition-all duration-300"></div>
+                <div class="hero-dot w-2 h-2 rounded-full bg-gray-600 cursor-pointer transition-all duration-300"></div>
+                <div class="hero-dot w-2 h-2 rounded-full bg-gray-600 cursor-pointer transition-all duration-300"></div>
+                <div class="hero-dot w-2 h-2 rounded-full bg-gray-600 cursor-pointer transition-all duration-300"></div>
+                <div class="hero-dot w-2 h-2 rounded-full bg-gray-600 cursor-pointer transition-all duration-300"></div>
+                <div class="hero-dot w-2 h-2 rounded-full bg-gray-600 cursor-pointer transition-all duration-300"></div>
                 
-                <!-- Indicador de Tiempo Circular -->
-                <div class="relative w-7 h-7 flex items-center justify-center ml-3">
-                    <svg class="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                        <circle cx="18" cy="18" r="14" fill="none" stroke="#E5E7EB" stroke-width="2.5"></circle>
-                        <circle id="hero-progress-circle" cx="18" cy="18" r="14" fill="none" stroke="#000000" stroke-width="2.5" stroke-dasharray="88" stroke-dashoffset="88" stroke-linecap="round"></circle>
-                    </svg>
-                    <span id="hero-progress-text" class="text-[9px] font-bold text-black font-sans z-10" style="padding-top: 1px;">5</span>
+                <!-- Indicador de Tiempo Circular y Candado -->
+                <div class="flex items-center gap-2 ml-3">
+                    <div class="relative w-7 h-7 flex items-center justify-center">
+                        <svg class="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                            <circle cx="18" cy="18" r="14" fill="none" stroke="#333333" stroke-width="2.5"></circle>
+                            <circle id="hero-progress-circle" cx="18" cy="18" r="14" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-dasharray="88" stroke-dashoffset="88" stroke-linecap="round"></circle>
+                        </svg>
+                        <span id="hero-progress-text" class="text-[9px] font-bold text-white font-sans z-10" style="padding-top: 1px;">6</span>
+                        <span id="hero-infinity-icon" class="hidden absolute inset-0 flex items-center justify-center text-[16px] font-medium text-white z-10 animate-pulse" style="padding-bottom: 2px;">∞</span>
+                    </div>
+                    <!-- Botón de candado (Lock) -->
+                    <button id="carousel-lock-btn" class="text-gray-500 hover:text-white transition-colors focus:outline-none flex items-center justify-center w-6 h-6">
+                        <svg id="lock-icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 9.9-1"></path>
+                        </svg>
+                    </button>
                 </div>
             </div>
             
-            <!-- Contenedor Wrapper para Animación de Altura (Eliminamos espacio vacío) -->
+            <!-- Contenedor Wrapper para Animación de Altura -->
             <div id="text-wrapper" class="relative w-full mx-auto overflow-hidden transition-[height] duration-500 ease-in-out px-2 md:px-4">
                 
                 <!-- Texto Slide 1 -->
                 <div class="hero-text absolute top-0 left-0 w-full px-2 md:px-4 transition-opacity duration-500 ease-in-out opacity-100 z-10 pointer-events-auto flex flex-col items-start justify-start">
-                    <h2 class="text-2xl md:text-3xl font-medium text-black mb-6" style="font-family: 'Jost', sans-serif;">
+                    <h2 class="text-2xl md:text-3xl font-medium text-white mb-6" style="font-family: 'Jost', sans-serif;">
                         Fer & Alonso, ¿podrás descubrirlo?
                     </h2>
-                    <a href="https://www.instagram.com/alonso_ia_alvarez" class="link-underline text-xs font-bold tracking-widest uppercase text-black">
+                    <a href="https://www.instagram.com/alonso_ia_alvarez" class="link-underline text-xs font-bold tracking-widest uppercase text-white">
                         IR A VERLOS JUNTOS
                     </a>
                 </div>
 
                 <!-- Texto Slide 2 (Alonso) -->
                 <div class="hero-text absolute top-0 left-0 w-full px-2 md:px-4 transition-opacity duration-500 ease-in-out opacity-0 z-0 pointer-events-none flex flex-col items-start justify-start">
-                    <p class="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-black mb-3 md:mb-4">MODA</p>
-                    <h2 class="text-3xl md:text-5xl lg:text-[3.2rem] font-medium text-black leading-[1.15] mb-6 md:mb-8 max-w-5xl" style="font-family: 'Jost', sans-serif; letter-spacing: -0.02em;">
+                    <p class="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-gray-300 mb-3 md:mb-4">MODA</p>
+                    <h2 class="text-3xl md:text-5xl lg:text-[3.2rem] font-medium text-white leading-[1.15] mb-6 md:mb-8 max-w-5xl" style="font-family: 'Jost', sans-serif; letter-spacing: -0.02em;">
                         Alonso Alvarez, el coach modelo mexicano regresa a la portada de Devon
                     </h2>
-                    <div class="text-[10px] md:text-[11px] font-medium tracking-[0.15em] uppercase text-black leading-loose">
-                        <p>POR DERECK J.</p>
-                        <p>FOTOGRAFÍA POR DEVON®</p>
-                        <p class="normal-case mt-2 text-[11px] md:text-[13px] text-gray-800 tracking-normal leading-none" style="font-family: 'Jost', sans-serif;">1 de abril de 2026</p>
+                    <div class="text-[10px] md:text-[11px] font-medium tracking-[0.15em] uppercase text-white leading-loose">
+                        <p class="text-gray-300">POR DERECK J.</p>
+                        <p class="text-gray-300">FOTOGRAFÍA POR DEVON®</p>
+                        <p class="normal-case mt-2 text-[11px] md:text-[13px] text-gray-400 tracking-normal leading-none" style="font-family: 'Jost', sans-serif;">1 de abril de 2026</p>
                     </div>
                 </div>
 
                 <!-- Texto Slide 3 (Espacio Devon) -->
                 <div class="hero-text absolute top-0 left-0 w-full px-2 md:px-4 transition-opacity duration-500 ease-in-out opacity-0 z-0 pointer-events-none flex flex-col items-start justify-start">
-                    <p class="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-black mb-3 md:mb-4">Espacio Devon</p>
-                    <h2 class="text-3xl md:text-5xl lg:text-[3.2rem] font-medium text-black leading-[1.15] mb-6 md:mb-8 max-w-5xl" style="font-family: 'Jost', sans-serif; letter-spacing: -0.02em;">
+                    <p class="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-gray-300 mb-3 md:mb-4">Espacio Devon</p>
+                    <h2 class="text-3xl md:text-5xl lg:text-[3.2rem] font-medium text-white leading-[1.15] mb-6 md:mb-8 max-w-5xl" style="font-family: 'Jost', sans-serif; letter-spacing: -0.02em;">
                         Alonso Alvarez, el coach modelo mexicano & su date Fernanda hacen una aparición en Espacio Devon
                     </h2>
-                    <div class="text-[10px] md:text-[11px] font-medium tracking-[0.15em] uppercase text-black leading-loose">
-                        <p>POR Dereck J.</p>
-                        <p>Fotografia Por Devon®</p>
-                        <div class="normal-case mt-2 text-[11px] md:text-[13px] text-gray-800 tracking-normal leading-none flex items-center gap-3" style="font-family: 'Jost', sans-serif;">
+                    <div class="text-[10px] md:text-[11px] font-medium tracking-[0.15em] uppercase text-white leading-loose">
+                        <p class="text-gray-300">POR Dereck J.</p>
+                        <p class="text-gray-300">Fotografia Por Devon®</p>
+                        <div class="normal-case mt-2 text-[11px] md:text-[13px] text-gray-400 tracking-normal leading-none flex items-center gap-3" style="font-family: 'Jost', sans-serif;">
                             <span>1 de abril de 2026</span>
-                            <a href="#" class="link-underline flex items-center gap-1 text-black font-medium transition-colors hover:text-black">
+                            <a href="#" class="link-underline flex items-center gap-1 text-white font-medium transition-colors hover:text-gray-300">
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                                 Acuatica Samil
                             </a>
@@ -396,13 +426,62 @@
                     </div>
                 </div>
 
+                <!-- Texto Slide 4 (Billie Eilish) -->
+                <div class="hero-text absolute top-0 left-0 w-full px-2 md:px-4 transition-opacity duration-500 ease-in-out opacity-0 z-0 pointer-events-none flex flex-col items-start justify-start">
+                    <p class="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-gray-300 mb-3 md:mb-4">Espacio Devon</p>
+                    <h2 class="text-3xl md:text-5xl lg:text-[3.2rem] font-medium text-white leading-[1.15] mb-6 md:mb-8 max-w-5xl" style="font-family: 'Jost', sans-serif; letter-spacing: -0.02em;">
+                        Billie Eilish, la artista estadounidense hacen una aparición en los cines con su pelicula HIT ME HARD AND SOFT Movie 
+                    </h2>
+                    <div class="text-[10px] md:text-[11px] font-medium tracking-[0.15em] uppercase text-white leading-loose">
+                        <p class="text-gray-300">POR Billie Eilish, Paramount® & Devon®.</p>
+                        <p class="text-gray-300">Fotografia Por Paramount®</p>
+                        <div class="normal-case mt-2 text-[11px] md:text-[13px] text-gray-400 tracking-normal leading-none flex items-center gap-3" style="font-family: 'Jost', sans-serif;">
+                            <span>20 de marzo de 2026</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Texto Slide 5 (Salma) -->
+                <div class="hero-text absolute top-0 left-0 w-full px-2 md:px-4 transition-opacity duration-500 ease-in-out opacity-0 z-0 pointer-events-none flex flex-col items-start justify-start">
+                    <p class="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-gray-300 mb-3 md:mb-4">(Re) Devon</p>
+                    <h2 class="text-3xl md:text-5xl lg:text-[3.2rem] font-medium text-white leading-[1.15] mb-6 md:mb-8 max-w-5xl" style="font-family: 'Jost', sans-serif; letter-spacing: -0.02em;">
+                        Salma, la mejor persona de la acuatica Samil podria volver gracias a un reporte hacia su sucesor
+                    </h2>
+                    <div class="text-[10px] md:text-[11px] font-medium tracking-[0.15em] uppercase text-white leading-loose">
+                        <p class="text-gray-300">Por Samil® & Devon®.</p>
+                        <p class="text-gray-300">Fotografia Por Samil®</p>
+                        <div class="normal-case mt-2 text-[11px] md:text-[13px] text-gray-400 tracking-normal leading-none flex items-center gap-3" style="font-family: 'Jost', sans-serif;">
+                            <span>4 de abril de 2026 (Actualizacion 6 abril de 2026)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Texto Slide 6 (Backrooms) -->
+                <div class="hero-text absolute top-0 left-0 w-full px-2 md:px-4 transition-opacity duration-500 ease-in-out opacity-0 z-0 pointer-events-none flex flex-col items-start justify-start">
+                    <p class="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-gray-300 mb-3 md:mb-4">Espacio Devon</p>
+                    <h2 class="text-3xl md:text-5xl lg:text-[3.2rem] font-medium text-white leading-[1.15] mb-6 md:mb-8 max-w-5xl" style="font-family: 'Jost', sans-serif; letter-spacing: -0.02em;">
+                        The Backrooms Movie, la pelicula estadounidense mas esperada producida por A24 para estar en los cines con su pelicula su lanzamiento se espera para el dia 29 mayo de 2026.
+                    </h2>
+                    <div class="text-[10px] md:text-[11px] font-medium tracking-[0.15em] uppercase text-white leading-loose mb-6">
+                        <p class="text-gray-300">POR A24® & Devon®.</p>
+                        <p class="text-gray-300">Fotografia Por Devon®</p>
+                        <div class="normal-case mt-2 text-[11px] md:text-[13px] text-gray-400 tracking-normal leading-none flex items-center gap-3" style="font-family: 'Jost', sans-serif;">
+                            <span>8 abril de 2026</span>
+                        </div>
+                    </div>
+                    <!-- Enlace a backrooms.html con animación de línea interactiva -->
+                    <a href="backrooms.html" class="link-underline text-xs md:text-sm font-bold tracking-widest uppercase text-white transition-colors pointer-events-auto relative z-30">
+                        Backrooms
+                    </a>
+                </div>
+
             </div>
         </section>
 
         <!-- Título ÚLTIMAS TENDENCIAS -->
         <div class="w-full max-w-7xl mx-auto px-6 mt-16 md:mt-24 mb-4">
-            <div class="border-t border-b border-gray-200 py-3 md:py-4">
-                <h2 class="text-lg md:text-xl font-medium tracking-widest text-black uppercase" style="font-family: 'Jost', sans-serif;">
+            <div class="border-t border-b border-gray-800 py-3 md:py-4">
+                <h2 class="text-lg md:text-xl font-medium tracking-widest text-white uppercase" style="font-family: 'Jost', sans-serif;">
                     ÚLTIMAS TENDENCIAS
                 </h2>
             </div>
@@ -411,36 +490,31 @@
     </main>
 
     <!-- FOOTER: Diseño estilo Vogue -->
-    <footer class="bg-black text-white pt-16 pb-8">
+    <footer class="bg-black text-white pt-16 pb-8 border-t border-gray-900 mt-20">
         <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8">
             
             <!-- Columna Izquierda: Logo y Redes -->
             <div class="md:col-span-4 flex flex-col items-start">
-                <h2 class="text-5xl md:text-6xl font-bold tracking-widest mb-8 font-serif uppercase">DEVON</h2>
+                <!-- Logo GIF gigante reemplazando texto DEVON -->
+                <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/e94e7d1f-3328-48d3-b11a-45e835c32fcb/dhvgkbm-ea7c097b-28b8-421d-9517-808ca4874cf0.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi9lOTRlN2QxZi0zMzI4LTQ4ZDMtYjExYS00NWU4MzVjMzJmY2IvZGh2Z2tibS1lYTdjMDk3Yi0yOGI4LTQyMWQtOTUxNy04MDhjYTQ4NzRjZjAuZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.clS1Az05Pd-Bwh-3uZzyIZFNcJC3Q6dlwSwVI2riTaU" alt="Logo GIF" class="h-16 md:h-24 lg:h-32 object-contain mb-8">
                 
                 <div class="flex gap-3">
-                    <!-- FB -->
-                    <a href="#" class="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-white transition-colors text-white">
+                    <a href="#" class="w-10 h-10 rounded-full border border-gray-800 flex items-center justify-center hover:border-white transition-colors text-white">
                         <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.04-1.557-.14-2.857-.14C11.928 2 10 3.657 10 6.7v2.8H7.5v4H10v9.5h4v-9.5z"/></svg>
                     </a>
-                    <!-- Instagram -->
-                    <a href="#" class="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-white transition-colors text-white">
+                    <a href="#" class="w-10 h-10 rounded-full border border-gray-800 flex items-center justify-center hover:border-white transition-colors text-white">
                         <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
                     </a>
-                    <!-- X -->
-                    <a href="#" class="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-white transition-colors text-white">
+                    <a href="#" class="w-10 h-10 rounded-full border border-gray-800 flex items-center justify-center hover:border-white transition-colors text-white">
                         <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                     </a>
-                    <!-- YouTube -->
-                    <a href="#" class="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-white transition-colors text-white">
+                    <a href="#" class="w-10 h-10 rounded-full border border-gray-800 flex items-center justify-center hover:border-white transition-colors text-white">
                         <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.377.55a3.016 3.016 0 0 0-2.122 2.136C0 8.07 0 12 0 12s0 3.93.501 5.814a3.016 3.016 0 0 0 2.122 2.136c1.872.55 9.377.55 9.377.55s7.505 0 9.377-.55a3.016 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                     </a>
-                    <!-- Pinterest -->
-                    <a href="#" class="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-white transition-colors text-white">
+                    <a href="#" class="w-10 h-10 rounded-full border border-gray-800 flex items-center justify-center hover:border-white transition-colors text-white">
                         <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-3.957 1.406-3.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345l-.288 1.183c-.053.189-.168.223-.332.149-1.229-.556-1.996-2.311-1.996-3.719 0-3.037 2.203-5.834 6.368-5.834 3.346 0 5.952 2.385 5.952 5.568 0 3.325-2.096 6.002-5.008 6.002-1.024 0-1.99-.533-2.321-1.164l-.634 2.417c-.229.873-.853 1.96-1.272 2.624 1.139.317 2.339.489 3.585.489 6.621 0 11.988-5.367 11.988-11.987C24.005 5.367 18.638 0 12.017 0z"/></svg>
                     </a>
-                    <!-- TikTok -->
-                    <a href="#" class="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-white transition-colors text-white">
+                    <a href="#" class="w-10 h-10 rounded-full border border-gray-800 flex items-center justify-center hover:border-white transition-colors text-white">
                         <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12.525.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93v7.2c0 1.63-.52 3.26-1.5 4.54-1.15 1.5-2.9 2.45-4.81 2.76-1.89.31-3.88.08-5.59-.83-1.69-.9-2.99-2.43-3.6-4.18-.62-1.78-.6-3.72.07-5.48.68-1.79 2.08-3.25 3.8-4.05 1.7-.8 3.65-1.05 5.5-.72v4.06c-.85-.11-1.74-.03-2.52.33-.78.36-1.42 1-1.8 1.75-.38.75-.46 1.64-.22 2.42.24.78.78 1.45 1.49 1.83.71.39 1.57.48 2.35.26.78-.22 1.44-.75 1.84-1.47.4-.73.53-1.6.36-2.42v-14z"/></svg>
                     </a>
                 </div>
@@ -448,55 +522,55 @@
 
             <!-- Columna Central: MÁS EN DEVON -->
             <div class="md:col-span-4 md:pl-8">
-                <h4 class="text-[10px] font-bold tracking-[0.2em] uppercase mb-8 text-gray-100 font-sans">MÁS EN DEVON</h4>
+                <h4 class="text-[10px] font-bold tracking-[0.2em] uppercase mb-8 text-gray-500 font-sans">MÁS EN DEVON</h4>
                 <ul class="text-[10px] font-medium tracking-[0.15em] text-gray-300 space-y-5 uppercase font-sans">
-                    <li><a href="#" class="hover:text-white transition-colors">Moda</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Belleza</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Estilo de Vida</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Compras</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">(Re)Devon</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Red Carpet</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Pasarelas</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Videos</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Espacio Devon</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">PhotoDevon</a></li>
+                    <li><a href="moda.html" class="hover:text-white transition-colors">Moda</a></li>
+                    <li><a href="belleza.html" class="hover:text-white transition-colors">Belleza</a></li>
+                    <li><a href="estilodevida.html" class="hover:text-white transition-colors">Estilo de Vida</a></li>
+                    <li><a href="compras.html" class="hover:text-white transition-colors">Compras</a></li>
+                    <li><a href="redevon.html" class="hover:text-white transition-colors">(Re)Devon</a></li>
+                    <li><a href="redcarpet.html" class="hover:text-white transition-colors">Red Carpet</a></li>
+                    <li><a href="pasarelas.html" class="hover:text-white transition-colors">Pasarelas</a></li>
+                    <li><a href="videos.html" class="hover:text-white transition-colors">Videos</a></li>
+                    <li><a href="espaciodevon.html" class="hover:text-white transition-colors">Espacio Devon</a></li>
+                    <li><a href="photodevon.html" class="hover:text-white transition-colors">PhotoDevon</a></li>
                 </ul>
             </div>
 
             <!-- Columna Derecha: CONDÉ NAST MÉXICO -->
             <div class="md:col-span-4">
-                <h4 class="text-[10px] font-bold tracking-[0.2em] uppercase mb-8 text-gray-100 font-sans">CONDÉ NAST MÉXICO</h4>
+                <h4 class="text-[10px] font-bold tracking-[0.2em] uppercase mb-8 text-gray-500 font-sans">CONDÉ NAST MÉXICO</h4>
                 <ul class="text-[10px] font-medium tracking-[0.15em] text-gray-300 space-y-5 uppercase font-sans">
-                    <li><a href="#" class="hover:text-white transition-colors">AD</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Glamour</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Devon</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">GQ</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Wired</a></li>
+                    <li><a href="ad.html" class="hover:text-white transition-colors">AD</a></li>
+                    <li><a href="glamour.html" class="hover:text-white transition-colors">Glamour</a></li>
+                    <li><a href="index.html" class="hover:text-white transition-colors">Devon</a></li>
+                    <li><a href="gq.html" class="hover:text-white transition-colors">GQ</a></li>
+                    <li><a href="wired.html" class="hover:text-white transition-colors">Wired</a></li>
                 </ul>
             </div>
         </div>
 
         <!-- Línea separadora inferior y Links Legales -->
-        <div class="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-gray-800 flex flex-col md:flex-row items-center justify-between gap-8 font-sans">
+        <div class="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-gray-900 flex flex-col md:flex-row items-center justify-between gap-8 font-sans">
             
-            <div class="flex flex-wrap items-center justify-center md:justify-start gap-x-4 gap-y-3 text-[9px] font-medium tracking-[0.15em] text-gray-400 uppercase">
-                <a href="#" class="hover:text-white transition-colors">Convenio del Usuario</a>
+            <div class="flex flex-wrap items-center justify-center md:justify-start gap-x-4 gap-y-3 text-[9px] font-medium tracking-[0.15em] text-gray-500 uppercase">
+                <a href="convenio.html" class="hover:text-white transition-colors">Convenio del Usuario</a>
                 <span class="text-gray-700">|</span>
-                <a href="#" class="hover:text-white transition-colors">Aviso de Privacidad</a>
+                <a href="privacidad.html" class="hover:text-white transition-colors">Aviso de Privacidad</a>
                 <span class="text-gray-700">|</span>
-                <a href="#" class="hover:text-white transition-colors">Quiénes Somos</a>
+                <a href="quienessomos.html" class="hover:text-white transition-colors">Quiénes Somos</a>
                 <span class="text-gray-700">|</span>
-                <a href="#" class="hover:text-white transition-colors">Media Kit</a>
+                <a href="mediakit.html" class="hover:text-white transition-colors">Media Kit</a>
                 <span class="text-gray-700">|</span>
-                <a href="#" class="hover:text-white transition-colors">Newsletter</a>
+                <a href="newsletter.html" class="hover:text-white transition-colors">Newsletter</a>
                 <span class="text-gray-700">|</span>
-                <a href="#" class="hover:text-white transition-colors">Suscripción</a>
+                <a href="suscripcion.html" class="hover:text-white transition-colors">Suscripción</a>
                 <span class="text-gray-700">|</span>
-                <a href="#" class="hover:text-white transition-colors">Site Map</a>
+                <a href="sitemap.html" class="hover:text-white transition-colors">Site Map</a>
             </div>
 
             <!-- Botón México -->
-            <button class="flex items-center gap-2 border border-gray-700 px-4 py-2 text-xs font-normal hover:border-gray-400 transition-colors text-white tracking-wide shrink-0">
+            <button class="flex items-center gap-2 border border-gray-800 px-4 py-2 text-xs font-normal hover:border-gray-500 transition-colors text-white tracking-wide shrink-0">
                 México
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
@@ -507,30 +581,45 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
-            // --- 0. Animación Inicial ---
+            // --- 0. Animación Inicial (A24 Logo) y Pantalla de Mudanza ---
             const introContainer = document.getElementById('intro-container');
-            const introDev = document.getElementById('intro-dev');
-            const introN = document.getElementById('intro-n');
-            const introORing = document.getElementById('intro-o-ring');
+            const introLogo = document.getElementById('intro-logo');
+            const migrationOverlay = document.getElementById('migration-overlay');
+            const migrationContent = document.getElementById('migration-content');
 
             if (introContainer) {
+                // Mantenemos el scroll bloqueado porque queremos que el usuario haga clic en la redirección
                 document.body.style.overflow = 'hidden';
 
+                // Espera de 5 segundos antes de hacer el zoom y desaparecer
                 setTimeout(() => {
-                    introDev.style.opacity = '0';
-                    introN.style.opacity = '0';
-
+                    introLogo.style.transition = 'transform 0.8s cubic-bezier(0.7, 0, 0.3, 1), opacity 0.6s ease-in';
+                    introLogo.style.transform = 'scale(200)'; // Zoom inmenso rápido
+                    introLogo.style.opacity = '0';
+                    
                     setTimeout(() => {
-                        introORing.style.transform = 'scale(150)';
+                        introContainer.style.transition = 'opacity 0.5s ease';
                         introContainer.style.opacity = '0';
-                        document.body.style.overflow = '';
+                        
+                        // Aparece la pantalla de mudanza con Blur
+                        if (migrationOverlay && migrationContent) {
+                            migrationOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                            migrationOverlay.classList.add('opacity-100', 'pointer-events-auto');
+                            
+                            // Pequeño delay para el texto deslizándose hacia arriba
+                            setTimeout(() => {
+                                migrationContent.classList.remove('translate-y-10', 'opacity-0');
+                                migrationContent.classList.add('translate-y-0', 'opacity-100');
+                            }, 300);
+                        }
 
                         setTimeout(() => {
                             introContainer.remove();
-                        }, 1000); 
+                        }, 500); 
 
                     }, 400); 
-                }, 1600); 
+
+                }, 5000); // 5000 milisegundos = 5 segundos
             }
 
             // --- 1. Contador de Vistas Constante ---
@@ -556,7 +645,6 @@
             let islandMode = 'none'; 
             let pressTimer;
             let isLongPress = false;
-            let lastClickTime = 0;
 
             function openIsland(mode) {
                 islandMode = mode;
@@ -569,11 +657,6 @@
                 setTimeout(() => {
                     if (mode === 'default') {
                         islandContent.innerHTML = '<span class="text-white text-xs md:text-sm font-bold tracking-widest font-serif uppercase">DEVON</span>';
-                        islandContent.className = 'w-full flex items-center justify-center transition-all duration-300';
-                    } 
-                    else if (mode === 'time') {
-                        dynamicIsland.classList.add('time-mode');
-                        islandContent.innerHTML = `<span class="text-white text-xs md:text-sm font-bold tracking-widest">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>`;
                         islandContent.className = 'w-full flex items-center justify-center transition-all duration-300';
                     } 
                     else if (mode === 'views') {
@@ -593,19 +676,15 @@
                         });
                     }
                     else if (mode === 'unavailable') {
-                        dynamicIsland.classList.add('views-mode'); // Usamos este modo para darle suficiente ancho
+                        dynamicIsland.classList.add('views-mode'); 
                         islandContent.className = 'w-full flex items-center justify-center transition-all duration-300';
                         islandContent.innerHTML = `<span class="text-white text-xs md:text-sm font-bold tracking-widest uppercase">No Disponible</span>`;
                         
-                        // Retrasar el temblor hasta que la isla esté completamente abierta
                         setTimeout(() => {
-                            dynamicIsland.classList.add('island-shake'); // Agregamos la animación del temblor
-                            
-                            // Quitamos la clase del shake después de que termine la animación (400ms)
+                            dynamicIsland.classList.add('island-shake'); 
                             setTimeout(() => dynamicIsland.classList.remove('island-shake'), 400);
                         }, 350);
 
-                        // Auto-cerramos después de 2.5 segundos
                         setTimeout(() => {
                             if (islandMode === 'unavailable') closeIsland();
                         }, 2500);
@@ -623,15 +702,6 @@
                 }, 300);
             }
 
-            personBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (islandMode === 'views') {
-                    closeIsland();
-                } else {
-                    openIsland('views');
-                }
-            });
-
             const startPress = (e) => {
                 isLongPress = false;
                 if (navigator.vibrate) navigator.vibrate(20);
@@ -648,25 +718,6 @@
 
             const endPress = () => { clearTimeout(pressTimer); };
 
-            const handleClick = (e) => {
-                if (isLongPress) return; 
-                
-                const currentTime = new Date().getTime();
-                const timeDiff = currentTime - lastClickTime;
-                
-                if (timeDiff < 300 && timeDiff > 0) {
-                    if (islandMode === 'views') {
-                        closeIsland();
-                    } else if (islandMode === 'none' || islandMode === 'default') {
-                        openIsland('time');
-                        setTimeout(() => {
-                            if (islandMode === 'time') closeIsland();
-                        }, 3000);
-                    }
-                }
-                lastClickTime = currentTime;
-            };
-
             if(interactiveContainer) {
                 interactiveContainer.addEventListener('mousedown', startPress);
                 interactiveContainer.addEventListener('mouseup', endPress);
@@ -674,7 +725,6 @@
                 interactiveContainer.addEventListener('touchstart', startPress);
                 interactiveContainer.addEventListener('touchend', endPress);
                 interactiveContainer.addEventListener('touchcancel', endPress);
-                interactiveContainer.addEventListener('click', handleClick);
             }
 
             // --- 3. Slider Hero (Deslizamiento de Fotos y Ajuste de Altura de Texto) ---
@@ -685,6 +735,12 @@
             let currentSlide = 0;
             let slideInterval;
 
+            // Variables de la función Candado
+            let isCarouselLocked = false;
+            const lockBtn = document.getElementById('carousel-lock-btn');
+            const infinityIcon = document.getElementById('hero-infinity-icon');
+            const lockIconSvg = document.getElementById('lock-icon-svg');
+
             // Variables para el indicador circular
             const progressCircle = document.getElementById('hero-progress-circle');
             const progressText = document.getElementById('hero-progress-text');
@@ -692,19 +748,17 @@
             let slideStartTime;
             let progressAnimFrame;
 
-            // Función para animar el círculo y el tiempo
             function updateProgress() {
+                if (isCarouselLocked) return; // Si está bloqueado, no avanzamos la animación
                 if (!slideStartTime) return;
                 const elapsed = Date.now() - slideStartTime;
                 let remaining = slideDuration - elapsed;
                 if (remaining < 0) remaining = 0;
 
-                // Actualizar texto (segundos restantes)
                 if (progressText) {
                     progressText.textContent = Math.ceil(remaining / 1000);
                 }
 
-                // Actualizar progreso del borde circular (llenando de 88 a 0)
                 if (progressCircle) {
                     const circumference = 88;
                     const progress = Math.min(elapsed / slideDuration, 1);
@@ -716,7 +770,6 @@
                 }
             }
 
-            // Función para actualizar la altura del contenedor de texto
             function updateTextHeight(index) {
                 if (textWrapper && texts[index]) {
                     textWrapper.style.height = texts[index].offsetHeight + 'px';
@@ -725,19 +778,16 @@
 
             if (slides.length > 0) {
                 
-                // Set initial height based on first slide
                 document.fonts.ready.then(() => {
                     setTimeout(() => updateTextHeight(0), 100);
                 });
                 
-                // Recalculate on window resize
                 window.addEventListener('resize', () => {
                     updateTextHeight(currentSlide);
                 });
 
                 function showSlide(index) {
                     
-                    // 1. Fotos Deslizantes Horizontalmente (Sin Desvanecimiento)
                     slides.forEach((slide, i) => {
                         if (i === index) {
                             slide.style.transform = 'translateX(0)';
@@ -751,7 +801,6 @@
                         }
                     });
                     
-                    // 2. Textos Opacidad y Ajuste de Altura
                     texts.forEach((text, i) => {
                         if (i === index) {
                             text.style.opacity = '1';
@@ -765,21 +814,23 @@
                     });
                     updateTextHeight(index);
 
-                    // 3. Indicadores (Dots)
                     dots.forEach((dot, i) => {
                         if(i === index) {
-                            dot.className = "hero-dot w-8 h-1.5 rounded-full bg-black cursor-pointer transition-all duration-300";
+                            dot.className = "hero-dot w-8 h-1.5 rounded-full bg-white cursor-pointer transition-all duration-300";
                         } else {
-                            dot.className = "hero-dot w-2 h-2 rounded-full bg-gray-300 cursor-pointer transition-all duration-300";
+                            dot.className = "hero-dot w-2 h-2 rounded-full bg-gray-600 cursor-pointer transition-all duration-300";
                         }
                     });
                     
                     currentSlide = index;
 
-                    // 4. Reiniciar el temporizador circular
-                    slideStartTime = Date.now();
-                    if (progressAnimFrame) cancelAnimationFrame(progressAnimFrame);
-                    updateProgress();
+                    if (!isCarouselLocked) {
+                        slideStartTime = Date.now();
+                        if (progressAnimFrame) cancelAnimationFrame(progressAnimFrame);
+                        updateProgress();
+                    } else {
+                        if (progressCircle) progressCircle.style.strokeDashoffset = '0';
+                    }
                 }
 
                 function nextSlide() {
@@ -792,9 +843,46 @@
                     dot.addEventListener('click', () => {
                         clearInterval(slideInterval);
                         showSlide(index);
-                        slideInterval = setInterval(nextSlide, 4500);
+                        if (!isCarouselLocked) {
+                            slideInterval = setInterval(nextSlide, 4500);
+                        }
                     });
                 });
+                
+                // Evento Lógica del Candado (Infinity Loop)
+                if (lockBtn) {
+                    lockBtn.addEventListener('click', () => {
+                        isCarouselLocked = !isCarouselLocked;
+                        if (isCarouselLocked) {
+                            // Detener carrusel
+                            clearInterval(slideInterval);
+                            if (progressAnimFrame) cancelAnimationFrame(progressAnimFrame);
+                            progressText.style.display = 'none';
+                            infinityIcon.classList.remove('hidden');
+                            lockBtn.classList.add('text-white');
+                            lockBtn.classList.remove('text-gray-500');
+                            // Ícono: Candado Cerrado
+                            lockIconSvg.innerHTML = '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>';
+                            if (progressCircle) {
+                                progressCircle.style.transition = 'stroke-dashoffset 0.5s ease';
+                                progressCircle.style.strokeDashoffset = '0'; // Círculo completado
+                            }
+                        } else {
+                            // Reanudar carrusel
+                            progressText.style.display = 'block';
+                            infinityIcon.classList.add('hidden');
+                            lockBtn.classList.remove('text-white');
+                            lockBtn.classList.add('text-gray-500');
+                            // Ícono: Candado Abierto
+                            lockIconSvg.innerHTML = '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path>';
+                            if (progressCircle) progressCircle.style.transition = 'none';
+                            
+                            slideStartTime = Date.now();
+                            slideInterval = setInterval(nextSlide, 4500);
+                            updateProgress();
+                        }
+                    });
+                }
             }
 
             // --- 4. Lógica de Scroll ---
@@ -803,26 +891,21 @@
             window.addEventListener('scroll', () => {
                 if (!heroAnimContainer) return;
                 const scrollY = window.scrollY;
-                
                 const scale = 1 + (scrollY * 0.0004);
-                
                 heroAnimContainer.style.transform = `scale(${scale})`;
             });
 
             // --- 5. Interacción de Elementos "No Disponibles" ---
-            const unavailableElements = document.querySelectorAll('a[href="#"], div.hidden.md\\:flex span, div.flex.md\\:hidden button');
+            const unavailableElements = document.querySelectorAll('a[href="#"]');
             unavailableElements.forEach(el => {
                 el.addEventListener('click', (e) => {
                     e.preventDefault();
                     
-                    // Si el menú lateral está abierto, lo cerramos
                     if (sidebar && sidebar.classList.contains('open')) {
-                        hideOverlay(); // Llamamos a la función global para cerrar
+                        hideOverlay(); 
                     }
 
-                    // Hacemos scroll suave hacia arriba para asegurarnos de que el usuario vea la Isla Dinámica
                     window.scrollTo({ top: 0, behavior: 'smooth' });
-
                     openIsland('unavailable');
                 });
             });
