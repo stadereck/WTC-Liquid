@@ -171,41 +171,6 @@
         <img id="intro-logo" src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/e94e7d1f-3328-48d3-b11a-45e835c32fcb/dhvgkbm-ea7c097b-28b8-421d-9517-808ca4874cf0.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi9lOTRlN2QxZi0zMzI4LTQ4ZDMtYjExYS00NWU4MzVjMzJmY2IvZGh2Z2tibS1lYTdjMDk3Yi0yOGI4LTQyMWQtOTUxNy04MDhjYTQ4NzRjZjAuZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.clS1Az05Pd-Bwh-3uZzyIZFNcJC3Q6dlwSwVI2riTaU" alt="A24 Intro" class="h-40 md:h-64 object-contain relative z-20 transition-all duration-[0.8s] ease-in-out origin-center">
     </div>
 
-    <!-- Overlay de Mudanza (Blur) -->
-    <div id="migration-overlay" class="fixed inset-0 z-[9998] flex items-center justify-center bg-black/60 backdrop-blur-xl opacity-0 pointer-events-none transition-opacity duration-1000">
-        
-        <!-- Pantalla 1: Mensaje Inicial -->
-        <div id="migration-content" class="absolute w-full px-6 max-w-3xl transform translate-y-10 opacity-0 transition-all duration-700 ease-out flex flex-col items-center">
-            <h2 class="text-2xl md:text-4xl lg:text-5xl font-medium text-white mb-8 leading-snug text-center" style="font-family: 'Jost', sans-serif;">
-                Hola, <br> Nos estamos mudando. <br> Nuestra nueva página es:
-            </h2>
-            <a href="https://stadereck.github.io/devonrevista/" class="link-underline text-sm md:text-lg font-bold tracking-[0.2em] uppercase text-white transition-colors pb-1 mb-10 md:mb-14">
-                Ir a nueva página
-            </a>
-            
-            <button id="stay-init-btn" class="text-xs md:text-sm font-medium tracking-[0.1em] text-gray-400 hover:text-white transition-colors uppercase relative group">
-                ¿Quieres seguir en esta página?
-                <span class="absolute -bottom-1 left-0 w-0 h-[1px] bg-white transition-all duration-300 group-hover:w-full"></span>
-            </button>
-        </div>
-
-        <!-- Pantalla 2: Advertencia (Oculta Inicialmente) -->
-        <div id="warning-content" class="absolute w-full px-6 max-w-3xl transform translate-y-10 opacity-0 pointer-events-none transition-all duration-700 ease-out flex flex-col items-center">
-            <h2 class="text-xl md:text-3xl font-medium text-white mb-10 leading-snug text-center" style="font-family: 'Jost', sans-serif;">
-                Esta página ya no se actualizará, pero nuestra nueva página sí.<br>¿Quieres continuar?
-            </h2>
-            <div class="flex items-center gap-8 md:gap-14">
-                <button id="stay-yes-btn" class="link-underline text-sm md:text-lg font-bold tracking-[0.2em] uppercase text-white transition-colors pb-1">
-                    SÍ
-                </button>
-                <a href="https://stadereck.github.io/devonrevista/" class="link-underline text-sm md:text-lg font-bold tracking-[0.2em] uppercase text-white transition-colors pb-1">
-                    NO
-                </a>
-            </div>
-        </div>
-
-    </div>
-
     <!-- Overlay y Sidebar -->
     <div id="overlay" class="fixed inset-0 bg-black/70 z-40 hidden transition-opacity opacity-0" onclick="closeAll()"></div>
     <aside id="sidebarMenu" class="sidebar fixed top-0 left-0 h-full w-64 bg-[#0a0a0a] border-r border-gray-900 z-50 shadow-2xl flex flex-col">
@@ -339,32 +304,37 @@
             <div class="w-full mx-auto overflow-hidden shadow-2xl relative bg-gray-900 rounded-2xl md:rounded-[2rem]">
                 <div id="hero-anim-container" class="relative w-full aspect-[4/3] md:aspect-[16/9] transform origin-center will-change-transform bg-black">
                     
-                    <!-- Slide 1: Fer & Alonso -->
+                    <!-- Slide 1: Alonso y Alonso (NUEVO) -->
                     <div class="hero-slide absolute inset-0 transition-transform duration-500 ease-in-out transform translate-x-0 z-10">
+                        <img src="https://res.cloudinary.com/dhx58lnzb/image/upload/v1775698791/IMG_3481_kyxauo.jpg" alt="Alonso Alvarez y Alonso" class="absolute inset-0 w-full h-full object-cover object-top md:object-[center_15%]"/>
+                    </div>
+
+                    <!-- Slide 2: Fer & Alonso (Anterior Slide 1) -->
+                    <div class="hero-slide absolute inset-0 transition-transform duration-500 ease-in-out transform translate-x-full z-0">
                         <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?q=80&w=1000&auto=format&fit=crop" alt="Fer & Alonso" class="absolute inset-0 w-full h-full object-cover object-center opacity-80"/>
                     </div>
 
-                    <!-- Slide 2: Alonso Alvarez -->
+                    <!-- Slide 3: Alonso Alvarez -->
                     <div class="hero-slide absolute inset-0 transition-transform duration-500 ease-in-out transform translate-x-full z-0">
                         <img src="https://i.ibb.co/NchQM2g/b772fe23-6aca-47db-b91a-0ee4520e85e7.png" alt="Alonso Alvarez" class="absolute inset-0 w-full h-full object-cover object-top md:object-[center_15%]"/>
                     </div>
 
-                    <!-- Slide 3: Espacio Devon -->
+                    <!-- Slide 4: Espacio Devon -->
                     <div class="hero-slide absolute inset-0 transition-transform duration-500 ease-in-out transform translate-x-full z-0">
                         <img src="https://res.cloudinary.com/dhx58lnzb/image/upload/v1775094004/656410068-927276343609067-1256087780943380654-n_zjxxnt.jpg" alt="Alonso Alvarez & Fernanda en Espacio Devon" class="absolute inset-0 w-full h-full object-cover object-top md:object-[center_15%]"/>
                     </div>
 
-                    <!-- Slide 4: Billie Eilish -->
+                    <!-- Slide 5: Billie Eilish -->
                     <div class="hero-slide absolute inset-0 transition-transform duration-500 ease-in-out transform translate-x-full z-0">
                         <img src="https://res.cloudinary.com/dhx58lnzb/image/upload/v1775161656/3707dfabae83ff6afafbedeb78928728_tlfxrk.webp" alt="Billie Eilish en Espacio Devon" class="absolute inset-0 w-full h-full object-cover object-top md:object-[center_15%]"/>
                     </div>
 
-                    <!-- Slide 5: Salma -->
+                    <!-- Slide 6: Salma -->
                     <div class="hero-slide absolute inset-0 transition-transform duration-500 ease-in-out transform translate-x-full z-0">
                         <img src="https://acuaticasamil.com/wp-content/uploads/2025/08/2.jpg" alt="Salma Acuatica Samil" class="absolute inset-0 w-full h-full object-cover object-top md:object-[center_15%]"/>
                     </div>
 
-                    <!-- Slide 6: Backrooms -->
+                    <!-- Slide 7: Backrooms -->
                     <div class="hero-slide absolute inset-0 transition-transform duration-500 ease-in-out transform translate-x-full z-0">
                         <img src="https://hips.hearstapps.com/hmg-prod/images/screenshot-2026-02-26-at-10-18-37-am-69a0645189464.png?crop=0.9555555555555556xw:1xh;0,0.0179xh" alt="The Backrooms Movie" class="absolute inset-0 w-full h-full object-cover object-center"/>
                         <!-- Efecto transparente Backrooms sobre la imagen (Más chico y solo B mayúscula) -->
@@ -383,6 +353,7 @@
                 <div class="hero-dot w-2 h-2 rounded-full bg-gray-600 cursor-pointer transition-all duration-300"></div>
                 <div class="hero-dot w-2 h-2 rounded-full bg-gray-600 cursor-pointer transition-all duration-300"></div>
                 <div class="hero-dot w-2 h-2 rounded-full bg-gray-600 cursor-pointer transition-all duration-300"></div>
+                <div class="hero-dot w-2 h-2 rounded-full bg-gray-600 cursor-pointer transition-all duration-300"></div>
                 
                 <!-- Indicador de Tiempo Circular y Candado -->
                 <div class="flex items-center gap-2 ml-3">
@@ -391,7 +362,7 @@
                             <circle cx="18" cy="18" r="14" fill="none" stroke="#333333" stroke-width="2.5"></circle>
                             <circle id="hero-progress-circle" cx="18" cy="18" r="14" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-dasharray="88" stroke-dashoffset="88" stroke-linecap="round"></circle>
                         </svg>
-                        <span id="hero-progress-text" class="text-[9px] font-bold text-white font-sans z-10" style="padding-top: 1px;">6</span>
+                        <span id="hero-progress-text" class="text-[9px] font-bold text-white font-sans z-10" style="padding-top: 1px;">5</span>
                         <span id="hero-infinity-icon" class="hidden absolute inset-0 flex items-center justify-center text-[16px] font-medium text-white z-10 animate-pulse" style="padding-bottom: 2px;">∞</span>
                     </div>
                     <!-- Botón de candado (Lock) -->
@@ -407,17 +378,33 @@
             <!-- Contenedor Wrapper para Animación de Altura -->
             <div id="text-wrapper" class="relative w-full mx-auto overflow-hidden transition-[height] duration-500 ease-in-out px-2 md:px-4">
                 
-                <!-- Texto Slide 1 -->
+                <!-- Texto Slide 1 (Alonso y Alonso - NUEVO) -->
                 <div class="hero-text absolute top-0 left-0 w-full px-2 md:px-4 transition-opacity duration-500 ease-in-out opacity-100 z-10 pointer-events-auto flex flex-col items-start justify-start">
+                    <p class="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-gray-300 mb-3 md:mb-4">(Re) Devon</p>
+                    <h2 class="text-3xl md:text-5xl lg:text-[3.2rem] font-medium text-white leading-[1.15] mb-6 md:mb-8 max-w-5xl" style="font-family: 'Jost', sans-serif; letter-spacing: -0.02em;">
+                        Alonso Alvarez y Alonso, una foto unica de ambos juntos enlazando en el espacio de (Re) Devon
+                    </h2>
+                    <div class="text-[10px] md:text-[11px] font-medium tracking-[0.15em] uppercase text-white leading-loose">
+                        <p class="text-gray-300">POR Samil® & Devon®.</p>
+                        <p class="text-gray-300">Fotografia Por Samil®</p>
+                        <p class="text-gray-300">Editada por Devon®</p>
+                        <div class="normal-case mt-2 text-[11px] md:text-[13px] text-gray-400 tracking-normal leading-none flex items-center gap-3" style="font-family: 'Jost', sans-serif;">
+                            <span>8 abril de 2026</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Texto Slide 2 (Fer & Alonso - Anterior Slide 1) -->
+                <div class="hero-text absolute top-0 left-0 w-full px-2 md:px-4 transition-opacity duration-500 ease-in-out opacity-0 z-0 pointer-events-none flex flex-col items-start justify-start">
                     <h2 class="text-2xl md:text-3xl font-medium text-white mb-6" style="font-family: 'Jost', sans-serif;">
                         Fer & Alonso, ¿podrás descubrirlo?
                     </h2>
-                    <a href="https://www.instagram.com/alonso_ia_alvarez" class="link-underline text-xs font-bold tracking-widest uppercase text-white">
+                    <a href="https://www.instagram.com/alonso_ia_alvarez" class="link-underline text-xs font-bold tracking-widest uppercase text-white transition-colors relative z-30">
                         IR A VERLOS JUNTOS
                     </a>
                 </div>
 
-                <!-- Texto Slide 2 (Alonso) -->
+                <!-- Texto Slide 3 (Alonso) -->
                 <div class="hero-text absolute top-0 left-0 w-full px-2 md:px-4 transition-opacity duration-500 ease-in-out opacity-0 z-0 pointer-events-none flex flex-col items-start justify-start">
                     <p class="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-gray-300 mb-3 md:mb-4">MODA</p>
                     <h2 class="text-3xl md:text-5xl lg:text-[3.2rem] font-medium text-white leading-[1.15] mb-6 md:mb-8 max-w-5xl" style="font-family: 'Jost', sans-serif; letter-spacing: -0.02em;">
@@ -430,7 +417,7 @@
                     </div>
                 </div>
 
-                <!-- Texto Slide 3 (Espacio Devon) -->
+                <!-- Texto Slide 4 (Espacio Devon) -->
                 <div class="hero-text absolute top-0 left-0 w-full px-2 md:px-4 transition-opacity duration-500 ease-in-out opacity-0 z-0 pointer-events-none flex flex-col items-start justify-start">
                     <p class="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-gray-300 mb-3 md:mb-4">Espacio Devon</p>
                     <h2 class="text-3xl md:text-5xl lg:text-[3.2rem] font-medium text-white leading-[1.15] mb-6 md:mb-8 max-w-5xl" style="font-family: 'Jost', sans-serif; letter-spacing: -0.02em;">
@@ -449,7 +436,7 @@
                     </div>
                 </div>
 
-                <!-- Texto Slide 4 (Billie Eilish) -->
+                <!-- Texto Slide 5 (Billie Eilish) -->
                 <div class="hero-text absolute top-0 left-0 w-full px-2 md:px-4 transition-opacity duration-500 ease-in-out opacity-0 z-0 pointer-events-none flex flex-col items-start justify-start">
                     <p class="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-gray-300 mb-3 md:mb-4">Espacio Devon</p>
                     <h2 class="text-3xl md:text-5xl lg:text-[3.2rem] font-medium text-white leading-[1.15] mb-6 md:mb-8 max-w-5xl" style="font-family: 'Jost', sans-serif; letter-spacing: -0.02em;">
@@ -464,7 +451,7 @@
                     </div>
                 </div>
 
-                <!-- Texto Slide 5 (Salma) -->
+                <!-- Texto Slide 6 (Salma) -->
                 <div class="hero-text absolute top-0 left-0 w-full px-2 md:px-4 transition-opacity duration-500 ease-in-out opacity-0 z-0 pointer-events-none flex flex-col items-start justify-start">
                     <p class="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-gray-300 mb-3 md:mb-4">(Re) Devon</p>
                     <h2 class="text-3xl md:text-5xl lg:text-[3.2rem] font-medium text-white leading-[1.15] mb-6 md:mb-8 max-w-5xl" style="font-family: 'Jost', sans-serif; letter-spacing: -0.02em;">
@@ -479,7 +466,7 @@
                     </div>
                 </div>
 
-                <!-- Texto Slide 6 (Backrooms) -->
+                <!-- Texto Slide 7 (Backrooms) -->
                 <div class="hero-text absolute top-0 left-0 w-full px-2 md:px-4 transition-opacity duration-500 ease-in-out opacity-0 z-0 pointer-events-none flex flex-col items-start justify-start">
                     <p class="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-gray-300 mb-3 md:mb-4">Espacio Devon</p>
                     <h2 class="text-3xl md:text-5xl lg:text-[3.2rem] font-medium text-white leading-[1.15] mb-6 md:mb-8 max-w-5xl" style="font-family: 'Jost', sans-serif; letter-spacing: -0.02em;">
@@ -492,7 +479,6 @@
                             <span>8 abril de 2026</span>
                         </div>
                     </div>
-                    <!-- Enlace a backrooms.html con animación de línea interactiva -->
                     <a href="backrooms.html" class="link-underline text-xs md:text-sm font-bold tracking-widest uppercase text-white transition-colors pointer-events-auto relative z-30">
                         Backrooms
                     </a>
@@ -604,17 +590,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
-            // --- 0. Animación Inicial (A24 Logo) y Pantalla de Mudanza ---
+            // --- 0. Animación Inicial (A24 Logo) ---
             const introContainer = document.getElementById('intro-container');
             const introLogo = document.getElementById('intro-logo');
-            const migrationOverlay = document.getElementById('migration-overlay');
-            const migrationContent = document.getElementById('migration-content');
-            const warningContent = document.getElementById('warning-content');
-            const stayInitBtn = document.getElementById('stay-init-btn');
-            const stayYesBtn = document.getElementById('stay-yes-btn');
-
-            // Verificar si el usuario ya decidió quedarse para siempre
-            const hideMigrationPermanently = localStorage.getItem('hideDevonMigration') === 'true';
 
             if (introContainer) {
                 // Mantenemos el scroll bloqueado al iniciar
@@ -629,21 +607,7 @@
                     setTimeout(() => {
                         introContainer.style.transition = 'opacity 0.5s ease';
                         introContainer.style.opacity = '0';
-                        
-                        // Si NO ha elegido quedarse para siempre, mostramos el aviso
-                        if (!hideMigrationPermanently && migrationOverlay && migrationContent) {
-                            migrationOverlay.classList.remove('opacity-0', 'pointer-events-none');
-                            migrationOverlay.classList.add('opacity-100', 'pointer-events-auto');
-                            
-                            // Pequeño delay para el texto deslizándose hacia arriba
-                            setTimeout(() => {
-                                migrationContent.classList.remove('translate-y-10', 'opacity-0');
-                                migrationContent.classList.add('translate-y-0', 'opacity-100');
-                            }, 300);
-                        } else {
-                            // Si ya había elegido quedarse antes, liberamos el scroll de la página inmediatamente
-                            document.body.style.overflow = '';
-                        }
+                        document.body.style.overflow = '';
 
                         setTimeout(() => {
                             introContainer.remove();
@@ -651,42 +615,8 @@
 
                     }, 400); 
 
-                }, 5000); // 5000 milisegundos = 5 segundos
+                }, 5000); 
             }
-
-            // --- Lógica de los Botones de la Pantalla de Mudanza ---
-            if (stayInitBtn) {
-                stayInitBtn.addEventListener('click', () => {
-                    // Ocultamos la pantalla 1
-                    migrationContent.classList.remove('translate-y-0', 'opacity-100');
-                    migrationContent.classList.add('-translate-y-10', 'opacity-0', 'pointer-events-none');
-                    
-                    // Mostramos la pantalla 2 (Advertencia)
-                    setTimeout(() => {
-                        warningContent.classList.remove('pointer-events-none', 'translate-y-10', 'opacity-0');
-                        warningContent.classList.add('pointer-events-auto', 'translate-y-0', 'opacity-100');
-                    }, 500);
-                });
-            }
-
-            if (stayYesBtn) {
-                stayYesBtn.addEventListener('click', () => {
-                    // Guardamos la decisión para que nunca más aparezca
-                    localStorage.setItem('hideDevonMigration', 'true');
-                    
-                    // Ocultamos el overlay (quitamos el blur)
-                    migrationOverlay.classList.remove('opacity-100', 'pointer-events-auto');
-                    migrationOverlay.classList.add('opacity-0', 'pointer-events-none');
-                    
-                    // Restauramos el scroll de la página
-                    document.body.style.overflow = '';
-                    
-                    setTimeout(() => {
-                        migrationOverlay.remove();
-                    }, 1000);
-                });
-            }
-
 
             // --- 1. Contador de Vistas Constante ---
             let viewsCount = 1000000; 
