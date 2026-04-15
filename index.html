@@ -1233,6 +1233,145 @@
             color: #000;
         }
 
+
+        /* --- WTC INTELLIGENCE: Home Indicator Assistant --- */
+        .notch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 18%;
+            width: 38%;
+            height: 30%;
+            border-radius: 999px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            background: linear-gradient(90deg, rgba(255,0,102,0.9), rgba(255,200,0,0.9), rgba(0,255,170,0.9), rgba(0,140,255,0.9), rgba(180,0,255,0.9));
+            background-size: 240% 100%;
+            filter: blur(1.4px) saturate(1.2);
+        }
+        .notch.rgb-partial::after {
+            opacity: 0.95;
+            animation: rgbSliceMove 1.4s linear infinite;
+        }
+        @keyframes rgbSliceMove {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 240% 50%; }
+        }
+
+        .assistant-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 4500;
+            display: none;
+            justify-content: center;
+            align-items: flex-end;
+            padding: 0 16px 34px;
+            background: rgba(0, 0, 0, 0.22);
+            backdrop-filter: blur(8px);
+        }
+        .assistant-overlay.active { display: flex; }
+
+        .assistant-sheet {
+            width: 100%;
+            border-radius: 30px;
+            padding: 18px;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.22);
+            box-shadow: 0 16px 50px rgba(0,0,0,0.35);
+            background: linear-gradient(130deg, rgba(255,76,76,0.92), rgba(255,166,0,0.88), rgba(45,196,255,0.88), rgba(181,85,255,0.9));
+            background-size: 220% 220%;
+            animation: assistantFlow 6s ease infinite;
+        }
+        @keyframes assistantFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .assistant-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-shadow: 0 1px 8px rgba(0,0,0,0.25);
+        }
+        .assistant-close {
+            border: none;
+            background: rgba(255,255,255,0.22);
+            color: #fff;
+            border-radius: 999px;
+            width: 28px;
+            height: 28px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .assistant-chat {
+            min-height: 86px;
+            max-height: 140px;
+            overflow-y: auto;
+            border-radius: 16px;
+            padding: 10px;
+            background: rgba(0,0,0,0.2);
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        .assistant-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .assistant-input {
+            flex: 1;
+            border: none;
+            border-radius: 14px;
+            padding: 12px;
+            font-size: 14px;
+            color: #111;
+            outline: none;
+        }
+        .assistant-btn {
+            border: none;
+            border-radius: 14px;
+            padding: 0 14px;
+            background: #111;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .assistant-hint {
+            margin-top: 8px;
+            font-size: 11px;
+            opacity: 0.9;
+        }
+
+        .voice-consent {
+            position: absolute;
+            top: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 30px);
+            z-index: 4600;
+            display: none;
+            background: rgba(0,0,0,0.82);
+            border: 1px solid rgba(255,255,255,0.26);
+            border-radius: 20px;
+            color: #fff;
+            padding: 14px;
+            backdrop-filter: blur(12px);
+        }
+        .voice-consent.active { display: block; animation: fadeIn 0.2s; }
+        .voice-actions { display: flex; gap: 8px; margin-top: 10px; }
+        .voice-actions button {
+            flex: 1;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
         /* PHONE & CALC */
         .keypad,
         .calc-grid {
@@ -2144,6 +2283,31 @@
                         width="100%" height="100%" frameBorder="0" allowfullscreen="" loading="lazy"></iframe></div>
             </div>
 
+
+            <div class="assistant-overlay" id="assistantOverlay">
+                <div class="assistant-sheet">
+                    <div class="assistant-header">
+                        <span>WTC Intelligence</span>
+                        <button class="assistant-close" onclick="closeAssistant()">×</button>
+                    </div>
+                    <div class="assistant-chat" id="assistantChat">Hola, soy WTC Intelligence. Escribe una orden simple y te ayudo.</div>
+                    <div class="assistant-row">
+                        <input id="assistantInput" class="assistant-input" placeholder="Ejemplo: abre cámara / qué hora es" />
+                        <button class="assistant-btn" onclick="sendAssistantPrompt()">Enviar</button>
+                    </div>
+                    <div class="assistant-hint">Doble toque en la barra de inicio: teclado multicolor · Mantener presionado: modo voz superpuesto.</div>
+                </div>
+            </div>
+
+            <div class="voice-consent" id="voiceConsent">
+                <div style="font-size:14px; font-weight:700;">WTC Intelligence en modo voz</div>
+                <div style="font-size:12px; opacity:0.88; margin-top:6px;">¿Permites usar reconocimiento de voz para responder sobre la app actual?</div>
+                <div class="voice-actions">
+                    <button style="background:#1f1f1f; color:#fff;" onclick="closeVoiceConsent()">Ahora no</button>
+                    <button style="background:#34c759; color:#fff;" onclick="enableVoiceAssistant()">Permitir voz</button>
+                </div>
+            </div>
+
             <div class="home-indicator" id="homeIndicator" onclick="goHome()"></div>
             <div class="status-bar" id="statusBar"><span id="statusBarClock">9:41</span>
                 <div style="display:flex; gap:5px;"><i data-lucide="signal" size="14"></i><i data-lucide="wifi"
@@ -2455,7 +2619,160 @@
             updateCalendar(); // Ejecutar Calendario Dinámico
             fetchWeather();   // Ejecutar Clima Real
             initNotes();      // Ejecutar Memoria de Notas
+            setupHomeIndicatorGestures();
         };
+
+
+
+        // --- WTC INTELLIGENCE (doble toque / long press en Home Indicator) ---
+        let homePressTimer = null;
+        let longPressTriggered = false;
+        let voicePermissionGranted = false;
+        const COMMAND_LIBRARY = Array.from({ length: 170 }, (_, i) => `comando rápido ${i + 1}`);
+
+        function addAssistantLog(who, msg) {
+            const chat = document.getElementById('assistantChat');
+            if (!chat) return;
+            const line = document.createElement('div');
+            line.innerHTML = `<b>${who}:</b> ${msg}`;
+            chat.appendChild(line);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function openAssistant() {
+            document.getElementById('assistantOverlay').classList.add('active');
+            const input = document.getElementById('assistantInput');
+            input.focus();
+        }
+
+        function closeAssistant() {
+            document.getElementById('assistantOverlay').classList.remove('active');
+        }
+
+        function pulseRgbIsland() {
+            const notch = document.getElementById('notch');
+            notch.classList.add('rgb-partial');
+            setTimeout(() => notch.classList.remove('rgb-partial'), 2200);
+        }
+
+        function parseAssistantCommand(rawText) {
+            const text = (rawText || '').toLowerCase().trim();
+            if (!text) return 'Escribe algo para ayudarte.';
+
+            const appMap = {
+                camara: 'camera', 'cámara': 'camera', fotos: 'photos', calendario: 'calendar', clima: 'weather', reloj: 'clock', mapas: 'maps', notas: 'notes', ajustes: 'settings', calculadora: 'calculator', musica: 'music', música: 'music', telefono: 'phone', 'teléfono': 'phone', safari: 'safari', mensajes: 'messages', cartera: 'wallet'
+            };
+
+            if (text.includes('hora')) {
+                return `Son las ${new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}.`;
+            }
+            if (text.includes('fecha') || text.includes('día') || text.includes('dia')) {
+                return new Date().toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' });
+            }
+            if (text.includes('comandos') || text.includes('qué puedes') || text.includes('que puedes')) {
+                return `Tengo más de ${COMMAND_LIBRARY.length} atajos configurados para hora, fecha, abrir apps, cerrar apps, inicio, clima, notas y más.`;
+            }
+            if (text.includes('cerrar todo') || text.includes('inicio') || text.includes('ir a inicio')) {
+                goHome();
+                return 'Listo, regresé al inicio.';
+            }
+
+            for (const [name, id] of Object.entries(appMap)) {
+                if (text.includes('abre') && text.includes(name)) {
+                    openApp(id);
+                    return `Abriendo ${name}.`;
+                }
+                if ((text.includes('cierra') || text.includes('salir')) && text.includes(name)) {
+                    closeApp(id);
+                    return `Cerrando ${name}.`;
+                }
+            }
+
+            if (text.includes('hola')) return '¡Hola! ¿En qué te ayudo hoy?';
+            if (text.includes('gracias')) return 'De nada. 💫';
+            return 'Entendido. Puedo responder hora, fecha, abrir/cerrar apps o volver al inicio.';
+        }
+
+        function sendAssistantPrompt() {
+            const input = document.getElementById('assistantInput');
+            const prompt = input.value;
+            addAssistantLog('Tú', prompt);
+            const response = parseAssistantCommand(prompt);
+            addAssistantLog('WTC', response);
+            input.value = '';
+        }
+
+        function showVoiceConsent() {
+            pulseRgbIsland();
+            document.getElementById('voiceConsent').classList.add('active');
+            openAssistant();
+            addAssistantLog('WTC', 'Modo voz solicitado. Puedo superponerme sobre cualquier app para ayudarte.');
+        }
+
+        function closeVoiceConsent() {
+            document.getElementById('voiceConsent').classList.remove('active');
+        }
+
+        function enableVoiceAssistant() {
+            voicePermissionGranted = true;
+            closeVoiceConsent();
+            addAssistantLog('WTC', 'Permiso de voz concedido. Escribe o habla para pedir acciones simples.');
+
+            if ('webkitSpeechRecognition' in window) {
+                try {
+                    const recognition = new webkitSpeechRecognition();
+                    recognition.lang = 'es-MX';
+                    recognition.interimResults = false;
+                    recognition.maxAlternatives = 1;
+                    recognition.onresult = (event) => {
+                        const spoken = event.results[0][0].transcript;
+                        addAssistantLog('Voz', spoken);
+                        addAssistantLog('WTC', parseAssistantCommand(spoken));
+                    };
+                    recognition.start();
+                } catch (e) {
+                    addAssistantLog('WTC', 'No pude iniciar el reconocimiento en este navegador, pero el teclado funciona.');
+                }
+            } else {
+                addAssistantLog('WTC', 'Reconocimiento de voz no disponible aquí. Puedes usar teclado multicolor.');
+            }
+        }
+
+        function setupHomeIndicatorGestures() {
+            const home = document.getElementById('homeIndicator');
+            const start = () => {
+                longPressTriggered = false;
+                homePressTimer = setTimeout(() => {
+                    longPressTriggered = true;
+                    showVoiceConsent();
+                }, 560);
+            };
+            const cancel = () => clearTimeout(homePressTimer);
+
+            home.addEventListener('dblclick', (e) => {
+                e.stopPropagation();
+                openAssistant();
+                pulseRgbIsland();
+                addAssistantLog('WTC', 'Teclado multicolor activo. Pregúntame algo simple.');
+            });
+            home.addEventListener('touchstart', start, { passive: true });
+            home.addEventListener('mousedown', start);
+            home.addEventListener('touchend', cancel);
+            home.addEventListener('mouseup', cancel);
+            home.addEventListener('mouseleave', cancel);
+
+            home.addEventListener('click', (e) => {
+                if (longPressTriggered || document.getElementById('assistantOverlay').classList.contains('active')) {
+                    e.stopPropagation();
+                    return;
+                }
+            }, true);
+
+            const assistantInput = document.getElementById('assistantInput');
+            assistantInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') sendAssistantPrompt();
+            });
+        }
 
         function unlockPhone() {
             const n = document.getElementById('notch');
