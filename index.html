@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>WTC Liquid Celebrating Pride </title>
-    <link rel="icon" href="https://www.svgrepo.com/show/503173/apple-logo.svg" type="image/svg+xml">
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Apple_Computer_Logo_rainbow.svg/1280px-Apple_Computer_Logo_rainbow.svg.png" type="image/png">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;600&family=Roboto:wght@400;500;700&display=swap');
@@ -87,7 +87,10 @@
             font-weight: 700;
             opacity: 0;
             transition: opacity 1s;
-            color: black;
+            /* Efecto Pride en el texto de bienvenida */
+            background: linear-gradient(to right, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .swipe-hint-text {
@@ -102,20 +105,9 @@
         }
 
         @keyframes fadeUp {
-            0% {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            50% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-
-            100% {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
+            0% { opacity: 0; transform: translateY(10px); }
+            50% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-10px); }
         }
 
         /* --- ISLA DINÁMICA --- */
@@ -148,13 +140,8 @@
         }
 
         @keyframes islandBreathe {
-            0% {
-                box-shadow: 0 0 15px 1px rgba(0, 122, 255, 0.5), 0 0 30px 2px rgba(200, 50, 255, 0.2);
-            }
-
-            100% {
-                box-shadow: 0 0 25px 4px rgba(50, 200, 255, 0.8), 0 0 50px 8px rgba(50, 255, 100, 0.4);
-            }
+            0% { box-shadow: 0 0 15px 1px rgba(0, 122, 255, 0.5), 0 0 30px 2px rgba(200, 50, 255, 0.2); }
+            100% { box-shadow: 0 0 25px 4px rgba(50, 200, 255, 0.8), 0 0 50px 8px rgba(50, 255, 100, 0.4); }
         }
 
         .notch.expanded-cc {
@@ -250,7 +237,6 @@
             transition: 0.2s;
         }
 
-        /* --- ACTUALIZACIÓN DE MARZO: Isla Dinámica para Música --- */
         .notch.expanded-music {
             width: 150px;
             height: 40px;
@@ -285,51 +271,21 @@
             animation: eqAnim 0.6s ease infinite alternate;
         }
 
-        .eq-bar:nth-child(1) {
-            height: 100%;
-            animation-delay: 0.1s;
-        }
-
-        .eq-bar:nth-child(2) {
-            height: 60%;
-            animation-delay: 0.3s;
-        }
-
-        .eq-bar:nth-child(3) {
-            height: 80%;
-            animation-delay: 0.2s;
-        }
-
-        .eq-bar:nth-child(4) {
-            height: 40%;
-            animation-delay: 0.4s;
-        }
+        .eq-bar:nth-child(1) { height: 100%; animation-delay: 0.1s; }
+        .eq-bar:nth-child(2) { height: 60%; animation-delay: 0.3s; }
+        .eq-bar:nth-child(3) { height: 80%; animation-delay: 0.2s; }
+        .eq-bar:nth-child(4) { height: 40%; animation-delay: 0.4s; }
 
         @keyframes eqAnim {
-            0% {
-                transform: scaleY(0.3);
-            }
-
-            100% {
-                transform: scaleY(1);
-            }
+            0% { transform: scaleY(0.3); }
+            100% { transform: scaleY(1); }
         }
 
         @keyframes superChargeGlow {
-            0% {
-                box-shadow: 0 0 20px 2px rgba(255, 215, 0, 0.6),
-                    0 0 40px 4px rgba(255, 255, 0, 0.4),
-                    inset 0 0 20px rgba(255, 215, 0, 0.2);
-            }
-
-            100% {
-                box-shadow: 0 0 30px 4px rgba(255, 215, 0, 0.9),
-                    0 0 60px 8px rgba(255, 215, 0, 0.6),
-                    inset 0 0 30px rgba(255, 215, 0, 0.3);
-            }
+            0% { box-shadow: 0 0 20px 2px rgba(255, 215, 0, 0.6), 0 0 40px 4px rgba(255, 255, 0, 0.4), inset 0 0 20px rgba(255, 215, 0, 0.2); }
+            100% { box-shadow: 0 0 30px 4px rgba(255, 215, 0, 0.9), 0 0 60px 8px rgba(255, 215, 0, 0.6), inset 0 0 30px rgba(255, 215, 0, 0.3); }
         }
 
-        /* Rayos eléctricos */
         .lightning {
             position: absolute;
             width: 3px;
@@ -339,46 +295,17 @@
             animation: lightning 1.5s infinite;
         }
 
-        .lightning:nth-child(1) {
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .lightning:nth-child(2) {
-            left: 30%;
-            animation-delay: 0.3s;
-        }
-
-        .lightning:nth-child(3) {
-            right: 30%;
-            animation-delay: 0.6s;
-        }
-
-        .lightning:nth-child(4) {
-            right: 10%;
-            animation-delay: 0.9s;
-        }
+        .lightning:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .lightning:nth-child(2) { left: 30%; animation-delay: 0.3s; }
+        .lightning:nth-child(3) { right: 30%; animation-delay: 0.6s; }
+        .lightning:nth-child(4) { right: 10%; animation-delay: 0.9s; }
 
         @keyframes lightning {
-
-            0%,
-            100% {
-                opacity: 0;
-                transform: translateY(-10px) scaleY(0);
-            }
-
-            10% {
-                opacity: 1;
-                transform: translateY(0) scaleY(1);
-            }
-
-            20% {
-                opacity: 0;
-                transform: translateY(10px) scaleY(0.5);
-            }
+            0%, 100% { opacity: 0; transform: translateY(-10px) scaleY(0); }
+            10% { opacity: 1; transform: translateY(0) scaleY(1); }
+            20% { opacity: 0; transform: translateY(10px) scaleY(0.5); }
         }
 
-        /* Partículas de energía */
         .energy-particle {
             position: absolute;
             width: 4px;
@@ -390,20 +317,9 @@
         }
 
         @keyframes particleFloat {
-            0% {
-                opacity: 0;
-                transform: translateY(20px) scale(0);
-            }
-
-            50% {
-                opacity: 1;
-                transform: translateY(-20px) scale(1);
-            }
-
-            100% {
-                opacity: 0;
-                transform: translateY(-40px) scale(0);
-            }
+            0% { opacity: 0; transform: translateY(20px) scale(0); }
+            50% { opacity: 1; transform: translateY(-20px) scale(1); }
+            100% { opacity: 0; transform: translateY(-40px) scale(0); }
         }
 
         .notch.expanded-faceid {
@@ -526,9 +442,7 @@
         }
 
         @keyframes spin {
-            100% {
-                transform: rotate(360deg);
-            }
+            100% { transform: rotate(360deg); }
         }
 
         .scan-line {
@@ -551,29 +465,19 @@
         }
 
         @keyframes scan {
-            0% {
-                top: 0;
-                opacity: 0;
-            }
-
-            50% {
-                opacity: 1;
-            }
-
-            100% {
-                top: 100%;
-                opacity: 0;
-            }
+            0% { top: 0; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
         }
 
-        /* WTC Intelligence Siri Effect */
+        /* WTC Intelligence Siri Effect (Pride Edition Colors) */
         .siri-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(255,0,127,0.4), rgba(127,0,255,0.4), rgba(0,212,255,0.4));
+            background: linear-gradient(135deg, rgba(255,0,127,0.4), rgba(255,165,0,0.4), rgba(0,212,255,0.4), rgba(127,0,255,0.4));
             background-size: 200% 200%;
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
@@ -595,71 +499,7 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* TUTORIAL MEJORADO */
-        #tutorialOverlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(20px);
-            z-index: 4000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .tut-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 30px;
-            padding: 40px;
-            text-align: center;
-            color: white;
-            display: none;
-            max-width: 300px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-        }
-
-        .tut-card.active {
-            display: block;
-            animation: fadeIn 0.5s;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .tut-btn {
-            background: linear-gradient(135deg, #007aff, #0051d5);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 20px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 20px;
-            box-shadow: 0 4px 15px rgba(0, 122, 255, 0.4);
-            transition: all 0.3s;
-        }
-
-        .tut-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 122, 255, 0.6);
-        }
-
-        /* FONDOS MODIFICADOS SEGUN LA SOLICITUD */
+        /* FONDOS PRIDE POR DEFECTO */
         .wallpaper-layer {
             position: absolute;
             top: 0;
@@ -668,6 +508,7 @@
             height: 100%;
             z-index: 0;
             background: url('https://i.ibb.co/rNK6kjH/Wallpaper-IOS-1.jpg') center/cover no-repeat;
+            transition: background 0.5s ease;
         }
 
         /* LOCK SCREEN */
@@ -682,7 +523,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), background 0.5s ease;
         }
 
         .lock-screen.unlocked {
@@ -693,7 +534,7 @@
             margin-top: 80px;
             text-align: center;
             color: white;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
         }
 
         .lock-time {
@@ -771,11 +612,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: rgba(255,255,255,0.1) !important;
+            background: rgba(255,255,255,0.2) !important;
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255,255,255,0.3);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.4);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             color: white !important;
             font-size: 28px;
             position: relative;
@@ -783,13 +624,13 @@
         }
 
         .app-icon img {
-            opacity: 0.85;
+            opacity: 0.9;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-            mix-blend-mode: luminosity;
+            mix-blend-mode: normal;
         }
 
         .icon-cal {
-            background: rgba(255,255,255,0.1) !important;
+            background: rgba(255,255,255,0.2) !important;
             color: white !important;
             flex-direction: column;
             font-size: 10px;
@@ -800,44 +641,26 @@
         .icon-cal span {
             font-size: 28px;
             color: white !important;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        .icon-cal #calIconDayName {
+            text-shadow: none;
         }
 
-        .icon-maps {
-            background: rgba(255,255,255,0.1) !important;
-            color: white !important;
-        }
-
-        .icon-clock {
-            background: rgba(255,255,255,0.1) !important;
-            color: #fff !important;
-            border: 1px solid rgba(255,255,255,0.3) !important;
-        }
-
-        .icon-weather {
-            background: rgba(255,255,255,0.1) !important;
-            color: white !important;
-        }
-
-        .icon-phone {
-            background: rgba(255,255,255,0.1) !important;
-            color: white !important;
-        }
-
-        .icon-messages {
-            background: rgba(255,255,255,0.1) !important;
-            color: white !important;
-        }
-
-        .icon-wallet {
-            background: rgba(255,255,255,0.1) !important;
-            color: white !important;
-            border: 1px solid rgba(255,255,255,0.3) !important;
-        }
+        .icon-maps { background: rgba(255,255,255,0.2) !important; color: white !important; }
+        .icon-clock { background: rgba(255,255,255,0.2) !important; color: #fff !important; }
+        .icon-weather { background: rgba(255,255,255,0.2) !important; color: white !important; }
+        .icon-phone { background: rgba(255,255,255,0.2) !important; color: white !important; }
+        .icon-messages { background: rgba(255,255,255,0.2) !important; color: white !important; }
+        .icon-wallet { background: rgba(255,255,255,0.2) !important; color: white !important; }
 
         .app-name {
             font-size: 11px;
             color: white;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+            font-weight: 500;
+            /* Sombra más fuerte para asegurar que sea legible sobre fondos pastel */
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0,0,0,0.5);
         }
 
         .dock-bar {
@@ -845,13 +668,13 @@
             width: 100%;
             height: 95px;
             border-radius: 35px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(50px);
             -webkit-backdrop-filter: blur(50px);
             display: flex;
             justify-content: space-evenly;
             align-items: center;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .cam-modes {
@@ -1202,31 +1025,6 @@
             z-index: 2;
         }
 
-        .theme-picker {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            padding: 15px 20px;
-        }
-
-        .theme-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            border: 3px solid transparent;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .theme-btn.active {
-            border-color: #007aff;
-            transform: scale(1.1);
-        }
-
-        .theme-btn:hover {
-            transform: scale(1.05);
-        }
-
         .order-row {
             display: flex;
             align-items: center;
@@ -1263,89 +1061,6 @@
         .list-item.font-selected .font-check {
             display: block;
             color: #007aff;
-        }
-
-        /* --- ADMIN ABUSE GLITCH EFFECT --- */
-        .glitch-text {
-            animation: glitch-text-anim 0.4s infinite alternate;
-            display: inline-flex;
-            align-items: center;
-        }
-
-        @keyframes glitch-text-anim {
-            0% {
-                font-family: 'Roboto', sans-serif;
-                filter: invert(0);
-                transform: none;
-                letter-spacing: normal;
-                color: #fff;
-                text-shadow: none;
-            }
-
-            20% {
-                font-family: 'Dancing Script', cursive;
-                filter: invert(1);
-                transform: scaleX(-1);
-                letter-spacing: 2px;
-                color: #ff0000;
-                text-shadow: 2px 2px 0 #00ff00;
-            }
-
-            40% {
-                font-family: monospace;
-                transform: skewX(-15deg);
-                color: #00ff00;
-                text-shadow: -2px -2px 0 #ff00ff;
-            }
-
-            60% {
-                font-family: 'Inter', sans-serif;
-                transform: scaleY(-1);
-                letter-spacing: -2px;
-                filter: hue-rotate(180deg);
-                color: #fff;
-            }
-
-            80% {
-                font-family: 'Courier New', Courier, monospace;
-                transform: translate(2px, -2px) rotate(2deg);
-                filter: invert(1) contrast(200%);
-                color: #ff00ff;
-            }
-
-            100% {
-                font-family: 'Roboto', sans-serif;
-                filter: invert(0);
-                transform: none;
-                letter-spacing: normal;
-                color: #ff0000;
-            }
-        }
-
-        @keyframes bg-glitch {
-            0% {
-                background-position: 0 0;
-                opacity: 0.3;
-            }
-
-            25% {
-                opacity: 0.8;
-                filter: invert(1);
-            }
-
-            50% {
-                background-position: 20px 20px;
-                opacity: 0.5;
-            }
-
-            75% {
-                transform: scale(1.05);
-            }
-
-            100% {
-                background-position: -20px -20px;
-                opacity: 0.3;
-            }
         }
 
         /* --- ACTUALIZACIÓN DE MARZO: Terminal Hacker (Easter Egg) --- */
@@ -1492,25 +1207,6 @@
                 <div class="close-terminal" onclick="document.getElementById('aiTerminal').style.display='none'">[X]
                     EXIT</div>
                 <div id="aiText"></div>
-            </div>
-
-            <!-- TUTORIAL -->
-            <div id="tutorialOverlay">
-                <div class="tut-card active" id="tut1">
-                    <h2>⚡ Bienvenido a iOS 26</h2>
-                    <p style="margin:20px 0; opacity:0.8;">Liquid Glass UI con Super Charge 200W</p>
-                    <button class="tut-btn" onclick="nextTut(1)">Siguiente</button>
-                </div>
-                <div class="tut-card" id="tut2">
-                    <h2>🔋 Super Charge 200W</h2>
-                    <p style="margin:20px 0; opacity:0.8;">Carga ultrarrápida con efectos visuales</p>
-                    <button class="tut-btn" onclick="nextTut(2)">Siguiente</button>
-                </div>
-                <div class="tut-card" id="tut3">
-                    <h2>✨ Gestos</h2>
-                    <p style="margin:20px 0; opacity:0.8;">Navegación Fluida y Animada</p>
-                    <button class="tut-btn" onclick="closeTutorial()">Empezar</button>
-                </div>
             </div>
 
             <!-- PANTALLA BLOQUEO -->
@@ -1668,7 +1364,7 @@
                             <div class="list-item" onclick="navSettings('personalize')">
                                 <div style="display:flex; gap:10px;"><i data-lucide="palette" style="color:#ff6b6b"></i>
                                     <span>Personalización</span></div>
-                                <div style="color:#34c759; font-weight:600; display:flex; align-items:center;">Nuevo <i
+                                <div style="color:#34c759; font-weight:600; display:flex; align-items:center;">Pride <i
                                         data-lucide="chevron-right" size="16"></i></div>
                             </div>
                             <div class="list-item" onclick="navSettings('langs')">
@@ -1692,74 +1388,24 @@
                                 <div style="color:#FFD700; font-weight:600;">Probar</div>
                             </div>
                         </div>
-                        <div class="list-group">
-                            <div class="list-item" onclick="window.location.href='betaindex.html'">
-                                <div style="display:flex; gap:10px;"><i data-lucide="flask-conical"
-                                        style="color:#ff9f0a"></i> Ir a versión beta</div>
-                                <div style="color:#888; display:flex; align-items:center;">Beta <i
-                                        data-lucide="chevron-right" size="16"></i></div>
-                            </div>
-                        </div>
-                        <div class="list-group">
-                            <div class="list-item" onclick="window.location.href='lite.html'">
-                                <div style="display:flex; gap:10px;"><i data-lucide="sparkles"
-                                        style="color:#34c759"></i> Ir a versión lite</div>
-                                <div style="color:#34c759; font-weight:600; display:flex; align-items:center;">Nuevo <i
-                                        data-lucide="chevron-right" size="16"></i></div>
-                            </div>
-                        </div>
-                        <div class="list-group">
-                            <div class="list-item" onclick="window.location.href='ultra.html'">
-                                <div style="display:flex; gap:10px;"><i data-lucide="crown" style="color:#FFD700"></i>
-                                    Ir a ULTRA</div>
-                                <div style="color:#FFD700; font-weight:600; display:flex; align-items:center;">ULTRA <i
-                                        data-lucide="chevron-right" size="16"></i></div>
-                            </div>
-                        </div>
-
-                        <!-- NUEVO BOTÓN ADMIN ABUSE -->
-                        <div class="list-group">
-                            <div class="list-item" onclick="window.location.href='reservadminabuse.html'"
-                                style="position: relative; overflow: hidden; background: #111;">
-                                <div style="display:flex; gap:10px; z-index: 2; position: relative;"
-                                    class="glitch-text">
-                                    <i data-lucide="skull" style="color:#ff0000"></i> ir al admin abuse
-                                </div>
-                                <div style="color:#ff0000; font-weight:800; display:flex; align-items:center; z-index: 2; position: relative;"
-                                    class="glitch-text">
-                                    NUEVO <i data-lucide="chevron-right" size="16"></i>
-                                </div>
-                                <div class="glitch-bg"
-                                    style="position: absolute; top:0; left:0; width:100%; height:100%; background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,0,0,0.2) 10px, rgba(255,0,0,0.2) 20px); z-index: 1; pointer-events: none; mix-blend-mode: overlay; animation: bg-glitch 0.5s infinite linear;">
-                                </div>
-                            </div>
-                        </div>
 
                     </div>
 
-                    <!-- PERSONALIZE PAGE -->
+                    <!-- PERSONALIZE PAGE (WALLPAPER PRIDE LOGIC) -->
                     <div id="setPersonalize" class="settings-page hidden sub">
                         <div class="list-group">
-                            <div style="padding:15px 20px; font-weight:600;">Tema de color</div>
-                            <div class="theme-picker">
-                                <div class="theme-btn active" data-theme="0" title="Azul"
-                                    style="background:linear-gradient(135deg, #021B79, #0575E6, #00F260);"
-                                    onclick="applyTheme(0)"></div>
-                                <div class="theme-btn" data-theme="1" title="Verde"
-                                    style="background:linear-gradient(135deg, #0f5132, #198754, #20c997);"
-                                    onclick="applyTheme(1)"></div>
-                                <div class="theme-btn" data-theme="2" title="Morado"
-                                    style="background:linear-gradient(135deg, #2d1b69, #6f42c1, #e83e8c);"
-                                    onclick="applyTheme(2)"></div>
-                                <div class="theme-btn" data-theme="3" title="Rosa"
-                                    style="background:linear-gradient(135deg, #c2185b, #e91e63, #f48fb1);"
-                                    onclick="applyTheme(3)"></div>
-                                <div class="theme-btn" data-theme="4" title="Naranja"
-                                    style="background:linear-gradient(135deg, #e65100, #ff6f00, #ffab40);"
-                                    onclick="applyTheme(4)"></div>
-                                <div class="theme-btn" data-theme="5" title="Oscuro"
-                                    style="background:linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);"
-                                    onclick="applyTheme(5)"></div>
+                            <div style="padding:15px 20px; font-weight:600; font-size:14px; color:#888;">FONDOS DE PANTALLA (PRIDE EDITION)</div>
+                            <div class="list-item" onclick="swapWallpapers()">
+                                <div>Intercambiar fondos</div><i data-lucide="refresh-cw" style="color:#007aff"></i>
+                            </div>
+                            <div class="list-item" onclick="matchToLock()">
+                                <div>Usar fondo de bloqueo en inicio</div><i data-lucide="copy" style="color:#007aff"></i>
+                            </div>
+                            <div class="list-item" onclick="matchToHome()">
+                                <div>Usar fondo de inicio en bloqueo</div><i data-lucide="copy" style="color:#007aff"></i>
+                            </div>
+                            <div class="list-item" onclick="restorePride()">
+                                <div>Restaurar fondos Pride</div><i data-lucide="sparkles" style="color:#ff2d55"></i>
                             </div>
                         </div>
                         <div class="list-group">
@@ -1779,13 +1425,6 @@
                                 <div>Roboto</div><i data-lucide="check" class="font-check" id="font-check-roboto"
                                     style="display:none;"></i>
                             </div>
-                        </div>
-                        <div class="list-group">
-                            <div style="padding:15px 20px; font-weight:600;">Orden de apps</div>
-                            <div id="orderListContainer"></div>
-                            <div style="padding:12px 20px;"><button onclick="saveAppOrder()"
-                                    style="width:100%; padding:12px; background:#007aff; color:white; border:none; border-radius:10px; font-weight:600; cursor:pointer;">Guardar
-                                    orden</button></div>
                         </div>
                     </div>
 
@@ -2066,30 +1705,27 @@
         const hasSeenWelcome = localStorage.getItem('wtc_liquid_welcome_seen');
 
         if (hasSeenWelcome === 'true') {
-            // Ya visto: ocultar bienvenida y tutorial inmediatamente
             document.getElementById('welcomeScreen').style.display = 'none';
             document.getElementById('notch').classList.remove('welcome-aura');
-            document.getElementById('tutorialOverlay').style.display = 'none';
         } else {
-            // No visto: Iniciar ciclo de saludos
             greetInterval = setInterval(() => {
                 welcomeText.style.opacity = 0;
                 setTimeout(() => {
                     greetIdx = (greetIdx + 1) % greetings.length;
                     welcomeText.innerText = greetings[greetIdx];
                     welcomeText.style.opacity = 1;
-                }, 500);
-            }, 2000);
-        }
+            }, 500);
+        }, 2000);
+    }
 
-        function startSetup() {
-            if (greetInterval) clearInterval(greetInterval);
-            document.getElementById('notch').classList.remove('welcome-aura');
-            document.getElementById('welcomeScreen').style.transform = "translateY(-100%)";
-            document.getElementById('tutorialOverlay').style.display = "flex";
-        }
+    function startSetup() {
+        if (greetInterval) clearInterval(greetInterval);
+        document.getElementById('notch').classList.remove('welcome-aura');
+        document.getElementById('welcomeScreen').style.transform = "translateY(-100%)";
+        localStorage.setItem('wtc_liquid_welcome_seen', 'true');
+    }
 
-        // --- SUPER CHARGE 200W ANIMATION ---
+    // --- SUPER CHARGE 200W ANIMATION ---
         function triggerSuperCharge() {
             const n = document.getElementById('notch');
             const percentEl = document.getElementById('chargePercent');
@@ -2101,9 +1737,7 @@
             const chargeInterval = setInterval(() => {
                 percent += 2;
                 percentEl.textContent = percent + '%';
-
-                // Calcular velocidad de carga simulada
-                const wattage = Math.floor(180 + Math.random() * 40); // Entre 180W y 220W
+                const wattage = Math.floor(180 + Math.random() * 40);
                 speedEl.textContent = `${wattage}W`;
 
                 if (percent >= 100) {
@@ -2114,26 +1748,22 @@
                         percentEl.textContent = '100%';
                     }, 2000);
                 }
-            }, 50); // Actualiza cada 50ms para carga rápida
+            }, 50);
         }
 
         // --- LANGUAGE LOGIC ---
         function setLanguage(lang) {
             currentLang = lang;
             const t = translations[lang];
-
             const n = document.getElementById('notch');
             n.classList.add('expanded-language');
 
             document.getElementById('langNotchText').textContent = t.changing_lang;
-
             document.querySelectorAll('[data-key]').forEach(el => {
                 const key = el.getAttribute('data-key');
                 if (t[key]) el.textContent = t[key];
             });
-
             document.getElementById('swipeText').textContent = t.welcome;
-
             document.querySelectorAll('.lang-check').forEach(i => i.style.display = 'none');
             document.getElementById('check-' + lang).style.display = 'block';
 
@@ -2156,24 +1786,15 @@
 
             if (target === 'langs') {
                 main.classList.add('hidden');
-                langs.classList.remove('hidden');
-                personalize.classList.add('hidden');
-                backBtn.style.visibility = 'visible';
-                backBtn.innerText = translations[currentLang].settings || "Ajustes";
-                backBtn.onclick = () => navSettings('back');
-                title.innerText = translations[currentLang].lang_region || "Idioma";
-            } else if (target === 'personalize') {
-                main.classList.add('hidden');
-                langs.classList.add('hidden');
-                personalize.classList.remove('hidden');
-                backBtn.style.visibility = 'visible';
-                backBtn.innerText = translations[currentLang].settings || "Ajustes";
-                backBtn.onclick = () => navSettings('back');
-                title.innerText = "Personalización";
-                renderOrderList();
-                if (typeof lucide !== 'undefined') lucide.createIcons();
-            } else if (target === 'back') {
-                main.classList.remove('hidden');
+            langs.classList.add('hidden');
+            personalize.classList.remove('hidden');
+            backBtn.style.visibility = 'visible';
+            backBtn.innerText = translations[currentLang].settings || "Ajustes";
+            backBtn.onclick = () => navSettings('back');
+            title.innerText = "Personalización";
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        } else if (target === 'back') {
+            main.classList.remove('hidden');
                 langs.classList.add('hidden');
                 personalize.classList.add('hidden');
                 backBtn.innerText = "Atrás";
@@ -2182,32 +1803,63 @@
             }
         }
 
-        // --- PERSONALIZATION ---
-        const THEMES = [
-            'linear-gradient(135deg, #021B79, #0575E6, #00F260)',
-            'linear-gradient(135deg, #0f5132, #198754, #20c997)',
-            'linear-gradient(135deg, #2d1b69, #6f42c1, #e83e8c)',
-            'linear-gradient(135deg, #c2185b, #e91e63, #f48fb1)',
-            'linear-gradient(135deg, #e65100, #ff6f00, #ffab40)',
-            'linear-gradient(135deg, #1a1a2e, #16213e, #0f3460)'
-        ];
+        // --- PERSONALIZATION & WALLPAPER PRIDE LOGIC ---
+        const prideBg1 = "url('https://i.ibb.co/hFFPG4Qp/Wallpaper-IOS-2.jpg')"; // Lock original
+        const prideBg2 = "url('https://i.ibb.co/rNK6kjH/Wallpaper-IOS-1.jpg')"; // Home original
+        
+        let currentLockBg = prideBg1;
+        let currentHomeBg = prideBg2;
+
+        function updateWallpapers() {
+            document.getElementById('lockScreen').style.background = currentLockBg;
+            document.getElementById('lockScreen').style.backgroundSize = 'cover';
+            document.getElementById('lockScreen').style.backgroundPosition = 'center';
+            
+            document.getElementById('wallpaper').style.background = currentHomeBg;
+            document.getElementById('wallpaper').style.backgroundSize = 'cover';
+            document.getElementById('wallpaper').style.backgroundPosition = 'center';
+            
+            localStorage.setItem('wtc_lock_bg', currentLockBg);
+            localStorage.setItem('wtc_home_bg', currentHomeBg);
+        }
+
+        function swapWallpapers() {
+            let temp = currentLockBg;
+            currentLockBg = currentHomeBg;
+            currentHomeBg = temp;
+            updateWallpapers();
+        }
+
+        function matchToLock() {
+            currentHomeBg = currentLockBg;
+            updateWallpapers();
+        }
+
+        function matchToHome() {
+            currentLockBg = currentHomeBg;
+            updateWallpapers();
+        }
+
+        function restorePride() {
+            currentLockBg = prideBg1;
+            currentHomeBg = prideBg2;
+            updateWallpapers();
+        }
+
+        function initWallpapers() {
+            const savedLock = localStorage.getItem('wtc_lock_bg');
+            const savedHome = localStorage.getItem('wtc_home_bg');
+            if (savedLock && savedHome) {
+                currentLockBg = savedLock;
+                currentHomeBg = savedHome;
+                updateWallpapers();
+            }
+        }
+
         const FONTS = { system: '-apple-system, BlinkMacSystemFont, sans-serif', inter: "'Inter', sans-serif", dancing: "'Dancing Script', cursive", roboto: "'Roboto', sans-serif" };
         const DEFAULT_APP_ORDER = ['mail', 'calendar', 'photos', 'camera', 'maps', 'clock', 'weather', 'wallet', 'notes', 'calculator', 'chatgpt', 'files', 'settings'];
         const APP_NAMES = { mail: 'Mail', calendar: 'Calendario', photos: 'Fotos', camera: 'Cámara', maps: 'Mapas', clock: 'Reloj', weather: 'Clima', wallet: 'Cartera', notes: 'Notas', calculator: 'Calculadora', chatgpt: 'ChatGPT', files: 'Archivos', settings: 'Ajustes' };
-        let appOrderEdit = [];
 
-        function applyTheme(idx) {
-            const bg = THEMES[idx];
-            document.getElementById('wallpaper').style.background = bg;
-            document.getElementById('wallpaper').style.backgroundSize = '100% 100%';
-            document.getElementById('wallpaper').style.animation = 'none';
-            document.getElementById('lockScreen').style.background = bg;
-            document.getElementById('lockScreen').style.backgroundSize = '100% 100%';
-            document.getElementById('lockScreen').style.animation = 'none';
-            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
-            document.querySelector('.theme-btn[data-theme="' + idx + '"]').classList.add('active');
-            localStorage.setItem('wtc_liquid_theme', String(idx));
-        }
         function applyFont(id) {
             const font = FONTS[id] || FONTS.system;
             document.body.style.fontFamily = font;
@@ -2217,12 +1869,14 @@
             localStorage.setItem('wtc_liquid_font', id);
             if (typeof lucide !== 'undefined') lucide.createIcons();
         }
+
         function loadAppOrder() {
             try {
                 const s = localStorage.getItem('wtc_liquid_app_order');
                 return s ? JSON.parse(s) : [...DEFAULT_APP_ORDER];
             } catch { return [...DEFAULT_APP_ORDER]; }
         }
+
         function renderAppGrid() {
             const order = loadAppOrder();
             const grid = document.getElementById('appGrid');
@@ -2232,40 +1886,8 @@
             order.forEach(id => { if (byId[id]) grid.appendChild(byId[id]); });
             if (typeof lucide !== 'undefined') lucide.createIcons();
         }
-        function renderOrderList() {
-            appOrderEdit = loadAppOrder();
-            const cont = document.getElementById('orderListContainer');
-            const len = appOrderEdit.length;
-            cont.innerHTML = appOrderEdit.map((id, i) => '<div class="order-row"><span>' + (APP_NAMES[id] || id) + '</span><div class="order-btns"><button onclick="moveAppUp(' + i + ')"' + (i === 0 ? ' disabled' : '') + '><i data-lucide="chevron-up" size="18"></i></button><button onclick="moveAppDown(' + i + ')"' + (i === len - 1 ? ' disabled' : '') + '><i data-lucide="chevron-down" size="18"></i></button></div></div>').join('');
-            if (typeof lucide !== 'undefined') lucide.createIcons();
-        }
-        function moveAppUp(i) {
-            if (i <= 0) return;
-            [appOrderEdit[i - 1], appOrderEdit[i]] = [appOrderEdit[i], appOrderEdit[i - 1]];
-            renderOrderList();
-        }
-        function moveAppDown(i) {
-            if (i >= appOrderEdit.length - 1) return;
-            [appOrderEdit[i], appOrderEdit[i + 1]] = [appOrderEdit[i + 1], appOrderEdit[i]];
-            renderOrderList();
-        }
-        function saveAppOrder() {
-            localStorage.setItem('wtc_liquid_app_order', JSON.stringify(appOrderEdit));
-            renderAppGrid();
-        }
 
-        // TUTORIAL
-        function nextTut(n) {
-            document.getElementById('tut' + n).classList.remove('active');
-            document.getElementById('tut' + (n + 1)).classList.add('active');
-        }
-        function closeTutorial() {
-            document.getElementById('tutorialOverlay').style.display = "none";
-            // GUARDAR ESTADO: USUARIO HA TERMINADO EL TUTORIAL
-            localStorage.setItem('wtc_liquid_welcome_seen', 'true');
-        }
-
-        // SYSTEM
+        // SYSTEM CLOCK
         function updateClock() {
             const d = new Date();
             const t = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -2276,44 +1898,37 @@
         }
         setInterval(updateClock, 1000); updateClock();
 
-        /* --- ACTUALIZACIÓN DE MARZO: Calendario Dinámico --- */
+        // CALENDAR
         function updateCalendar() {
             const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
             const dayNames = ["DOM", "LUN", "MAR", "MIE", "JUE", "VIE", "SAB"];
             const d = new Date();
-
-            // Actualizar App Interna
             const calDisplay = document.getElementById('calMonthDisplay');
             if (calDisplay) calDisplay.innerText = monthNames[d.getMonth()];
-
-            // Actualizar Icono en Home Screen
             const iconDayName = document.getElementById('calIconDayName');
             const iconDayNum = document.getElementById('calIconDayNum');
             if (iconDayName) iconDayName.innerText = dayNames[d.getDay()];
             if (iconDayNum) iconDayNum.innerText = d.getDate();
         }
 
-        /* --- ACTUALIZACIÓN DE MARZO: Clima Real (WeatherAPI) --- */
+        // WEATHER
         async function fetchWeather() {
             try {
                 const res = await fetch('https://api.weatherapi.com/v1/current.json?key=4b02f5f27ef04701a4b205249252911&q=Ojo de Agua, Mexico&lang=es');
                 const data = await res.json();
                 document.getElementById('weatherTemp').innerHTML = `<h1 style="font-size: 80px; margin-bottom: 0;">${Math.round(data.current.temp_c)}°</h1>`;
                 document.getElementById('weatherDesc').innerText = data.current.condition.text;
-                
                 const humEl = document.getElementById('weatherHum');
                 if (humEl) humEl.innerText = data.current.humidity + '%';
-                
                 const windEl = document.getElementById('weatherWind');
                 if (windEl) windEl.innerText = data.current.wind_kph + ' km/h';
-
             } catch (e) {
                 console.log('Error al obtener clima', e);
                 document.getElementById('weatherDesc').innerText = "Sin conexión";
             }
         }
 
-        /* --- ACTUALIZACIÓN DE MARZO: Notas con Memoria (localStorage) --- */
+        // NOTES
         function initNotes() {
             const notesArea = document.getElementById('notesTextarea');
             const savedNote = localStorage.getItem('wtc_liquid_notes');
@@ -2332,8 +1947,7 @@
         window.onresize = resize;
 
         (function initPersonalization() {
-            const theme = localStorage.getItem('wtc_liquid_theme');
-            if (theme !== null) applyTheme(parseInt(theme, 10));
+            initWallpapers();
             applyFont(localStorage.getItem('wtc_liquid_font') || 'system');
             renderAppGrid();
         })();
@@ -2341,9 +1955,9 @@
         window.onload = function () {
             resize();
             lucide.createIcons();
-            updateCalendar(); // Ejecutar Calendario Dinámico
-            fetchWeather();   // Ejecutar Clima Real
-            initNotes();      // Ejecutar Memoria de Notas
+            updateCalendar();
+            fetchWeather();
+            initNotes();
         };
 
         function unlockPhone() {
@@ -2375,8 +1989,6 @@
                     document.getElementById('statusBar').classList.add('dark');
                 }
             }
-
-            /* --- ACTUALIZACIÓN DE MARZO: Isla Dinámica Música --- */
             if (id === 'music') {
                 document.getElementById('notch').classList.add('expanded-music');
             }
@@ -2385,16 +1997,12 @@
             document.getElementById('app-' + id).classList.remove('open');
             if (id === 'wallet') clearInterval(cvcInterval);
             if (id === 'camera') stopCamera();
-
-            /* --- ACTUALIZACIÓN DE MARZO: Cerrar Isla Música --- */
             if (id === 'music') {
                 document.getElementById('notch').classList.remove('expanded-music');
             }
-
             goHome();
         }
 
-        // SETTINGS & DARK MODE
         function toggleDark() {
             document.getElementById('iphoneFrame').classList.toggle('dark-mode');
             document.getElementById('darkToggle').classList.toggle('active');
@@ -2446,20 +2054,13 @@
             cvcInterval = setInterval(updateCVC, 30000);
         }
 
-        /* --- ACTUALIZACIÓN DE MARZO: Lógica para Easter Egg de Terminal IA --- */
+        // AI TERMINAL
         function triggerAiTerminal() {
             const terminal = document.getElementById('aiTerminal');
             const termText = document.getElementById('aiText');
             terminal.style.display = 'block';
             termText.innerHTML = '';
-
-            const msgs = [
-                "INICIANDO WTC LIQUID AI CORE...",
-                "BYPASSING APPLE SECURITY PROTOCOLS...",
-                "ACCESS GRANTED.",
-                "HELLO, USER.",
-                "I AM ALIVE."
-            ];
+            const msgs = ["INICIANDO WTC LIQUID AI CORE...", "BYPASSING APPLE SECURITY PROTOCOLS...", "ACCESS GRANTED.", "HELLO, USER.", "I AM ALIVE."];
             let i = 0;
             const intv = setInterval(() => {
                 if (i >= msgs.length) { clearInterval(intv); return; }
@@ -2468,12 +2069,10 @@
             }, 800);
         }
 
-        /* --- ACTUALIZACIÓN DE MARZO: Permitir tipeo de teclado físico para Letras en el Teléfono --- */
         document.addEventListener('keydown', (e) => {
             const phoneApp = document.getElementById('app-phone');
             if (phoneApp && phoneApp.classList.contains('open')) {
                 const key = e.key.toUpperCase();
-                // Permitir A-Z además de números y símbolos para el Easter Egg
                 if (/^[0-9A-Z*#]$/.test(key)) {
                     dial(key);
                 }
@@ -2502,36 +2101,28 @@
             document.getElementById('wallpaper').style.filter = `brightness(${opacity})`;
         }
 
-        // PHONE & CALC
+        // PHONE
         function dial(n) {
             const display = document.getElementById('phoneDisplay');
             display.innerText += n;
-
-            // Lógica para 911 - Redirección instantánea (< 0.1s)
             if (display.innerText === '911') {
                 window.location.href = 'new911.html';
             }
-
-            /* --- ACTUALIZACIÓN DE MARZO: Easter Eggs en el Teléfono --- */
             if (display.innerText === '8080') {
                 document.getElementById('wallpaper').style.background = 'url("https://www.transparenttextures.com/patterns/cubes.png"), #5e3a1f';
                 document.body.style.fontFamily = 'monospace';
                 alert('¡Minecraft Mode Activado!');
-                display.innerText = ''; // Reset
+                display.innerText = '';
             }
-
             if (display.innerText === '*#*#AI#*#*') {
                 triggerAiTerminal();
-                display.innerText = ''; // Reset
+                display.innerText = '';
             }
-
-            /* --- Easter Egg: "assumptions" (sin importar mayúsculas/minúsculas ni errores de tipeo) --- */
             if (display.innerText.toLowerCase().replace(/[^a-z]/g, '') === 'assumptions') {
                 window.location.href = 'assumptions.html';
             }
         }
 
-        // Long-press en 4 redirige a htlr.html
         (function () {
             var dial4 = document.getElementById('dialKey4');
             if (!dial4) return;
@@ -2545,30 +2136,24 @@
             dial4.addEventListener('touchend', cancelHold);
         })();
 
-        /* --- ACTUALIZACIÓN DE MARZO: Calculadora Segura (Reemplaza uso de eval) --- */
+        // CALCULATOR
         function safeMath(expr) {
-            // Separa números y operadores matemáticos
             let tokens = expr.match(/(?:\d+\.?\d*|[\+\-\*\/])/g);
             if (!tokens) return "0";
-
-            // Primera pasada: Multiplicación y División (Orden de Operaciones)
             for (let i = 1; i < tokens.length - 1; i += 2) {
                 if (tokens[i] === '*' || tokens[i] === '/') {
                     let a = parseFloat(tokens[i - 1]);
                     let b = parseFloat(tokens[i + 1]);
                     let r = tokens[i] === '*' ? (a * b) : (a / b);
                     tokens.splice(i - 1, 3, r);
-                    i -= 2; // Retroceder el índice tras alterar el array
+                    i -= 2; 
                 }
             }
-
-            // Segunda pasada: Suma y Resta
             let res = parseFloat(tokens[0]);
             for (let i = 1; i < tokens.length - 1; i += 2) {
                 if (tokens[i] === '+') res += parseFloat(tokens[i + 1]);
                 if (tokens[i] === '-') res -= parseFloat(tokens[i + 1]);
             }
-
             return isNaN(res) ? "Error" : res.toString();
         }
 
@@ -2579,7 +2164,6 @@
                 cVal = "0";
             } else if (v === '=') {
                 try {
-                    /* --- ACTUALIZACIÓN DE MARZO: Sustitución de eval() por safeMath() --- */
                     cVal = safeMath(cVal);
                 } catch {
                     cVal = "Error";
@@ -2591,9 +2175,7 @@
                 }
             } else if (v === '%') {
                 if (cVal !== "0" && cVal !== "Error") {
-                    try {
-                        cVal = (parseFloat(safeMath(cVal)) / 100).toString();
-                    } catch { cVal = "Error"; }
+                    try { cVal = (parseFloat(safeMath(cVal)) / 100).toString(); } catch { cVal = "Error"; }
                 }
             } else {
                 if (cVal === "0" && v !== '.') cVal = "";
@@ -2631,7 +2213,6 @@
             }
         });
 
-        // Overwrite goHome to dismiss Siri if active
         const originalGoHome = window.goHome || function() {};
         window.goHome = function() {
             if (siriOverlay.classList.contains('active')) {
@@ -2641,7 +2222,6 @@
             if (typeof originalGoHome === 'function') originalGoHome();
         };
 
-        // Redefine directly just in case it's in local scope
         goHome = window.goHome;
 
     </script>
