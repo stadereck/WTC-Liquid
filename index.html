@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WTC Liquid Celebrating Pride </title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cimage href='https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Apple_Computer_Logo_rainbow.svg/1280px-Apple_Computer_Logo_rainbow.svg.png' x='10' y='0' width='80' height='100'/%3E%3C/svg%3E" type="image/svg+xml">
+    <title>WTC Liquid Celebrating Pride</title>
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Apple_Computer_Logo_rainbow.svg/1280px-Apple_Computer_Logo_rainbow.svg.png" type="image/png">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;600&family=Roboto:wght@400;500;700&display=swap');
@@ -132,16 +132,20 @@
             box-shadow: 0 0 0 0px transparent;
         }
 
-        /* Animación Aura Boreal para Bienvenida */
+        /* Animación Aura Pride para Bienvenida */
         .notch.welcome-aura {
-            animation: islandBreathe 3s infinite alternate;
-            box-shadow: 0 0 20px 2px rgba(0, 122, 255, 0.6), 0 0 40px 5px rgba(50, 255, 100, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: prideAura 4s linear infinite;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        @keyframes islandBreathe {
-            0% { box-shadow: 0 0 15px 1px rgba(0, 122, 255, 0.5), 0 0 30px 2px rgba(200, 50, 255, 0.2); }
-            100% { box-shadow: 0 0 25px 4px rgba(50, 200, 255, 0.8), 0 0 50px 8px rgba(50, 255, 100, 0.4); }
+        @keyframes prideAura {
+            0% { box-shadow: 0 0 20px 2px #ff0000, 0 0 40px 5px #ff7f00; }
+            16% { box-shadow: 0 0 20px 2px #ff7f00, 0 0 40px 5px #ffff00; }
+            33% { box-shadow: 0 0 20px 2px #ffff00, 0 0 40px 5px #00ff00; }
+            50% { box-shadow: 0 0 20px 2px #00ff00, 0 0 40px 5px #0000ff; }
+            66% { box-shadow: 0 0 20px 2px #0000ff, 0 0 40px 5px #4b0082; }
+            83% { box-shadow: 0 0 20px 2px #4b0082, 0 0 40px 5px #8b00ff; }
+            100% { box-shadow: 0 0 20px 2px #ff0000, 0 0 40px 5px #ff7f00; }
         }
 
         .notch.expanded-cc {
@@ -1696,7 +1700,7 @@
         let currentLang = 'es';
 
         // --- HELLO SEQUENCE ---
-        const greetings = ["Provechito", "hello", "hola", "bonjour", "ciao", "hallo", "olá", "你好", "こんにちは", "Provechito"];
+        const greetings = ["Pride", "hello", "hola", "bonjour", "ciao", "hallo", "olá", "你好", "こんにちは"];
         let greetIdx = 0;
         const welcomeText = document.getElementById('welcomeText');
         let greetInterval;
