@@ -1266,23 +1266,21 @@
                 <div class="swipe-detector" id="swipeDetector"></div>
                 <div class="app-grid" id="appGrid">
                     <div class="app-item" data-app-id="mail" onclick="openApp('mail')">
-                        <div class="app-icon"><img src="https://i.ibb.co/Rp6zxQc4/250.jpg"
-                                style="width:100%;height:100%;object-fit:cover;"></div>
+                        <div class="app-icon"><i data-lucide="mail"></i></div>
                         <span class="app-name" data-key="mail">Mail</span>
                     </div>
                     <!-- --- ACTUALIZACIÓN DE MARZO: ID's para Calendario Dinámico --- -->
                     <div class="app-item" data-app-id="calendar" onclick="openApp('calendar')">
                         <div class="app-icon icon-cal"><span id="calIconDayName"
                                 style="font-size:10px; color:#ff3b30">DOM</span><span id="calIconDayNum"
-                                style="font-size:28px; color:#000">28</span></div><span class="app-name"
+                                style="font-size:28px; color:#fff">28</span></div><span class="app-name"
                             data-key="calendar">Calendario</span>
                     </div>
                     <div class="app-item" data-app-id="photos" onclick="openApp('photos')">
-                        <div class="app-icon" style="background:white;"><i data-lucide="image" color="#ff2d55"></i>
-                        </div><span class="app-name" data-key="photos">Fotos</span>
+                        <div class="app-icon"><i data-lucide="image"></i></div><span class="app-name" data-key="photos">Fotos</span>
                     </div>
                     <div class="app-item" data-app-id="camera" onclick="openApp('camera')">
-                        <div class="app-icon" style="background:#ccc;"><i data-lucide="camera" color="#000"></i></div>
+                        <div class="app-icon"><i data-lucide="camera"></i></div>
                         <span class="app-name" data-key="camera">Cámara</span>
                     </div>
 
@@ -1304,28 +1302,20 @@
                     </div>
 
                     <div class="app-item" data-app-id="notes" onclick="openApp('notes')">
-                        <div class="app-icon" style="background:#ffd60a; color:white;"><i data-lucide="file-text"></i>
-                        </div><span class="app-name" data-key="notes">Notas</span>
+                        <div class="app-icon"><i data-lucide="file-text"></i></div><span class="app-name" data-key="notes">Notas</span>
                     </div>
                     <div class="app-item" data-app-id="calculator" onclick="openApp('calculator')">
-                        <div class="app-icon"><img src="https://i.ibb.co/JRPgZLNR/images-removebg-preview.png"
-                                style="width:100%;height:100%;object-fit:cover;"></div>
+                        <div class="app-icon"><i data-lucide="calculator"></i></div>
                         <span class="app-name" data-key="calculator">Calculadora</span>
                     </div>
 
-                    <div class="app-item" data-app-id="chatgpt" onclick="openApp('chatgpt')">
-                        <div class="app-icon" style="background:#10a37f; color:white;"><i data-lucide="bot"></i></div>
-                        <span class="app-name">ChatGPT</span>
-                    </div>
                     <div class="app-item" data-app-id="files" onclick="openApp('files')">
-                        <div class="app-icon" style="background:white; color:#007aff;"><i data-lucide="folder"></i></div>
+                        <div class="app-icon"><i data-lucide="folder"></i></div>
                         <span class="app-name">Archivos</span>
                     </div>
 
                     <div class="app-item" data-app-id="settings" onclick="openApp('settings')">
-                        <div class="app-icon"><img src="https://i.ibb.co/JS5p6Z7/Settings-29-dark-removebg-preview.png"
-                                onerror="this.style.display='none';this.parentNode.style.background='#8e8e93';this.parentNode.innerHTML='<i data-lucide=\'settings-2\'></i>'"
-                                style="width:100%;height:100%;object-fit:cover;"></div>
+                        <div class="app-icon"><i data-lucide="settings"></i></div>
                         <span class="app-name" data-key="settings">Ajustes</span>
                     </div>
                 </div>
@@ -1335,14 +1325,13 @@
                         <div class="app-icon icon-phone"><i data-lucide="phone"></i></div>
                     </div>
                     <div class="app-item" onclick="openApp('safari')">
-                        <div class="app-icon" style="background:white; color:#007aff;"><i data-lucide="compass"></i>
-                        </div>
+                        <div class="app-icon"><i data-lucide="compass"></i></div>
                     </div>
                     <div class="app-item" onclick="openApp('messages')">
                         <div class="app-icon icon-messages"><i data-lucide="message-circle"></i></div>
                     </div>
                     <div class="app-item" onclick="openApp('music')">
-                        <div class="app-icon" style="background:#ff2d55;"><i data-lucide="music"></i></div>
+                        <div class="app-icon"><i data-lucide="music"></i></div>
                     </div>
                 </div>
             </div>
@@ -1692,14 +1681,6 @@
                         apple.com</div><iframe src="https://www.bing.com"
                         style="width:100%; flex:1; border:none; background:transparent;"></iframe>
                 </div>
-            </div>
-            <div id="app-chatgpt" class="app-window">
-                <div class="nav-bar">
-                    <div style="color:#10a37f" onclick="closeApp('chatgpt')">Atrás</div>
-                    <div>ChatGPT</div>
-                    <div onclick="closeApp('chatgpt')">Listo</div>
-                </div>
-                <div class="app-body" style="padding:20px;">Hola, ¿en qué te puedo ayudar hoy?</div>
             </div>
             <div id="app-files" class="app-window">
                 <div class="nav-bar">
@@ -2094,8 +2075,8 @@
         }
 
         const FONTS = { system: '-apple-system, BlinkMacSystemFont, sans-serif', inter: "'Inter', sans-serif", dancing: "'Dancing Script', cursive", roboto: "'Roboto', sans-serif" };
-        const DEFAULT_APP_ORDER = ['mail', 'calendar', 'photos', 'camera', 'maps', 'clock', 'weather', 'wallet', 'notes', 'calculator', 'chatgpt', 'files', 'settings'];
-        const APP_NAMES = { mail: 'Mail', calendar: 'Calendario', photos: 'Fotos', camera: 'Cámara', maps: 'Mapas', clock: 'Reloj', weather: 'Clima', wallet: 'Cartera', notes: 'Notas', calculator: 'Calculadora', chatgpt: 'ChatGPT', files: 'Archivos', settings: 'Ajustes' };
+        const DEFAULT_APP_ORDER = ['mail', 'calendar', 'photos', 'camera', 'maps', 'clock', 'weather', 'wallet', 'notes', 'calculator', 'files', 'settings'];
+        const APP_NAMES = { mail: 'Mail', calendar: 'Calendario', photos: 'Fotos', camera: 'Cámara', maps: 'Mapas', clock: 'Reloj', weather: 'Clima', wallet: 'Cartera', notes: 'Notas', calculator: 'Calculadora', files: 'Archivos', settings: 'Ajustes' };
 
         function applyFont(id) {
             const font = FONTS[id] || FONTS.system;
