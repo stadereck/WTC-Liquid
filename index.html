@@ -511,7 +511,10 @@
             width: 100%;
             height: 100%;
             z-index: 0;
-            background: url('https://i.ibb.co/rNK6kjH/Wallpaper-IOS-1.jpg') center/cover no-repeat;
+            /* Se actualizará dinámicamente */
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
             transition: background 0.5s ease;
         }
 
@@ -523,7 +526,10 @@
             width: 100%;
             height: 100%;
             z-index: 1000;
-            background: url('https://i.ibb.co/hFFPG4Qp/Wallpaper-IOS-2.jpg') center/cover no-repeat;
+            /* Se actualizará dinámicamente */
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -586,6 +592,17 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
+            /* Contenedor principal que permite detectar los swipes en toda la pantalla de inicio */
+        }
+        
+        /* Capa transparente para detectar swipes sobre el Home Screen sin bloquear clicks a apps */
+        .swipe-detector {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5; /* Por encima de los iconos pero manejaremos eventos cuidadosamente */
         }
 
         .app-grid {
@@ -595,6 +612,8 @@
             padding: 0;
             overflow-y: auto;
             scrollbar-width: none;
+            position: relative;
+            z-index: 10; /* Por encima del detector para que sigan siendo clickeables */
         }
 
         .app-grid::-webkit-scrollbar {
@@ -607,6 +626,8 @@
             align-items: center;
             gap: 4px;
             cursor: pointer;
+            position: relative;
+            z-index: 10;
         }
 
         .app-icon {
@@ -625,6 +646,7 @@
             font-size: 28px;
             position: relative;
             overflow: hidden;
+            pointer-events: none; /* Para que los eventos pasen al contenedor padre .app-item */
         }
 
         .app-icon img {
@@ -663,8 +685,8 @@
             font-size: 11px;
             color: white;
             font-weight: 500;
-            /* Sombra más fuerte para asegurar que sea legible sobre fondos pastel */
             text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0,0,0,0.5);
+            pointer-events: none;
         }
 
         .dock-bar {
@@ -679,6 +701,8 @@
             justify-content: space-evenly;
             align-items: center;
             border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            z-index: 10;
         }
 
         .cam-modes {
@@ -1109,6 +1133,26 @@
             z-index: 10001;
             background: rgba(0, 255, 0, 0.1);
         }
+
+        /* Estilo para el indicador de estilo de fondo */
+        .style-indicator {
+            position: absolute;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
     </style>
 </head>
 
@@ -1229,8 +1273,12 @@
 
             <div class="wallpaper-layer" id="wallpaper"></div>
 
+            <!-- Indicador de Estilo al cambiar fondos -->
+            <div id="styleIndicator" class="style-indicator">Estilo 1</div>
+
             <!-- HOME SCREEN -->
-            <div class="home-screen">
+            <div class="home-screen" id="homeScreenContainer">
+                <div class="swipe-detector" id="swipeDetector"></div> <!-- Detector para los gestos -->
                 <div class="app-grid" id="appGrid">
                     <div class="app-item" data-app-id="mail" onclick="openApp('mail')">
                         <div class="app-icon"><img src="https://i.ibb.co/Rp6zxQc4/250.jpg"
@@ -1790,15 +1838,24 @@
 
             if (target === 'langs') {
                 main.classList.add('hidden');
-            langs.classList.add('hidden');
-            personalize.classList.remove('hidden');
-            backBtn.style.visibility = 'visible';
-            backBtn.innerText = translations[currentLang].settings || "Ajustes";
-            backBtn.onclick = () => navSettings('back');
-            title.innerText = "Personalización";
-            if (typeof lucide !== 'undefined') lucide.createIcons();
-        } else if (target === 'back') {
-            main.classList.remove('hidden');
+                langs.classList.add('hidden');
+                personalize.classList.remove('hidden');
+                backBtn.style.visibility = 'visible';
+                backBtn.innerText = translations[currentLang].settings || "Ajustes";
+                backBtn.onclick = () => navSettings('back');
+                title.innerText = "Personalización";
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            } else if (target === 'personalize') {
+                main.classList.add('hidden');
+                langs.classList.add('hidden');
+                personalize.classList.remove('hidden');
+                backBtn.style.visibility = 'visible';
+                backBtn.innerText = translations[currentLang].settings || "Ajustes";
+                backBtn.onclick = () => navSettings('back');
+                title.innerText = "Personalización";
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            } else if (target === 'back') {
+                main.classList.remove('hidden');
                 langs.classList.add('hidden');
                 personalize.classList.add('hidden');
                 backBtn.innerText = "Atrás";
@@ -1807,26 +1864,75 @@
             }
         }
 
-        // --- PERSONALIZATION & WALLPAPER PRIDE LOGIC ---
-        const prideBg1 = "url('https://i.ibb.co/hFFPG4Qp/Wallpaper-IOS-2.jpg')"; // Lock original
-        const prideBg2 = "url('https://i.ibb.co/rNK6kjH/Wallpaper-IOS-1.jpg')"; // Home original
+        // --- PRIDE WALLPAPERS CONFIGURATION ---
+        const prideStyles = [
+            { // Estilo 1: Predeterminado original
+                name: "Estilo 1",
+                home: "url('https://i.ibb.co/rNK6kjH/Wallpaper-IOS-1.jpg')",
+                lock: "url('https://i.ibb.co/hFFPG4Qp/Wallpaper-IOS-2.jpg')"
+            },
+            { // Estilo 2
+                name: "Estilo 2",
+                home: "url('https://www.iclarified.com/images/news/93554/447511/447511-640.avif')",
+                lock: "url('https://www.iclarified.com/images/news/93554/447517/447517-640.avif')"
+            },
+            { // Estilo 3
+                name: "Estilo 3",
+                home: "url('https://www.iclarified.com/images/news/93554/447526/447526-640.avif')",
+                lock: "url('https://www.iclarified.com/images/news/93554/447529/447529-640.avif')"
+            },
+            { // Estilo 4
+                name: "Estilo 4",
+                home: "url('https://www.iclarified.com/images/news/93554/447538/447538-640.avif')",
+                lock: "url('https://www.iclarified.com/images/news/93554/447541/447541-640.avif')"
+            },
+            { // Estilo 5
+                name: "Estilo 5",
+                home: "url('https://www.iclarified.com/images/news/93554/447549/447549-640.avif')",
+                lock: "url('https://www.iclarified.com/images/news/93554/447552/447552-640.avif')"
+            }
+        ];
+
+        let currentStyleIndex = parseInt(localStorage.getItem('wtc_pride_style_index')) || 0;
         
-        let currentLockBg = prideBg1;
-        let currentHomeBg = prideBg2;
+        // Mantener las variables antiguas por compatibilidad con los botones de Ajustes
+        let currentLockBg = prideStyles[currentStyleIndex].lock;
+        let currentHomeBg = prideStyles[currentStyleIndex].home;
+
+        function applyStyle(index) {
+            currentStyleIndex = index;
+            currentHomeBg = prideStyles[index].home;
+            currentLockBg = prideStyles[index].lock;
+            
+            updateWallpapers();
+            localStorage.setItem('wtc_pride_style_index', index);
+            
+            showStyleIndicator(prideStyles[index].name);
+        }
+
+        function showStyleIndicator(text) {
+            const ind = document.getElementById('styleIndicator');
+            ind.textContent = text;
+            ind.style.opacity = 1;
+            
+            // Limpiar timeout anterior si existe
+            if(window.styleIndTimeout) clearTimeout(window.styleIndTimeout);
+            
+            window.styleIndTimeout = setTimeout(() => {
+                ind.style.opacity = 0;
+            }, 1500);
+        }
 
         function updateWallpapers() {
-            document.getElementById('lockScreen').style.background = currentLockBg;
-            document.getElementById('lockScreen').style.backgroundSize = 'cover';
-            document.getElementById('lockScreen').style.backgroundPosition = 'center';
+            document.getElementById('lockScreen').style.backgroundImage = currentLockBg;
+            document.getElementById('wallpaper').style.backgroundImage = currentHomeBg;
             
-            document.getElementById('wallpaper').style.background = currentHomeBg;
-            document.getElementById('wallpaper').style.backgroundSize = 'cover';
-            document.getElementById('wallpaper').style.backgroundPosition = 'center';
-            
+            // Guardar para ajustes (en caso de que se usen las opciones manuales)
             localStorage.setItem('wtc_lock_bg', currentLockBg);
             localStorage.setItem('wtc_home_bg', currentHomeBg);
         }
 
+        // Funciones originales de Ajustes (adaptadas)
         function swapWallpapers() {
             let temp = currentLockBg;
             currentLockBg = currentHomeBg;
@@ -1845,20 +1951,173 @@
         }
 
         function restorePride() {
-            currentLockBg = prideBg1;
-            currentHomeBg = prideBg2;
-            updateWallpapers();
+            applyStyle(0); // Volver al estilo 1 por defecto
         }
 
         function initWallpapers() {
+            // Intentar cargar el índice de estilo guardado
+            let savedIndex = localStorage.getItem('wtc_pride_style_index');
+            
+            // Si el usuario ya había modificado manualmente con las opciones antiguas, respetarlo si no hay índice
             const savedLock = localStorage.getItem('wtc_lock_bg');
             const savedHome = localStorage.getItem('wtc_home_bg');
-            if (savedLock && savedHome) {
+            
+            if (savedIndex !== null) {
+                applyStyle(parseInt(savedIndex));
+            } else if (savedLock && savedHome) {
                 currentLockBg = savedLock;
                 currentHomeBg = savedHome;
                 updateWallpapers();
+            } else {
+                applyStyle(0);
             }
         }
+
+        // --- GESTURES FOR WALLPAPER CHANGE ---
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let isLongPress = false;
+        let longPressTimer;
+        let gestureActive = false; // Indica si estamos en modo "cambio de fondo"
+
+        const swipeDetector = document.getElementById('swipeDetector');
+
+        swipeDetector.addEventListener('touchstart', function(e) {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            isLongPress = false;
+            gestureActive = false;
+
+            // Iniciar temporizador para long press (ej. 500ms)
+            longPressTimer = setTimeout(() => {
+                isLongPress = true;
+                gestureActive = true;
+                // Pequeña vibración para indicar que se entró en el modo
+                if (navigator.vibrate) navigator.vibrate(50);
+                
+                // Efecto visual sutil (zoom out del home screen)
+                document.getElementById('appGrid').style.transform = 'scale(0.95)';
+                document.getElementById('appGrid').style.transition = 'transform 0.3s';
+                document.querySelector('.dock-bar').style.transform = 'scale(0.95)';
+                document.querySelector('.dock-bar').style.transition = 'transform 0.3s';
+                
+            }, 500);
+        });
+
+        swipeDetector.addEventListener('touchmove', function(e) {
+            // Si nos movemos demasiado pronto, cancelar el long press
+            if (!isLongPress) {
+                let dx = Math.abs(e.touches[0].clientX - touchStartX);
+                let dy = Math.abs(e.touches[0].clientY - touchStartY);
+                if (dx > 10 || dy > 10) {
+                    clearTimeout(longPressTimer);
+                }
+                return;
+            }
+
+            // Si estamos en modo gesto, prevenir scroll/comportamiento por defecto
+            if (gestureActive) {
+                e.preventDefault(); 
+            }
+        }, { passive: false });
+
+        swipeDetector.addEventListener('touchend', function(e) {
+            clearTimeout(longPressTimer);
+            
+            // Restaurar estilo visual
+            document.getElementById('appGrid').style.transform = 'scale(1)';
+            document.querySelector('.dock-bar').style.transform = 'scale(1)';
+
+            if (gestureActive) {
+                let touchEndX = e.changedTouches[0].clientX;
+                let diffX = touchEndX - touchStartX;
+
+                // Detectar swipe horizontal
+                if (Math.abs(diffX) > 50) { // Umbral de 50px
+                    if (diffX > 0) {
+                        // Swipe Derecha (Estilo anterior)
+                        let newIndex = currentStyleIndex - 1;
+                        if (newIndex < 0) newIndex = prideStyles.length - 1;
+                        applyStyle(newIndex);
+                    } else {
+                        // Swipe Izquierda (Siguiente estilo)
+                        let newIndex = currentStyleIndex + 1;
+                        if (newIndex >= prideStyles.length) newIndex = 0;
+                        applyStyle(newIndex);
+                    }
+                }
+            }
+            
+            gestureActive = false;
+            isLongPress = false;
+        });
+
+        // Cancelar también si el toque se interrumpe
+        swipeDetector.addEventListener('touchcancel', function(e) {
+            clearTimeout(longPressTimer);
+            document.getElementById('appGrid').style.transform = 'scale(1)';
+            document.querySelector('.dock-bar').style.transform = 'scale(1)';
+            gestureActive = false;
+            isLongPress = false;
+        });
+
+        // Para ratón (útil para pruebas en PC)
+        swipeDetector.addEventListener('mousedown', function(e) {
+            touchStartX = e.clientX;
+            touchStartY = e.clientY;
+            isLongPress = false;
+            gestureActive = false;
+
+            longPressTimer = setTimeout(() => {
+                isLongPress = true;
+                gestureActive = true;
+                document.getElementById('appGrid').style.transform = 'scale(0.95)';
+                document.getElementById('appGrid').style.transition = 'transform 0.3s';
+                document.querySelector('.dock-bar').style.transform = 'scale(0.95)';
+                document.querySelector('.dock-bar').style.transition = 'transform 0.3s';
+            }, 500);
+        });
+
+        swipeDetector.addEventListener('mousemove', function(e) {
+            if (!isLongPress) {
+                let dx = Math.abs(e.clientX - touchStartX);
+                let dy = Math.abs(e.clientY - touchStartY);
+                if (dx > 10 || dy > 10) {
+                    clearTimeout(longPressTimer);
+                }
+            }
+        });
+
+        window.addEventListener('mouseup', function(e) {
+            if(longPressTimer) clearTimeout(longPressTimer);
+            
+            let grid = document.getElementById('appGrid');
+            if(grid) grid.style.transform = 'scale(1)';
+            let dock = document.querySelector('.dock-bar');
+            if(dock) dock.style.transform = 'scale(1)';
+
+            if (gestureActive) {
+                let touchEndX = e.clientX;
+                let diffX = touchEndX - touchStartX;
+
+                if (Math.abs(diffX) > 50) {
+                    if (diffX > 0) {
+                        let newIndex = currentStyleIndex - 1;
+                        if (newIndex < 0) newIndex = prideStyles.length - 1;
+                        applyStyle(newIndex);
+                    } else {
+                        let newIndex = currentStyleIndex + 1;
+                        if (newIndex >= prideStyles.length) newIndex = 0;
+                        applyStyle(newIndex);
+                    }
+                }
+            }
+            
+            gestureActive = false;
+            isLongPress = false;
+        });
+
+
 
         const FONTS = { system: '-apple-system, BlinkMacSystemFont, sans-serif', inter: "'Inter', sans-serif", dancing: "'Dancing Script', cursive", roboto: "'Roboto', sans-serif" };
         const DEFAULT_APP_ORDER = ['mail', 'calendar', 'photos', 'camera', 'maps', 'clock', 'weather', 'wallet', 'notes', 'calculator', 'chatgpt', 'files', 'settings'];
