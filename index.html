@@ -474,33 +474,24 @@
             100% { top: 100%; opacity: 0; }
         }
 
-        /* WTC Intelligence Siri Effect (Pride Edition Colors) */
-        .siri-overlay {
+        /* Estilo para el indicador de estilo de fondo */
+        .style-indicator {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(255,0,127,0.4), rgba(255,165,0,0.4), rgba(0,212,255,0.4), rgba(127,0,255,0.4));
-            background-size: 200% 200%;
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            z-index: 5500;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 2000;
             opacity: 0;
+            transition: opacity 0.3s;
             pointer-events: none;
-            transition: opacity 0.4s ease;
-            animation: siriWave 3s ease infinite;
-        }
-
-        .siri-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        @keyframes siriWave {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
         /* FONDOS PRIDE POR DEFECTO */
@@ -511,7 +502,6 @@
             width: 100%;
             height: 100%;
             z-index: 0;
-            /* Se actualizará dinámicamente */
             background-size: cover !important;
             background-position: center !important;
             background-repeat: no-repeat !important;
@@ -526,7 +516,6 @@
             width: 100%;
             height: 100%;
             z-index: 1000;
-            /* Se actualizará dinámicamente */
             background-size: cover !important;
             background-position: center !important;
             background-repeat: no-repeat !important;
@@ -592,9 +581,8 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-            /* Contenedor principal que permite detectar los swipes en toda la pantalla de inicio */
         }
-        
+
         /* Capa transparente para detectar swipes sobre el Home Screen sin bloquear clicks a apps */
         .swipe-detector {
             position: absolute;
@@ -602,7 +590,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 5; /* Por encima de los iconos pero manejaremos eventos cuidadosamente */
+            z-index: 5;
         }
 
         .app-grid {
@@ -613,7 +601,7 @@
             overflow-y: auto;
             scrollbar-width: none;
             position: relative;
-            z-index: 10; /* Por encima del detector para que sigan siendo clickeables */
+            z-index: 10;
         }
 
         .app-grid::-webkit-scrollbar {
@@ -646,7 +634,7 @@
             font-size: 28px;
             position: relative;
             overflow: hidden;
-            pointer-events: none; /* Para que los eventos pasen al contenedor padre .app-item */
+            pointer-events: none;
         }
 
         .app-icon img {
@@ -1167,9 +1155,6 @@
                 <div class="swipe-hint-text" id="swipeText">Desliza para empezar</div>
             </div>
 
-            <!-- WTC INTELLIGENCE OVERLAY -->
-            <div id="siriOverlay" class="siri-overlay" onclick="closeSiri()"></div>
-
             <!-- ISLA DINÁMICA (Aura Welcome) -->
             <div class="notch welcome-aura" id="notch" ondblclick="toggleControlCenter()">
                 <!-- RAYOS ELÉCTRICOS -->
@@ -1278,7 +1263,7 @@
 
             <!-- HOME SCREEN -->
             <div class="home-screen" id="homeScreenContainer">
-                <div class="swipe-detector" id="swipeDetector"></div> <!-- Detector para los gestos -->
+                <div class="swipe-detector" id="swipeDetector"></div>
                 <div class="app-grid" id="appGrid">
                     <div class="app-item" data-app-id="mail" onclick="openApp('mail')">
                         <div class="app-icon"><img src="https://i.ibb.co/Rp6zxQc4/250.jpg"
@@ -1446,7 +1431,25 @@
                     <!-- PERSONALIZE PAGE (WALLPAPER PRIDE LOGIC) -->
                     <div id="setPersonalize" class="settings-page hidden sub">
                         <div class="list-group">
-                            <div style="padding:15px 20px; font-weight:600; font-size:14px; color:#888;">FONDOS DE PANTALLA (PRIDE EDITION)</div>
+                            <div style="padding:15px 20px; font-weight:600; font-size:14px; color:#888;">ESTILOS PRIDE</div>
+                            <div class="list-item" onclick="applyStyle(0)">
+                                <div>Estilo 1 (Predeterminado)</div><i data-lucide="check" class="style-check" id="style-check-0" style="color:#007aff"></i>
+                            </div>
+                            <div class="list-item" onclick="applyStyle(1)">
+                                <div>Estilo 2</div><i data-lucide="check" class="style-check" id="style-check-1" style="display:none; color:#007aff"></i>
+                            </div>
+                            <div class="list-item" onclick="applyStyle(2)">
+                                <div>Estilo 3</div><i data-lucide="check" class="style-check" id="style-check-2" style="display:none; color:#007aff"></i>
+                            </div>
+                            <div class="list-item" onclick="applyStyle(3)">
+                                <div>Estilo 4</div><i data-lucide="check" class="style-check" id="style-check-3" style="display:none; color:#007aff"></i>
+                            </div>
+                            <div class="list-item" onclick="applyStyle(4)">
+                                <div>Estilo 5</div><i data-lucide="check" class="style-check" id="style-check-4" style="display:none; color:#007aff"></i>
+                            </div>
+                        </div>
+                        <div class="list-group">
+                            <div style="padding:15px 20px; font-weight:600; font-size:14px; color:#888;">AJUSTES MANUALES</div>
                             <div class="list-item" onclick="swapWallpapers()">
                                 <div>Intercambiar fondos</div><i data-lucide="refresh-cw" style="color:#007aff"></i>
                             </div>
@@ -1455,9 +1458,6 @@
                             </div>
                             <div class="list-item" onclick="matchToHome()">
                                 <div>Usar fondo de inicio en bloqueo</div><i data-lucide="copy" style="color:#007aff"></i>
-                            </div>
-                            <div class="list-item" onclick="restorePride()">
-                                <div>Restaurar fondos Pride</div><i data-lucide="sparkles" style="color:#ff2d55"></i>
                             </div>
                         </div>
                         <div class="list-group">
@@ -1894,8 +1894,6 @@
         ];
 
         let currentStyleIndex = parseInt(localStorage.getItem('wtc_pride_style_index')) || 0;
-        
-        // Mantener las variables antiguas por compatibilidad con los botones de Ajustes
         let currentLockBg = prideStyles[currentStyleIndex].lock;
         let currentHomeBg = prideStyles[currentStyleIndex].home;
 
@@ -1908,31 +1906,37 @@
             localStorage.setItem('wtc_pride_style_index', index);
             
             showStyleIndicator(prideStyles[index].name);
+            
+            document.querySelectorAll('.style-check').forEach(el => { el.style.display = 'none'; });
+            const check = document.getElementById('style-check-' + index);
+            if(check) check.style.display = 'block';
         }
 
         function showStyleIndicator(text) {
             const ind = document.getElementById('styleIndicator');
-            ind.textContent = text;
-            ind.style.opacity = 1;
-            
-            // Limpiar timeout anterior si existe
-            if(window.styleIndTimeout) clearTimeout(window.styleIndTimeout);
-            
-            window.styleIndTimeout = setTimeout(() => {
-                ind.style.opacity = 0;
-            }, 1500);
+            if(ind) {
+                ind.textContent = text;
+                ind.style.opacity = 1;
+                if(window.styleIndTimeout) clearTimeout(window.styleIndTimeout);
+                window.styleIndTimeout = setTimeout(() => {
+                    ind.style.opacity = 0;
+                }, 1500);
+            }
         }
 
         function updateWallpapers() {
-            document.getElementById('lockScreen').style.backgroundImage = currentLockBg;
-            document.getElementById('wallpaper').style.backgroundImage = currentHomeBg;
+            document.getElementById('lockScreen').style.background = currentLockBg;
+            document.getElementById('lockScreen').style.backgroundSize = 'cover';
+            document.getElementById('lockScreen').style.backgroundPosition = 'center';
             
-            // Guardar para ajustes (en caso de que se usen las opciones manuales)
+            document.getElementById('wallpaper').style.background = currentHomeBg;
+            document.getElementById('wallpaper').style.backgroundSize = 'cover';
+            document.getElementById('wallpaper').style.backgroundPosition = 'center';
+            
             localStorage.setItem('wtc_lock_bg', currentLockBg);
             localStorage.setItem('wtc_home_bg', currentHomeBg);
         }
 
-        // Funciones originales de Ajustes (adaptadas)
         function swapWallpapers() {
             let temp = currentLockBg;
             currentLockBg = currentHomeBg;
@@ -1950,15 +1954,8 @@
             updateWallpapers();
         }
 
-        function restorePride() {
-            applyStyle(0); // Volver al estilo 1 por defecto
-        }
-
         function initWallpapers() {
-            // Intentar cargar el índice de estilo guardado
             let savedIndex = localStorage.getItem('wtc_pride_style_index');
-            
-            // Si el usuario ya había modificado manualmente con las opciones antiguas, respetarlo si no hay índice
             const savedLock = localStorage.getItem('wtc_lock_bg');
             const savedHome = localStorage.getItem('wtc_home_bg');
             
@@ -1978,146 +1975,123 @@
         let touchStartY = 0;
         let isLongPress = false;
         let longPressTimer;
-        let gestureActive = false; // Indica si estamos en modo "cambio de fondo"
+        let gestureActive = false;
 
         const swipeDetector = document.getElementById('swipeDetector');
+        if(swipeDetector) {
+            swipeDetector.addEventListener('touchstart', function(e) {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+                isLongPress = false;
+                gestureActive = false;
 
-        swipeDetector.addEventListener('touchstart', function(e) {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-            isLongPress = false;
-            gestureActive = false;
+                longPressTimer = setTimeout(() => {
+                    isLongPress = true;
+                    gestureActive = true;
+                    if (navigator.vibrate) navigator.vibrate(50);
+                    
+                    document.getElementById('appGrid').style.transform = 'scale(0.95)';
+                    document.getElementById('appGrid').style.transition = 'transform 0.3s';
+                    document.querySelector('.dock-bar').style.transform = 'scale(0.95)';
+                    document.querySelector('.dock-bar').style.transition = 'transform 0.3s';
+                }, 500);
+            });
 
-            // Iniciar temporizador para long press (ej. 500ms)
-            longPressTimer = setTimeout(() => {
-                isLongPress = true;
-                gestureActive = true;
-                // Pequeña vibración para indicar que se entró en el modo
-                if (navigator.vibrate) navigator.vibrate(50);
-                
-                // Efecto visual sutil (zoom out del home screen)
-                document.getElementById('appGrid').style.transform = 'scale(0.95)';
-                document.getElementById('appGrid').style.transition = 'transform 0.3s';
-                document.querySelector('.dock-bar').style.transform = 'scale(0.95)';
-                document.querySelector('.dock-bar').style.transition = 'transform 0.3s';
-                
-            }, 500);
-        });
-
-        swipeDetector.addEventListener('touchmove', function(e) {
-            // Si nos movemos demasiado pronto, cancelar el long press
-            if (!isLongPress) {
-                let dx = Math.abs(e.touches[0].clientX - touchStartX);
-                let dy = Math.abs(e.touches[0].clientY - touchStartY);
-                if (dx > 10 || dy > 10) {
-                    clearTimeout(longPressTimer);
+            swipeDetector.addEventListener('touchmove', function(e) {
+                if (!isLongPress) {
+                    let dx = Math.abs(e.touches[0].clientX - touchStartX);
+                    let dy = Math.abs(e.touches[0].clientY - touchStartY);
+                    if (dx > 10 || dy > 10) clearTimeout(longPressTimer);
+                    return;
                 }
-                return;
-            }
+                if (gestureActive) e.preventDefault(); 
+            }, { passive: false });
 
-            // Si estamos en modo gesto, prevenir scroll/comportamiento por defecto
-            if (gestureActive) {
-                e.preventDefault(); 
-            }
-        }, { passive: false });
+            swipeDetector.addEventListener('touchend', function(e) {
+                clearTimeout(longPressTimer);
+                document.getElementById('appGrid').style.transform = 'scale(1)';
+                document.querySelector('.dock-bar').style.transform = 'scale(1)';
 
-        swipeDetector.addEventListener('touchend', function(e) {
-            clearTimeout(longPressTimer);
-            
-            // Restaurar estilo visual
-            document.getElementById('appGrid').style.transform = 'scale(1)';
-            document.querySelector('.dock-bar').style.transform = 'scale(1)';
+                if (gestureActive) {
+                    let touchEndX = e.changedTouches[0].clientX;
+                    let diffX = touchEndX - touchStartX;
 
-            if (gestureActive) {
-                let touchEndX = e.changedTouches[0].clientX;
-                let diffX = touchEndX - touchStartX;
-
-                // Detectar swipe horizontal
-                if (Math.abs(diffX) > 50) { // Umbral de 50px
-                    if (diffX > 0) {
-                        // Swipe Derecha (Estilo anterior)
-                        let newIndex = currentStyleIndex - 1;
-                        if (newIndex < 0) newIndex = prideStyles.length - 1;
-                        applyStyle(newIndex);
-                    } else {
-                        // Swipe Izquierda (Siguiente estilo)
-                        let newIndex = currentStyleIndex + 1;
-                        if (newIndex >= prideStyles.length) newIndex = 0;
-                        applyStyle(newIndex);
+                    if (Math.abs(diffX) > 50) {
+                        if (diffX > 0) {
+                            let newIndex = currentStyleIndex - 1;
+                            if (newIndex < 0) newIndex = prideStyles.length - 1;
+                            applyStyle(newIndex);
+                        } else {
+                            let newIndex = currentStyleIndex + 1;
+                            if (newIndex >= prideStyles.length) newIndex = 0;
+                            applyStyle(newIndex);
+                        }
                     }
                 }
-            }
-            
-            gestureActive = false;
-            isLongPress = false;
-        });
+                gestureActive = false;
+                isLongPress = false;
+            });
 
-        // Cancelar también si el toque se interrumpe
-        swipeDetector.addEventListener('touchcancel', function(e) {
-            clearTimeout(longPressTimer);
-            document.getElementById('appGrid').style.transform = 'scale(1)';
-            document.querySelector('.dock-bar').style.transform = 'scale(1)';
-            gestureActive = false;
-            isLongPress = false;
-        });
+            swipeDetector.addEventListener('touchcancel', function(e) {
+                clearTimeout(longPressTimer);
+                document.getElementById('appGrid').style.transform = 'scale(1)';
+                document.querySelector('.dock-bar').style.transform = 'scale(1)';
+                gestureActive = false;
+                isLongPress = false;
+            });
 
-        // Para ratón (útil para pruebas en PC)
-        swipeDetector.addEventListener('mousedown', function(e) {
-            touchStartX = e.clientX;
-            touchStartY = e.clientY;
-            isLongPress = false;
-            gestureActive = false;
+            swipeDetector.addEventListener('mousedown', function(e) {
+                touchStartX = e.clientX;
+                touchStartY = e.clientY;
+                isLongPress = false;
+                gestureActive = false;
 
-            longPressTimer = setTimeout(() => {
-                isLongPress = true;
-                gestureActive = true;
-                document.getElementById('appGrid').style.transform = 'scale(0.95)';
-                document.getElementById('appGrid').style.transition = 'transform 0.3s';
-                document.querySelector('.dock-bar').style.transform = 'scale(0.95)';
-                document.querySelector('.dock-bar').style.transition = 'transform 0.3s';
-            }, 500);
-        });
+                longPressTimer = setTimeout(() => {
+                    isLongPress = true;
+                    gestureActive = true;
+                    document.getElementById('appGrid').style.transform = 'scale(0.95)';
+                    document.getElementById('appGrid').style.transition = 'transform 0.3s';
+                    document.querySelector('.dock-bar').style.transform = 'scale(0.95)';
+                    document.querySelector('.dock-bar').style.transition = 'transform 0.3s';
+                }, 500);
+            });
 
-        swipeDetector.addEventListener('mousemove', function(e) {
-            if (!isLongPress) {
-                let dx = Math.abs(e.clientX - touchStartX);
-                let dy = Math.abs(e.clientY - touchStartY);
-                if (dx > 10 || dy > 10) {
-                    clearTimeout(longPressTimer);
+            swipeDetector.addEventListener('mousemove', function(e) {
+                if (!isLongPress) {
+                    let dx = Math.abs(e.clientX - touchStartX);
+                    let dy = Math.abs(e.clientY - touchStartY);
+                    if (dx > 10 || dy > 10) clearTimeout(longPressTimer);
                 }
-            }
-        });
+            });
 
-        window.addEventListener('mouseup', function(e) {
-            if(longPressTimer) clearTimeout(longPressTimer);
-            
-            let grid = document.getElementById('appGrid');
-            if(grid) grid.style.transform = 'scale(1)';
-            let dock = document.querySelector('.dock-bar');
-            if(dock) dock.style.transform = 'scale(1)';
+            window.addEventListener('mouseup', function(e) {
+                if(longPressTimer) clearTimeout(longPressTimer);
+                
+                let grid = document.getElementById('appGrid');
+                if(grid) grid.style.transform = 'scale(1)';
+                let dock = document.querySelector('.dock-bar');
+                if(dock) dock.style.transform = 'scale(1)';
 
-            if (gestureActive) {
-                let touchEndX = e.clientX;
-                let diffX = touchEndX - touchStartX;
+                if (gestureActive) {
+                    let touchEndX = e.clientX;
+                    let diffX = touchEndX - touchStartX;
 
-                if (Math.abs(diffX) > 50) {
-                    if (diffX > 0) {
-                        let newIndex = currentStyleIndex - 1;
-                        if (newIndex < 0) newIndex = prideStyles.length - 1;
-                        applyStyle(newIndex);
-                    } else {
-                        let newIndex = currentStyleIndex + 1;
-                        if (newIndex >= prideStyles.length) newIndex = 0;
-                        applyStyle(newIndex);
+                    if (Math.abs(diffX) > 50) {
+                        if (diffX > 0) {
+                            let newIndex = currentStyleIndex - 1;
+                            if (newIndex < 0) newIndex = prideStyles.length - 1;
+                            applyStyle(newIndex);
+                        } else {
+                            let newIndex = currentStyleIndex + 1;
+                            if (newIndex >= prideStyles.length) newIndex = 0;
+                            applyStyle(newIndex);
+                        }
                     }
                 }
-            }
-            
-            gestureActive = false;
-            isLongPress = false;
-        });
-
-
+                gestureActive = false;
+                isLongPress = false;
+            });
+        }
 
         const FONTS = { system: '-apple-system, BlinkMacSystemFont, sans-serif', inter: "'Inter', sans-serif", dancing: "'Dancing Script', cursive", roboto: "'Roboto', sans-serif" };
         const DEFAULT_APP_ORDER = ['mail', 'calendar', 'photos', 'camera', 'maps', 'clock', 'weather', 'wallet', 'notes', 'calculator', 'chatgpt', 'files', 'settings'];
@@ -2446,46 +2420,6 @@
             }
             d.innerText = cVal;
         }
-
-        // WTC Intelligence / Siri
-        let siriTimer;
-        const siriOverlay = document.getElementById('siriOverlay');
-        const homeIndicatorEl = document.getElementById('homeIndicator');
-        const notchElement = document.getElementById('notch');
-
-        function startSiriHold() {
-            siriTimer = setTimeout(() => {
-                siriOverlay.classList.add('active');
-                if (navigator.vibrate) navigator.vibrate(50);
-            }, 600);
-        }
-        function cancelSiriHold() {
-            clearTimeout(siriTimer);
-        }
-        function closeSiri() {
-            siriOverlay.classList.remove('active');
-        }
-
-        [notchElement, homeIndicatorEl].forEach(el => {
-            if(el) {
-                el.addEventListener('mousedown', startSiriHold);
-                el.addEventListener('touchstart', startSiriHold);
-                el.addEventListener('mouseup', cancelSiriHold);
-                el.addEventListener('mouseleave', cancelSiriHold);
-                el.addEventListener('touchend', cancelSiriHold);
-            }
-        });
-
-        const originalGoHome = window.goHome || function() {};
-        window.goHome = function() {
-            if (siriOverlay.classList.contains('active')) {
-                closeSiri();
-                return;
-            }
-            if (typeof originalGoHome === 'function') originalGoHome();
-        };
-
-        goHome = window.goHome;
 
     </script>
 </body>
