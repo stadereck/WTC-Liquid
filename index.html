@@ -474,24 +474,28 @@
             100% { top: 100%; opacity: 0; }
         }
 
-        /* Estilo para el indicador de estilo de fondo */
-        .style-indicator {
-            position: absolute;
-            top: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.6);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            z-index: 2000;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
+        /* NUEVA ANIMACIÓN Y ESTILO PARA LA ISLA DINÁMICA: CAMBIO DE ESTILO */
+        .notch.expanded-style {
+            width: 200px;
+            height: 45px;
+            border-radius: 25px;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .notch.expanded-charge .charge-ui,
+        .notch.expanded-faceid .faceid-ui,
+        .notch.expanded-language .lang-ui,
+        .notch.expanded-style .style-ui {
+            display: flex;
+            opacity: 1;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         /* FONDOS PRIDE POR DEFECTO */
@@ -1183,6 +1187,12 @@
                         id="langNotchText">Cambiando Idioma...</span>
                 </div>
 
+                <!-- NOTIFICACIÓN DE ESTILO EN ISLA DINÁMICA -->
+                <div class="notch-content style-ui">
+                    <i data-lucide="sparkles" style="color: #ff2d55;"></i> 
+                    <span style="font-weight:600; font-size: 14px;" id="styleNotchText">Estilo 1</span>
+                </div>
+
                 <!-- --- ACTUALIZACIÓN DE MARZO: Interfaz Música Notch --- -->
                 <div class="notch-content music-ui">
                     <div style="font-size: 13px; color: #1db954; display: flex; align-items: center; gap: 5px;">
@@ -1257,9 +1267,6 @@
             </div>
 
             <div class="wallpaper-layer" id="wallpaper"></div>
-
-            <!-- Indicador de Estilo al cambiar fondos -->
-            <div id="styleIndicator" class="style-indicator">Estilo 1</div>
 
             <!-- HOME SCREEN -->
             <div class="home-screen" id="homeScreenContainer">
@@ -1893,15 +1900,21 @@
             if(check) check.style.display = 'block';
         }
 
+        // --- ANIMACIÓN DE LA ISLA DINÁMICA PARA EL CAMBIO DE ESTILO ---
         function showStyleIndicator(text) {
-            const ind = document.getElementById('styleIndicator');
-            if(ind) {
+            const ind = document.getElementById('styleNotchText');
+            const n = document.getElementById('notch');
+            if(ind && n) {
                 ind.textContent = text;
-                ind.style.opacity = 1;
+                n.classList.remove('expanded-charge', 'expanded-faceid', 'expanded-language', 'expanded-music', 'expanded-cc');
+                n.classList.add('expanded-style');
+                
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+
                 if(window.styleIndTimeout) clearTimeout(window.styleIndTimeout);
                 window.styleIndTimeout = setTimeout(() => {
-                    ind.style.opacity = 0;
-                }, 1500);
+                    n.classList.remove('expanded-style');
+                }, 2000); // Desaparece la Isla Dinámica después de 2 segundos
             }
         }
 
